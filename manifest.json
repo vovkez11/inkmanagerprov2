@@ -1,23 +1,26 @@
 {
   "name": "InkManager Pro",
   "short_name": "InkManager",
-  "description": "Professional tattoo studio management built by artists for artists",
-  "start_url": "/index.html",
+  "description": "Professional tattoo studio management for tattoo artists",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#00bcd4",
-  "orientation": "portrait",
-  "categories": ["business", "productivity"],
+  "orientation": "any",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300bcd4'/><text x='50' y='70' font-family='Arial' font-size='60' text-anchor='middle' fill='white'>🦇</text></svg>",
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/dragon.svg",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300bcd4'/><text x='50' y='70' font-family='Arial' font-size='60' text-anchor='middle' fill='white'>🦇</text></svg>",
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/dragon.svg",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "en"
 }
