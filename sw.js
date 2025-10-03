@@ -1,11 +1,8 @@
-const CACHE_NAME = 'inkmanager-v2';
+const CACHE_NAME = 'inkmanager-v3';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/landing.html',
-  '/manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@300;400;500;700&display=swap'
+  '/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -19,7 +16,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Return cached version or fetch from network
         return response || fetch(event.request);
       })
   );
