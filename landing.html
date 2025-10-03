@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkManager Pro - By Tattoo Artist Vladimir Romanovski</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: white;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .hero {
+            background: linear-gradient(135deg, #00bcd4 0%, #ff4081 100%);
+            padding: 80px 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        .hero h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        .cta-button {
+            background: white;
+            color: #00bcd4;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s;
+            min-height: 50px;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+        }
+        
+        .artist-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            font-weight: bold;
+        }
+        
+        .features {
+            padding: 60px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .feature-card i {
+            font-size: 2.5em;
+            color: #00bcd4;
+            margin-bottom: 15px;
+        }
+        
+        .artist-story {
+            padding: 60px 0;
+            background: rgba(0,188,212,0.1);
+            text-align: center;
+        }
+        .artist-card {
+            max-width: 500px;
+            margin: 25px auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .artist-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #00bcd4;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #00bcd4, #ff4081);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+        
+        .demo {
+            background: #2a2a2a;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .footer {
+            background: #1a1a1a;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .testimonial {
+            background: rgba(255,64,129,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 4px solid #ff4081;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0;
+            }
+            .hero h1 {
+                font-size: 2.2em;
+            }
+            .hero p {
+                font-size: 1.1em;
+            }
+            .features {
+                grid-template-columns: 1fr;
+                padding: 40px 0;
+            }
+            .artist-card {
+                margin: 20px 15px;
+                padding: 25px 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="artist-badge">
+                🦇 Built by Vladimir Romanovski • Professional Tattoo Artist
+            </div>
+            
+            <h1>InkManager Pro</h1>
+            <p><strong>Finally - studio software built by someone who actually tattoos!</strong></p>
+            <p>No more clunky software made by people who've never held a machine</p>
+            <a href="index.html" class="cta-button">
+                <i class="fas fa-rocket"></i> Launch Free App
+            </a>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features container">
+        <div class="feature-card">
+            <i class="fas fa-users"></i>
+            <h3>Client Management</h3>
+            <p>Track clients, preferences, medical notes, and session history</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-calendar"></i>
+            <h3>Session Scheduling</h3>
+            <p>Book appointments, track availability, and manage your calendar</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-syringe"></i>
+            <h3>Inventory Tracking</h3>
+            <p>Manage needles, ink, supplies with low-stock alerts</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-palette"></i>
+            <h3>Built by a Tattoo Artist</h3>
+            <p><strong>Vladimir Romanovski</strong> created this because existing tools don't understand our workflow</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">"I built what I wish I had in my own studio"</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-mobile"></i>
+            <h3>Mobile First</h3>
+            <p>Works perfectly on phones, tablets, and desktop</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-wifi"></i>
+            <h3>Offline Ready</h3>
+            <p>Works without internet - perfect for conventions</p>
+        </div>
+    </section>
+
+    <!-- Artist Story -->
+    <section class="artist-story">
+        <div class="container">
+            <h2>Built From Real Studio Experience</h2>
+            
+            <div class="testimonial">
+                <p style="font-style: italic;">"As a tattoo artist, I know exactly what features we need and what workflows actually work in a busy studio. No more adapting to software - the software adapts to you."</p>
+                <p style="margin-top: 10px; font-weight: bold;">- Vladimir Romanovski, Creator</p>
+            </div>
+
+            <div class="artist-card">
+                <div class="artist-avatar">
+                    🦇
+                </div>
+                <h3>Vladimir Romanovski</h3>
+                <p><strong>Professional Tattoo Artist & Software Developer</strong></p>
+                <p>"After years of struggling with clunky studio software made by people who've never tattooed, I decided to build something that actually understands our workflow. Every feature in InkManager Pro comes from real pain points in my own studio."</p>
+                <div style="margin-top: 20px;">
+                    <!-- Add your social media links here -->
+                    <a href="#" style="color: #00bcd4; margin: 0 10px; text-decoration: none;">
+                        <i class="fab fa-instagram"></i> My Tattoo Work
+                    </a>
+                    <a href="#" style="color: #00bcd4; margin: 0 10px; text-decoration: none;">
+                        <i class="fab fa-tiktok"></i> Studio Life
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo" id="demo">
+        <div class="container">
+            <h2>Ready to Transform Your Studio?</h2>
+            <p style="margin: 20px 0; font-size: 1.1em;">No signup. No payment. Just click and use.</p>
+            <a href="index.html" class="cta-button" style="background: #ff4081; color: white;">
+                <i class="fas fa-play"></i> Launch InkManager Pro Now
+            </a>
+            <p style="margin-top: 20px; opacity: 0.8;">100% Free • No Hidden Costs • Privacy Focused</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div style="margin-bottom: 20px;">
+                <h4>👨‍🎨 Created by Vladimir Romanovski</h4>
+                <p>Professional Tattoo Artist & Software Developer</p>
+                <p>Building tools that actually work in real studios</p>
+            </div>
+            <p>Made with ❤️ for the tattoo community</p>
+            <p>InkManager Pro • By Artists, For Artists • Free Forever</p>
+        </div>
+    </footer>
+</body>
+</html>
