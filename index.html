@@ -1492,1224 +1492,1214 @@
             </form>
         </div>
     </div>
-  <script>
-<script>
-// INKMANAGER PRO - COMPLETE WORKING VERSION
-class InkManagerPro {
-    constructor() {
-        this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
-        this.sessions = JSON.parse(localStorage.getItem('inkmanager_sessions')) || [];
-        this.inventory = JSON.parse(localStorage.getItem('inkmanager_inventory')) || [];
-        this.currentMonth = new Date().getMonth();
-        this.currentYear = new Date().getFullYear();
-        this.editingClientId = null;
-        this.editingItemId = null;
-        this.editingSessionId = null;
-        this.currentSessionMaterials = [];
-        
-        this.init();
-    }
 
-    init() {
-        this.setupEventListeners();
-        this.setupPWA();
-        this.refreshAll();
-        console.log('🎨 InkManager Pro - Complete Version Initialized');
-    }
-
-    setupPWA() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(() => console.log('✅ Service Worker registered'))
-                .catch(err => console.log('❌ Service Worker failed:', err));
-        }
-
-        let deferredPrompt;
-        const installButton = document.getElementById('installButton');
-        const installPrompt = document.getElementById('installPrompt');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('🎯 PWA Install Prompt triggered');
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            if (installButton) {
-                installButton.style.display = 'inline-flex';
-                installButton.classList.add('pulse');
+    <script>
+        // INKMANAGER PRO - COMPLETE WORKING VERSION
+        class InkManagerPro {
+            constructor() {
+                this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
+                this.sessions = JSON.parse(localStorage.getItem('inkmanager_sessions')) || [];
+                this.inventory = JSON.parse(localStorage.getItem('inkmanager_inventory')) || [];
+                this.currentMonth = new Date().getMonth();
+                this.currentYear = new Date().getFullYear();
+                this.editingClientId = null;
+                this.editingItemId = null;
+                this.editingSessionId = null;
+                this.currentSessionMaterials = [];
+                
+                this.init();
             }
-            
-            setTimeout(() => {
-                if (deferredPrompt && installPrompt) {
-                    installPrompt.classList.add('show');
-                }
-            }, 5000);
-        });
 
-        if (installButton) {
-            installButton.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
+            init() {
+                this.setupEventListeners();
+                this.setupPWA();
+                this.refreshAll();
+                console.log('🎨 InkManager Pro - Complete Version Initialized');
+            }
+
+            setupPWA() {
+                let deferredPrompt;
+                const installButton = document.getElementById('installButton');
+                const installPrompt = document.getElementById('installPrompt');
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    console.log('🎯 PWA Install Prompt triggered');
+                    e.preventDefault();
+                    deferredPrompt = e;
                     
-                    if (outcome === 'accepted') {
-                        console.log('✅ User accepted install');
-                        installButton.style.display = 'none';
-                        if (installPrompt) installPrompt.classList.remove('show');
-                        this.showNotification('🎉 App installed successfully!');
+                    if (installButton) {
+                        installButton.style.display = 'inline-flex';
+                        installButton.classList.add('pulse');
                     }
-                    deferredPrompt = null;
-                }
-            });
-        }
+                    
+                    setTimeout(() => {
+                        if (deferredPrompt && installPrompt) {
+                            installPrompt.classList.add('show');
+                        }
+                    }, 5000);
+                });
 
-        if (document.getElementById('installConfirmBtn')) {
-            document.getElementById('installConfirmBtn').addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
+                if (installButton) {
+                    installButton.addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            
+                            if (outcome === 'accepted') {
+                                console.log('✅ User accepted install');
+                                installButton.style.display = 'none';
+                                if (installPrompt) installPrompt.classList.remove('show');
+                                this.showNotification('🎉 App installed successfully!');
+                            }
+                            deferredPrompt = null;
+                        }
+                    });
+                }
+
+                if (document.getElementById('installConfirmBtn')) {
+                    document.getElementById('installConfirmBtn').addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            if (outcome === 'accepted') {
+                                installPrompt.classList.remove('show');
+                            }
+                            deferredPrompt = null;
+                        }
+                    });
+                }
+
+                if (document.getElementById('installDismissBtn')) {
+                    document.getElementById('installDismissBtn').addEventListener('click', () => {
                         installPrompt.classList.remove('show');
-                    }
-                    deferredPrompt = null;
+                    });
                 }
-            });
-        }
 
-        if (document.getElementById('installDismissBtn')) {
-            document.getElementById('installDismissBtn').addEventListener('click', () => {
-                installPrompt.classList.remove('show');
-            });
-        }
+                window.addEventListener('appinstalled', (evt) => {
+                    console.log('🏠 PWA was installed');
+                    if (installButton) installButton.style.display = 'none';
+                    if (installPrompt) installPrompt.classList.remove('show');
+                });
 
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('🏠 PWA was installed');
-            if (installButton) installButton.style.display = 'none';
-            if (installPrompt) installPrompt.classList.remove('show');
-        });
-
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('📱 Running in standalone mode');
-            if (installButton) installButton.style.display = 'none';
-        }
-    }
-
-    setupEventListeners() {
-        // Navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.showSection(e.currentTarget.dataset.section);
-            });
-        });
-
-        // Client Management
-        document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
-        document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
-        document.getElementById('closeClientModalBtn').addEventListener('click', () => this.closeClientModal());
-        document.getElementById('cancelClientBtn').addEventListener('click', () => this.closeClientModal());
-        document.getElementById('clientForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveClient();
-        });
-
-        // Session Management
-        document.getElementById('addSessionBtn').addEventListener('click', () => this.openSessionModal());
-        document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
-        document.getElementById('addCalendarSessionBtn').addEventListener('click', () => this.openSessionModal());
-        document.getElementById('closeSessionModalBtn').addEventListener('click', () => this.closeSessionModal());
-        document.getElementById('sessionForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveSession();
-        });
-
-        // Materials Management
-        document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
-        document.getElementById('materialItem').addEventListener('change', (e) => {
-            this.updateMaterialMaxQuantity(e.target.value);
-        });
-
-        // Inventory Management
-        document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
-        document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
-        document.getElementById('closeInventoryModalBtn').addEventListener('click', () => this.closeInventoryModal());
-        document.getElementById('cancelInventoryBtn').addEventListener('click', () => this.closeInventoryModal());
-        document.getElementById('inventoryForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveInventoryItem();
-        });
-
-        // Calendar Controls
-        document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
-        document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
-
-        // Search Functionality
-        document.getElementById('clientSearch').addEventListener('input', (e) => this.searchClients(e.target.value));
-        document.getElementById('inventorySearch').addEventListener('input', (e) => this.searchInventory(e.target.value));
-
-        // Set default session time to next hour
-        const nextHour = new Date();
-        nextHour.setHours(nextHour.getHours() + 1);
-        nextHour.setMinutes(0);
-        document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
-    }
-
-    // Navigation and Section Management
-    showSection(sectionId) {
-        console.log('Showing section:', sectionId);
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(sectionId).classList.add('active');
-        document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
-        
-        this.refreshSection(sectionId);
-    }
-
-    refreshSection(sectionId) {
-        console.log('Refreshing section:', sectionId);
-        switch(sectionId) {
-            case 'dashboard': this.refreshDashboard(); break;
-            case 'clients': this.refreshClients(); break;
-            case 'sessions': this.refreshSessions(); break;
-            case 'inventory': this.refreshInventory(); break;
-            case 'calendar': this.refreshCalendar(); break;
-            case 'reports': this.refreshReports(); break;
-        }
-    }
-
-    refreshAll() {
-        this.refreshDashboard();
-        this.refreshClients();
-        this.refreshSessions();
-        this.refreshInventory();
-        this.refreshCalendar();
-        this.refreshReports();
-    }
-
-    // Materials Management
-    updateMaterialMaxQuantity(itemId) {
-        const materialQty = document.getElementById('materialQty');
-        if (!itemId) {
-            materialQty.max = '';
-            return;
-        }
-
-        const item = this.inventory.find(i => i.id === itemId);
-        if (item) {
-            materialQty.max = item.qty;
-            materialQty.placeholder = `Max: ${item.qty}`;
-        }
-    }
-
-    addMaterialToSession() {
-        const itemId = document.getElementById('materialItem').value;
-        const quantity = parseInt(document.getElementById('materialQty').value) || 1;
-
-        if (!itemId) {
-            this.showNotification('Please select an item');
-            return;
-        }
-
-        const item = this.inventory.find(i => i.id === itemId);
-        if (!item) {
-            this.showNotification('Item not found');
-            return;
-        }
-
-        if (quantity > item.qty) {
-            this.showNotification(`Only ${item.qty} available in stock`);
-            return;
-        }
-
-        const existingIndex = this.currentSessionMaterials.findIndex(m => m.itemId === itemId);
-        if (existingIndex > -1) {
-            this.currentSessionMaterials[existingIndex].quantity += quantity;
-        } else {
-            this.currentSessionMaterials.push({
-                itemId: itemId,
-                itemName: item.name,
-                quantity: quantity,
-                type: item.type
-            });
-        }
-
-        this.refreshMaterialsList();
-        
-        document.getElementById('materialItem').value = '';
-        document.getElementById('materialQty').value = '1';
-        document.getElementById('materialQty').max = '';
-        document.getElementById('materialQty').placeholder = 'Qty';
-
-        this.showNotification(`✅ ${item.name} added to materials`);
-    }
-
-    removeMaterial(index) {
-        this.currentSessionMaterials.splice(index, 1);
-        this.refreshMaterialsList();
-    }
-
-    refreshMaterialsList() {
-        const container = document.getElementById('materialsList');
-        
-        if (this.currentSessionMaterials.length === 0) {
-            container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No materials added yet</div>';
-            return;
-        }
-
-        container.innerHTML = this.currentSessionMaterials.map((material, index) => `
-            <div class="material-item">
-                <div>${material.itemName}</div>
-                <div>Qty: ${material.quantity}</div>
-                <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `).join('');
-    }
-
-    deductMaterialsFromInventory() {
-        this.currentSessionMaterials.forEach(material => {
-            const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
-            if (itemIndex > -1) {
-                this.inventory[itemIndex].qty -= material.quantity;
-                if (this.inventory[itemIndex].qty < 0) {
-                    this.inventory[itemIndex].qty = 0;
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('📱 Running in standalone mode');
+                    if (installButton) installButton.style.display = 'none';
                 }
             }
-        });
-        this.saveData();
-    }
 
-    // Client Management
-    openClientModal(clientId = null) {
-        document.getElementById('clientForm').reset();
-        
-        if (clientId) {
-            const client = this.clients.find(c => c.id === clientId);
-            if (client) {
-                document.getElementById('clientName').value = client.name;
-                document.getElementById('clientPhone').value = client.phone || '';
-                document.getElementById('clientEmail').value = client.email || '';
-                document.getElementById('clientBirthDate').value = client.birthDate || '';
-                document.getElementById('clientSkinType').value = client.skinType || '';
-                document.getElementById('clientEmergencyContact').value = client.emergencyContact || '';
-                document.getElementById('clientNotes').value = client.notes || '';
-                
-                document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Client';
-                document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Update Client';
-                this.editingClientId = clientId;
-            }
-        } else {
-            document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
-            document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
-            this.editingClientId = null;
-        }
-        
-        document.getElementById('clientModal').style.display = 'block';
-        setTimeout(() => document.getElementById('clientName').focus(), 300);
-    }
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.showSection(e.currentTarget.dataset.section);
+                    });
+                });
 
-    closeClientModal() {
-        document.getElementById('clientModal').style.display = 'none';
-        this.editingClientId = null;
-    }
+                // Client Management
+                document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
+                document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
+                document.getElementById('closeClientModalBtn').addEventListener('click', () => this.closeClientModal());
+                document.getElementById('cancelClientBtn').addEventListener('click', () => this.closeClientModal());
+                document.getElementById('clientForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveClient();
+                });
 
-    saveClient() {
-        const name = document.getElementById('clientName').value.trim();
-        const phone = document.getElementById('clientPhone').value.trim();
-        const email = document.getElementById('clientEmail').value.trim();
-        const birthDate = document.getElementById('clientBirthDate').value;
-        const skinType = document.getElementById('clientSkinType').value;
-        const emergencyContact = document.getElementById('clientEmergencyContact').value.trim();
-        const notes = document.getElementById('clientNotes').value.trim();
+                // Session Management
+                document.getElementById('addSessionBtn').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('addCalendarSessionBtn').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('closeSessionModalBtn').addEventListener('click', () => this.closeSessionModal());
+                document.getElementById('sessionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveSession();
+                });
 
-        if (!name) {
-            this.showNotification('Please enter client name');
-            document.getElementById('clientName').focus();
-            return;
-        }
+                // Materials Management
+                document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
+                document.getElementById('materialItem').addEventListener('change', (e) => {
+                    this.updateMaterialMaxQuantity(e.target.value);
+                });
 
-        if (this.editingClientId) {
-            const clientIndex = this.clients.findIndex(c => c.id === this.editingClientId);
-            if (clientIndex !== -1) {
-                this.clients[clientIndex] = {
-                    ...this.clients[clientIndex],
-                    name: name,
-                    phone: phone,
-                    email: email,
-                    birthDate: birthDate,
-                    skinType: skinType,
-                    emergencyContact: emergencyContact,
-                    notes: notes,
-                    updatedAt: new Date().toISOString()
-                };
-                
-                this.safeSaveData();
-                this.closeClientModal();
-                this.refreshClients();
-                this.refreshDashboard();
-                this.showNotification('✅ Client updated successfully!');
-            }
-        } else {
-            const client = {
-                id: 'client-' + Date.now(),
-                name: name,
-                phone: phone,
-                email: email,
-                birthDate: birthDate,
-                skinType: skinType,
-                emergencyContact: emergencyContact,
-                notes: notes,
-                createdAt: new Date().toISOString(),
-                lastVisit: null,
-                totalSessions: 0,
-                totalSpent: 0
-            };
-            
-            this.clients.push(client);
-            this.safeSaveData();
-            this.closeClientModal();
-            this.refreshClients();
-            this.refreshDashboard();
-            this.showNotification('✅ Client profile created successfully!');
-        }
-    }
+                // Inventory Management
+                document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
+                document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
+                document.getElementById('closeInventoryModalBtn').addEventListener('click', () => this.closeInventoryModal());
+                document.getElementById('cancelInventoryBtn').addEventListener('click', () => this.closeInventoryModal());
+                document.getElementById('inventoryForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveInventoryItem();
+                });
 
-    refreshClients() {
-        const container = document.getElementById('clientsList');
-        
-        if (this.clients.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <h3>No Clients Yet</h3>
-                    <p>Start building your professional client database</p>
-                    <button class="btn btn-primary" id="addFirstClient">
-                        <i class="fas fa-plus"></i> Add Your First Client
-                    </button>
-                </div>
-            `;
-            document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
-            return;
-        }
+                // Calendar Controls
+                document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
+                document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
 
-        container.innerHTML = this.clients.map(client => {
-            const clientSessions = this.sessions.filter(s => s.clientId === client.id);
-            const totalSpent = clientSessions.reduce((sum, session) => sum + (session.price || 0), 0);
-            const lastSession = clientSessions.length > 0 ? 
-                new Date(Math.max(...clientSessions.map(s => new Date(s.dateTime)))) : null;
-            
-            return `
-                <div class="client-item">
-                    <div class="item-content" onclick="app.showSection('clients')">
-                        <div class="item-title">
-                            <i class="fas fa-user"></i> ${client.name}
-                            ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Regular</span>' : ''}
-                        </div>
-                        <div class="item-meta">
-                            ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
-                            ${client.email ? `<div><i class="fas fa-envelope"></i> ${client.email}</div>` : ''}
-                            ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
-                            ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
-                            ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                            <div><i class="fas fa-calendar"></i> ${clientSessions.length} sessions | <i class="fas fa-euro-sign"></i> €${totalSpent}</div>
-                            ${lastSession ? `<div><i class="fas fa-clock"></i> Last visit: ${lastSession.toLocaleDateString()}</div>` : ''}
-                            ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
-                            ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openClientModal('${client.id}')" title="Edit Client">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteClient('${client.id}')" title="Delete Client">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
+                // Search Functionality
+                document.getElementById('clientSearch').addEventListener('input', (e) => this.searchClients(e.target.value));
+                document.getElementById('inventorySearch').addEventListener('input', (e) => this.searchInventory(e.target.value));
 
-    searchClients(query) {
-        const container = document.getElementById('clientsList');
-        const filteredClients = this.clients.filter(client => 
-            client.name.toLowerCase().includes(query.toLowerCase()) ||
-            (client.phone && client.phone.includes(query)) ||
-            (client.email && client.email.toLowerCase().includes(query.toLowerCase()))
-        );
-
-        if (filteredClients.length === 0) {
-            container.innerHTML = '<div class="empty-state">No clients found matching your search</div>';
-            return;
-        }
-
-        container.innerHTML = filteredClients.map(client => `
-            <div class="client-item" onclick="app.openClientModal('${client.id}')">
-                <div class="item-content">
-                    <div class="item-title">${client.name}</div>
-                    <div class="item-meta">
-                        ${client.phone ? `<i class="fas fa-phone"></i> ${client.phone}<br>` : ''}
-                        ${client.email ? `<i class="fas fa-envelope"></i> ${client.email}` : ''}
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    deleteClient(clientId) {
-        if (confirm('Are you sure you want to delete this client and all their sessions?')) {
-            this.clients = this.clients.filter(c => c.id !== clientId);
-            this.sessions = this.sessions.filter(s => s.clientId !== clientId);
-            this.safeSaveData();
-            this.refreshAll();
-            this.showNotification('🗑️ Client and associated sessions deleted');
-        }
-    }
-
-    // Session Management
-    openSessionModal(sessionId = null, selectedDate = null) {
-        if (this.clients.length === 0) {
-            this.showNotification('Please add clients first!');
-            this.showSection('clients');
-            return;
-        }
-
-        this.currentSessionMaterials = [];
-        
-        const clientSelect = document.getElementById('sessionClient');
-        clientSelect.innerHTML = '<option value="">Select a client...</option>';
-        this.clients.forEach(client => {
-            clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
-        });
-
-        const materialSelect = document.getElementById('materialItem');
-        materialSelect.innerHTML = '<option value="">Select item...</option>';
-        this.inventory.forEach(item => {
-            if (item.qty > 0) {
-                materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
-            }
-        });
-
-        if (sessionId) {
-            const session = this.sessions.find(s => s.id === sessionId);
-            if (session) {
-                document.getElementById('sessionClient').value = session.clientId;
-                document.getElementById('sessionTitle').value = session.title;
-                document.getElementById('sessionDateTime').value = this.formatDateTime(new Date(session.dateTime));
-                document.getElementById('sessionDuration').value = session.duration || 2;
-                document.getElementById('sessionPrice').value = session.price || '';
-                document.getElementById('sessionNotes').value = session.notes || '';
-                
-                if (session.materialsUsed && session.materialsUsed.length > 0) {
-                    this.currentSessionMaterials = [...session.materialsUsed];
-                    this.refreshMaterialsList();
-                }
-                
-                document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
-                document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
-                this.editingSessionId = sessionId;
-            }
-        } else {
-            document.getElementById('sessionForm').reset();
-            
-            if (selectedDate) {
-                document.getElementById('sessionDateTime').value = this.formatDateTime(selectedDate);
-            } else {
+                // Set default session time to next hour
                 const nextHour = new Date();
                 nextHour.setHours(nextHour.getHours() + 1);
                 nextHour.setMinutes(0);
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
             }
-            
-            document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
-            document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
-            this.editingSessionId = null;
-        }
 
-        document.getElementById('sessionModal').style.display = 'block';
-    }
-
-    closeSessionModal() {
-        document.getElementById('sessionModal').style.display = 'none';
-        this.editingSessionId = null;
-        this.currentSessionMaterials = [];
-        this.refreshMaterialsList();
-    }
-
-    saveSession() {
-        const clientId = document.getElementById('sessionClient').value;
-        const title = document.getElementById('sessionTitle').value.trim();
-        const dateTime = document.getElementById('sessionDateTime').value;
-        const duration = parseFloat(document.getElementById('sessionDuration').value) || 2;
-        const price = parseFloat(document.getElementById('sessionPrice').value) || 0;
-        const notes = document.getElementById('sessionNotes').value.trim();
-
-        if (!clientId || !title || !dateTime) {
-            this.showNotification('Please fill in all required fields');
-            return;
-        }
-
-        if (this.editingSessionId) {
-            const sessionIndex = this.sessions.findIndex(s => s.id === this.editingSessionId);
-            if (sessionIndex !== -1) {
-                const oldMaterials = [...this.sessions[sessionIndex].materialsUsed];
+            // Navigation and Section Management
+            showSection(sectionId) {
+                console.log('Showing section:', sectionId);
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 
-                oldMaterials.forEach(material => {
-                    const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
-                    if (itemIndex > -1) {
-                        this.inventory[itemIndex].qty += material.quantity;
-                    }
-                });
+                document.getElementById(sectionId).classList.add('active');
+                document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
                 
-                this.sessions[sessionIndex] = {
-                    ...this.sessions[sessionIndex],
-                    clientId: clientId,
-                    title: title,
-                    dateTime: dateTime,
-                    duration: duration,
-                    price: price,
-                    notes: notes,
-                    materialsUsed: [...this.currentSessionMaterials],
-                    updatedAt: new Date().toISOString()
-                };
-                
-                this.deductMaterialsFromInventory();
-                
-                this.safeSaveData();
-                this.closeSessionModal();
-                this.refreshAll();
-                this.showNotification('✅ Session updated successfully!');
+                this.refreshSection(sectionId);
             }
-        } else {
-            const session = {
-                id: 'session-' + Date.now(),
-                clientId: clientId,
-                title: title,
-                dateTime: dateTime,
-                duration: duration,
-                price: price,
-                notes: notes,
-                materialsUsed: [...this.currentSessionMaterials],
-                createdAt: new Date().toISOString(),
-                status: 'scheduled'
-            };
 
-            this.sessions.push(session);
-            this.deductMaterialsFromInventory();
-            this.safeSaveData();
-            this.closeSessionModal();
-            this.refreshAll();
-            this.showNotification('✅ Session scheduled successfully!');
-        }
-    }
-
-    refreshSessions() {
-        const container = document.getElementById('sessionsList');
-        const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
-
-        if (allSessions.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-calendar-plus"></i>
-                    <h3>No Sessions Yet</h3>
-                    <p>Schedule your first professional tattoo session</p>
-                    <button class="btn btn-primary" id="addFirstSession">
-                        <i class="fas fa-plus"></i> Create First Session
-                    </button>
-                </div>
-            `;
-            document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
-            return;
-        }
-
-        container.innerHTML = allSessions.map(session => {
-            const sessionDate = new Date(session.dateTime);
-            const isPast = sessionDate < new Date();
-            const isToday = sessionDate.toDateString() === new Date().toDateString();
-            const statusClass = isPast ? 'completed' : (isToday ? 'urgent' : 'upcoming');
-            const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
-            const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
-            
-            const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
-                ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
-                : '';
-            
-            return `
-                <div class="session-item">
-                    <div class="item-content" onclick="app.showSection('sessions')">
-                        <div class="item-title">${session.title}</div>
-                        <div class="item-meta">
-                            <strong>Client:</strong> ${this.getClientName(session.clientId)}<br>
-                            <strong>When:</strong> ${sessionDate.toLocaleString()}<br>
-                            <strong>Duration:</strong> ${session.duration} hours<br>
-                            <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
-                            ${session.price ? `<strong>Price:</strong> €${session.price}` : ''}
-                            ${materialsText}
-                            ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
-                            ${session.updatedAt ? `<br><small style='opacity: 0.7;'>Last updated: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openSessionModal('${session.id}')" title="Edit Session">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')" title="Delete Session">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    deleteSession(sessionId) {
-        if (confirm('Are you sure you want to delete this session?')) {
-            const session = this.sessions.find(s => s.id === sessionId);
-            if (session && session.materialsUsed) {
-                session.materialsUsed.forEach(material => {
-                    const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
-                    if (itemIndex > -1) {
-                        this.inventory[itemIndex].qty += material.quantity;
-                    }
-                });
+            refreshSection(sectionId) {
+                console.log('Refreshing section:', sectionId);
+                switch(sectionId) {
+                    case 'dashboard': this.refreshDashboard(); break;
+                    case 'clients': this.refreshClients(); break;
+                    case 'sessions': this.refreshSessions(); break;
+                    case 'inventory': this.refreshInventory(); break;
+                    case 'calendar': this.refreshCalendar(); break;
+                    case 'reports': this.refreshReports(); break;
+                }
             }
-            
-            this.sessions = this.sessions.filter(s => s.id !== sessionId);
-            this.safeSaveData();
-            this.refreshAll();
-            this.showNotification('🗑️ Session deleted (materials restored to inventory)');
-        }
-    }
 
-    // Inventory Management
-    openInventoryModal(itemId = null) {
-        document.getElementById('inventoryForm').reset();
-        
-        if (itemId) {
-            const item = this.inventory.find(i => i.id === itemId);
-            if (item) {
-                document.getElementById('itemName').value = item.name;
-                document.getElementById('itemType').value = item.type;
-                document.getElementById('itemQty').value = item.qty;
-                document.getElementById('itemAlert').value = item.alert || 5;
-                document.getElementById('itemPrice').value = item.price || '';
-                document.getElementById('itemNotes').value = item.notes || '';
-                
-                document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Inventory Item';
-                document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Update Item';
-                this.editingItemId = itemId;
-            }
-        } else {
-            document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
-            document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
-            this.editingItemId = null;
-        }
-        
-        document.getElementById('inventoryModal').style.display = 'block';
-        setTimeout(() => document.getElementById('itemName').focus(), 300);
-    }
-
-    closeInventoryModal() {
-        document.getElementById('inventoryModal').style.display = 'none';
-        this.editingItemId = null;
-    }
-
-    saveInventoryItem() {
-        const name = document.getElementById('itemName').value.trim();
-        const type = document.getElementById('itemType').value;
-        const qty = parseInt(document.getElementById('itemQty').value) || 0;
-        const alert = parseInt(document.getElementById('itemAlert').value) || 5;
-        const price = parseFloat(document.getElementById('itemPrice').value) || 0;
-        const notes = document.getElementById('itemNotes').value.trim();
-
-        if (!name || !type) {
-            this.showNotification('Please fill all required fields');
-            return;
-        }
-
-        if (this.editingItemId) {
-            const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
-            if (itemIndex !== -1) {
-                this.inventory[itemIndex] = {
-                    ...this.inventory[itemIndex],
-                    name: name,
-                    type: type,
-                    qty: qty,
-                    alert: alert,
-                    price: price,
-                    notes: notes,
-                    updatedAt: new Date().toISOString()
-                };
-                
-                this.safeSaveData();
-                this.closeInventoryModal();
-                this.refreshInventory();
+            refreshAll() {
                 this.refreshDashboard();
-                this.showNotification('✅ Item updated successfully!');
+                this.refreshClients();
+                this.refreshSessions();
+                this.refreshInventory();
+                this.refreshCalendar();
+                this.refreshReports();
             }
-        } else {
-            const item = {
-                id: 'item-' + Date.now(),
-                name: name,
-                type: type,
-                qty: qty,
-                alert: alert,
-                price: price,
-                notes: notes,
-                createdAt: new Date().toISOString()
-            };
-            
-            this.inventory.push(item);
-            this.safeSaveData();
-            this.closeInventoryModal();
-            this.refreshInventory();
-            this.refreshDashboard();
-            this.showNotification('✅ Inventory item added!');
-        }
-    }
 
-    refreshInventory() {
-        const container = document.getElementById('inventoryList');
-        const alertsContainer = document.getElementById('inventoryAlerts');
-        
-        if (this.inventory.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h3>No Inventory Items</h3>
-                    <p>Track your needles, ink, and professional supplies</p>
-                    <button class="btn btn-primary" id="addFirstItem">
-                        <i class="fas fa-plus"></i> Add First Item
-                    </button>
-                </div>
-            `;
-            document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
-            return;
-        }
+            // Materials Management
+            updateMaterialMaxQuantity(itemId) {
+                const materialQty = document.getElementById('materialQty');
+                if (!itemId) {
+                    materialQty.max = '';
+                    return;
+                }
 
-        container.innerHTML = this.inventory.map(item => {
-            const isLowStock = item.qty <= item.alert;
-            const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
-            const typeIcons = {
-                'needle': '🪡',
-                'ink': '🎨',
-                'machine': '⚡',
-                'supply': '📦',
-                'aftercare': '🧴',
-                'safety': '🧤'
-            };
-            const icon = typeIcons[item.type] || '📋';
-            
-            return `
-                <div class="inventory-item">
-                    <div class="item-content" onclick="app.showSection('inventory')">
-                        <div class="item-title">
-                            ${icon} ${item.name}
-                            ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Low Stock</span>' : ''}
-                        </div>
-                        <div class="item-meta">
-                            <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ Alert at: ${item.alert}</div>
-                            <div>🏷️ ${item.type} ${item.price ? `| 💰 €${item.price} per unit` : ''}</div>
-                            ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
-                            ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openInventoryModal('${item.id}')" title="Edit Item">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteInventoryItem('${item.id}')" title="Delete Item">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+                const item = this.inventory.find(i => i.id === itemId);
+                if (item) {
+                    materialQty.max = item.qty;
+                    materialQty.placeholder = `Max: ${item.qty}`;
+                }
+            }
 
-        const lowStock = this.inventory.filter(item => item.qty <= item.alert);
-        if (lowStock.length > 0) {
-            alertsContainer.innerHTML = `
-                <div class="card" style="border-left: 5px solid var(--warning); background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-exclamation-triangle"></i> Low Stock Alerts
-                            </h4>
-                            <p style="margin: 0; color: rgba(255,255,255,0.8);">
-                                ${lowStock.length} item${lowStock.length > 1 ? 's' : ''} need${lowStock.length > 1 ? '' : 's'} restocking
-                            </p>
-                        </div>
-                        <button class="btn btn-warning" onclick="app.showSection('inventory')">
-                            <i class="fas fa-boxes"></i> Manage Inventory
+            addMaterialToSession() {
+                const itemId = document.getElementById('materialItem').value;
+                const quantity = parseInt(document.getElementById('materialQty').value) || 1;
+
+                if (!itemId) {
+                    this.showNotification('Please select an item');
+                    return;
+                }
+
+                const item = this.inventory.find(i => i.id === itemId);
+                if (!item) {
+                    this.showNotification('Item not found');
+                    return;
+                }
+
+                if (quantity > item.qty) {
+                    this.showNotification(`Only ${item.qty} available in stock`);
+                    return;
+                }
+
+                const existingIndex = this.currentSessionMaterials.findIndex(m => m.itemId === itemId);
+                if (existingIndex > -1) {
+                    this.currentSessionMaterials[existingIndex].quantity += quantity;
+                } else {
+                    this.currentSessionMaterials.push({
+                        itemId: itemId,
+                        itemName: item.name,
+                        quantity: quantity,
+                        type: item.type
+                    });
+                }
+
+                this.refreshMaterialsList();
+                
+                document.getElementById('materialItem').value = '';
+                document.getElementById('materialQty').value = '1';
+                document.getElementById('materialQty').max = '';
+                document.getElementById('materialQty').placeholder = 'Qty';
+
+                this.showNotification(`✅ ${item.name} added to materials`);
+            }
+
+            removeMaterial(index) {
+                this.currentSessionMaterials.splice(index, 1);
+                this.refreshMaterialsList();
+            }
+
+            refreshMaterialsList() {
+                const container = document.getElementById('materialsList');
+                
+                if (this.currentSessionMaterials.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No materials added yet</div>';
+                    return;
+                }
+
+                container.innerHTML = this.currentSessionMaterials.map((material, index) => `
+                    <div class="material-item">
+                        <div>${material.itemName}</div>
+                        <div>Qty: ${material.quantity}</div>
+                        <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
-                </div>
-            `;
-        } else {
-            alertsContainer.innerHTML = '';
-        }
-    }
+                `).join('');
+            }
 
-    searchInventory(query) {
-        const container = document.getElementById('inventoryList');
-        const filteredItems = this.inventory.filter(item => 
-            item.name.toLowerCase().includes(query.toLowerCase()) ||
-            item.type.toLowerCase().includes(query.toLowerCase()) ||
-            (item.notes && item.notes.toLowerCase().includes(query.toLowerCase()))
-        );
-
-        if (filteredItems.length === 0) {
-            container.innerHTML = '<div class="empty-state">No items found matching your search</div>';
-            return;
-        }
-
-        container.innerHTML = filteredItems.map(item => `
-            <div class="inventory-item" onclick="app.openInventoryModal('${item.id}')">
-                <div class="item-content">
-                    <div class="item-title">${item.name}</div>
-                    <div class="item-meta">
-                        📦 ${item.qty} in stock<br>
-                        🏷️ ${item.type}
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    deleteInventoryItem(itemId) {
-        if (confirm('Are you sure you want to delete this inventory item? This action cannot be undone.')) {
-            this.inventory = this.inventory.filter(i => i.id !== itemId);
-            this.safeSaveData();
-            this.refreshInventory();
-            this.refreshDashboard();
-            this.showNotification('🗑️ Item deleted');
-        }
-    }
-
-    // Dashboard
-    refreshDashboard() {
-        document.getElementById('totalClients').textContent = this.clients.length;
-        
-        const upcomingSessions = this.sessions.filter(s => new Date(s.dateTime) > new Date());
-        document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
-
-        const currentMonth = new Date().getMonth();
-        const currentYear = new Date().getFullYear();
-        const monthlyRevenue = this.sessions
-            .filter(s => {
-                const sessionDate = new Date(s.dateTime);
-                return sessionDate.getMonth() === currentMonth && 
-                       sessionDate.getFullYear() === currentYear;
-            })
-            .reduce((sum, session) => sum + (session.price || 0), 0);
-        document.getElementById('monthlyRevenue').textContent = `€${monthlyRevenue}`;
-
-        const lowStock = this.inventory.filter(item => item.qty <= item.alert);
-        document.getElementById('lowStockItems').textContent = lowStock.length;
-
-        const today = new Date().toDateString();
-        const todaysSessions = this.sessions.filter(s => 
-            new Date(s.dateTime).toDateString() === today
-        ).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-        
-        const todayContainer = document.getElementById('todaysSessions');
-        
-        if (todaysSessions.length === 0) {
-            todayContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-calendar-times"></i>
-                    <h3>No Sessions Today</h3>
-                    <p>Your schedule is clear for today</p>
-                    <button class="btn btn-primary" onclick="app.showSection('sessions')">
-                        <i class="fas fa-plus"></i> Schedule a Session
-                    </button>
-                </div>
-            `;
-        } else {
-            todayContainer.innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <h4 style="color: var(--primary); margin-bottom: 12px;">
-                        <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
-                    </h4>
-                </div>
-                ${todaysSessions.map(session => {
-                    const sessionTime = new Date(session.dateTime);
-                    const now = new Date();
-                    const timeDiff = sessionTime - now;
-                    const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60));
-                    const isUrgent = hoursUntil <= 2 && hoursUntil >= 0;
-                    const isCompleted = sessionTime < now;
-                    
-                    let statusClass = '';
-                    let statusIcon = '🕒';
-                    let statusText = `In ${hoursUntil}h`;
-                    
-                    if (isUrgent) {
-                        statusClass = 'urgent';
-                        statusIcon = '⚠️';
-                        statusText = 'Starting soon!';
-                    } else if (isCompleted) {
-                        statusClass = 'completed';
-                        statusIcon = '✅';
-                        statusText = 'Completed';
-                    } else if (hoursUntil < 0) {
-                        statusClass = 'completed';
-                        statusIcon = '✅';
-                        statusText = 'Completed';
+            deductMaterialsFromInventory() {
+                this.currentSessionMaterials.forEach(material => {
+                    const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                    if (itemIndex > -1) {
+                        this.inventory[itemIndex].qty -= material.quantity;
+                        if (this.inventory[itemIndex].qty < 0) {
+                            this.inventory[itemIndex].qty = 0;
+                        }
                     }
+                });
+                this.saveData();
+            }
+
+            // Client Management
+            openClientModal(clientId = null) {
+                document.getElementById('clientForm').reset();
+                
+                if (clientId) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client) {
+                        document.getElementById('clientName').value = client.name;
+                        document.getElementById('clientPhone').value = client.phone || '';
+                        document.getElementById('clientEmail').value = client.email || '';
+                        document.getElementById('clientBirthDate').value = client.birthDate || '';
+                        document.getElementById('clientSkinType').value = client.skinType || '';
+                        document.getElementById('clientEmergencyContact').value = client.emergencyContact || '';
+                        document.getElementById('clientNotes').value = client.notes || '';
+                        
+                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Client';
+                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Update Client';
+                        this.editingClientId = clientId;
+                    }
+                } else {
+                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
+                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
+                    this.editingClientId = null;
+                }
+                
+                document.getElementById('clientModal').style.display = 'block';
+                setTimeout(() => document.getElementById('clientName').focus(), 300);
+            }
+
+            closeClientModal() {
+                document.getElementById('clientModal').style.display = 'none';
+                this.editingClientId = null;
+            }
+
+            saveClient() {
+                const name = document.getElementById('clientName').value.trim();
+                const phone = document.getElementById('clientPhone').value.trim();
+                const email = document.getElementById('clientEmail').value.trim();
+                const birthDate = document.getElementById('clientBirthDate').value;
+                const skinType = document.getElementById('clientSkinType').value;
+                const emergencyContact = document.getElementById('clientEmergencyContact').value.trim();
+                const notes = document.getElementById('clientNotes').value.trim();
+
+                if (!name) {
+                    this.showNotification('Please enter client name');
+                    document.getElementById('clientName').focus();
+                    return;
+                }
+
+                if (this.editingClientId) {
+                    const clientIndex = this.clients.findIndex(c => c.id === this.editingClientId);
+                    if (clientIndex !== -1) {
+                        this.clients[clientIndex] = {
+                            ...this.clients[clientIndex],
+                            name: name,
+                            phone: phone,
+                            email: email,
+                            birthDate: birthDate,
+                            skinType: skinType,
+                            emergencyContact: emergencyContact,
+                            notes: notes,
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.safeSaveData();
+                        this.closeClientModal();
+                        this.refreshClients();
+                        this.refreshDashboard();
+                        this.showNotification('✅ Client updated successfully!');
+                    }
+                } else {
+                    const client = {
+                        id: 'client-' + Date.now(),
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        birthDate: birthDate,
+                        skinType: skinType,
+                        emergencyContact: emergencyContact,
+                        notes: notes,
+                        createdAt: new Date().toISOString(),
+                        lastVisit: null,
+                        totalSessions: 0,
+                        totalSpent: 0
+                    };
+                    
+                    this.clients.push(client);
+                    this.safeSaveData();
+                    this.closeClientModal();
+                    this.refreshClients();
+                    this.refreshDashboard();
+                    this.showNotification('✅ Client profile created successfully!');
+                }
+            }
+
+            refreshClients() {
+                const container = document.getElementById('clientsList');
+                
+                if (this.clients.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>No Clients Yet</h3>
+                            <p>Start building your professional client database</p>
+                            <button class="btn btn-primary" id="addFirstClient">
+                                <i class="fas fa-plus"></i> Add Your First Client
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
+                    return;
+                }
+
+                container.innerHTML = this.clients.map(client => {
+                    const clientSessions = this.sessions.filter(s => s.clientId === client.id);
+                    const totalSpent = clientSessions.reduce((sum, session) => sum + (session.price || 0), 0);
+                    const lastSession = clientSessions.length > 0 ? 
+                        new Date(Math.max(...clientSessions.map(s => new Date(s.dateTime)))) : null;
                     
                     return `
-                        <div class="todays-session-item ${statusClass}" onclick="app.showSection('sessions')">
-                            <div style="display: flex; justify-content: space-between; align-items: start;">
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; font-size: 1.1em; color: var(--light); margin-bottom: 6px;">
-                                        ${session.title}
-                                    </div>
-                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.4;">
-                                        <div>👤 ${this.getClientName(session.clientId)}</div>
-                                        <div>🕐 ${sessionTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                                        <div>${session.price ? `💰 €${session.price}` : ''}</div>
-                                        <div style="color: ${isUrgent ? 'var(--warning)' : 'var(--success)'}; font-weight: 600; margin-top: 4px;">
-                                            ${statusIcon} ${statusText}
-                                        </div>
-                                    </div>
+                        <div class="client-item">
+                            <div class="item-content" onclick="app.showSection('clients')">
+                                <div class="item-title">
+                                    <i class="fas fa-user"></i> ${client.name}
+                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Regular</span>' : ''}
                                 </div>
-                                <div style="margin-left: 10px;">
-                                    <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                <div class="item-meta">
+                                    ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
+                                    ${client.email ? `<div><i class="fas fa-envelope"></i> ${client.email}</div>` : ''}
+                                    ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
+                                    ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
+                                    ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
+                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} sessions | <i class="fas fa-euro-sign"></i> €${totalSpent}</div>
+                                    ${lastSession ? `<div><i class="fas fa-clock"></i> Last visit: ${lastSession.toLocaleDateString()}</div>` : ''}
+                                    ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
+                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openClientModal('${client.id}')" title="Edit Client">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteClient('${client.id}')" title="Delete Client">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     `;
-                }).join('')}
-            `;
-        }
-
-        const insightsContainer = document.getElementById('dashboardInsights');
-        if (this.sessions.length > 0) {
-            const totalRevenue = this.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
-            const avgSessionPrice = totalRevenue / this.sessions.length;
-            const returningClients = this.clients.filter(client => 
-                this.sessions.filter(s => s.clientId === client.id).length > 1
-            ).length;
-            
-            insightsContainer.innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
-                    <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
-                        <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
-                    </div>
-                    <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">€${Math.round(avgSessionPrice)}</div>
-                        <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
-                    </div>
-                    <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
-                        <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    // Calendar
-    refreshCalendar() {
-        const monthNames = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];
-        
-        document.getElementById('calendarMonth').textContent = 
-            `${monthNames[this.currentMonth]} ${this.currentYear}`;
-
-        const firstDay = new Date(this.currentYear, this.currentMonth, 1);
-        const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
-        const daysInMonth = lastDay.getDate();
-        const startingDay = firstDay.getDay();
-
-        const calendarGrid = document.getElementById('calendarGrid');
-        calendarGrid.innerHTML = '';
-
-        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        dayNames.forEach(day => {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day header';
-            dayElement.textContent = day;
-            calendarGrid.appendChild(dayElement);
-        });
-
-        for (let i = 0; i < startingDay; i++) {
-            const emptyDay = document.createElement('div');
-            emptyDay.className = 'calendar-day';
-            calendarGrid.appendChild(emptyDay);
-        }
-
-        const today = new Date();
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day';
-            
-            const currentDate = new Date(this.currentYear, this.currentMonth, day);
-            const isToday = currentDate.toDateString() === today.toDateString();
-            
-            if (isToday) {
-                dayElement.classList.add('today');
+                }).join('');
             }
 
-            const daySessions = this.getSessionsForDate(currentDate);
-            if (daySessions.length > 0) {
-                dayElement.classList.add('has-event');
+            searchClients(query) {
+                const container = document.getElementById('clientsList');
+                const filteredClients = this.clients.filter(client => 
+                    client.name.toLowerCase().includes(query.toLowerCase()) ||
+                    (client.phone && client.phone.includes(query)) ||
+                    (client.email && client.email.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                if (filteredClients.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No clients found matching your search</div>';
+                    return;
+                }
+
+                container.innerHTML = filteredClients.map(client => `
+                    <div class="client-item" onclick="app.openClientModal('${client.id}')">
+                        <div class="item-content">
+                            <div class="item-title">${client.name}</div>
+                            <div class="item-meta">
+                                ${client.phone ? `<i class="fas fa-phone"></i> ${client.phone}<br>` : ''}
+                                ${client.email ? `<i class="fas fa-envelope"></i> ${client.email}` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
             }
 
-            dayElement.innerHTML = `
-                <div class="day-number">${day}</div>
-                ${daySessions.slice(0, 2).map(session => `
-                    <div class="event" title="${session.title} - ${this.getClientName(session.clientId)}" onclick="event.stopPropagation(); app.showSection('sessions')">
-                        ${session.title}
-                    </div>
-                `).join('')}
-                ${daySessions.length > 2 ? `<div class="event">+${daySessions.length - 2} more</div>` : ''}
-            `;
+            deleteClient(clientId) {
+                if (confirm('Are you sure you want to delete this client and all their sessions?')) {
+                    this.clients = this.clients.filter(c => c.id !== clientId);
+                    this.sessions = this.sessions.filter(s => s.clientId !== clientId);
+                    this.safeSaveData();
+                    this.refreshAll();
+                    this.showNotification('🗑️ Client and associated sessions deleted');
+                }
+            }
 
-            dayElement.addEventListener('click', () => {
-                this.selectedDate = currentDate;
-                this.openSessionModal(currentDate);
-            });
+            // Session Management
+            openSessionModal(sessionId = null, selectedDate = null) {
+                if (this.clients.length === 0) {
+                    this.showNotification('Please add clients first!');
+                    this.showSection('clients');
+                    return;
+                }
 
-            calendarGrid.appendChild(dayElement);
-        }
-    }
+                this.currentSessionMaterials = [];
+                
+                const clientSelect = document.getElementById('sessionClient');
+                clientSelect.innerHTML = '<option value="">Select a client...</option>';
+                this.clients.forEach(client => {
+                    clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+                });
 
-    getSessionsForDate(date) {
-        return this.sessions.filter(session => {
-            const sessionDate = new Date(session.dateTime);
-            return sessionDate.getDate() === date.getDate() &&
-                   sessionDate.getMonth() === date.getMonth() &&
-                   sessionDate.getFullYear() === date.getFullYear();
-        });
-    }
-
-    changeMonth(direction) {
-        this.currentMonth += direction;
-        if (this.currentMonth < 0) {
-            this.currentMonth = 11;
-            this.currentYear--;
-        } else if (this.currentMonth > 11) {
-            this.currentMonth = 0;
-            this.currentYear++;
-        }
-        this.refreshCalendar();
-    }
-
-    // Reports
-    refreshReports() {
-        const totalSessions = this.sessions.length;
-        const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
-        const avgSessionPrice = totalSessions > 0 ? totalRevenue / totalSessions : 0;
-        
-        const clientsWithMultipleSessions = this.clients.filter(client => 
-            this.sessions.filter(s => s.clientId === client.id).length > 1
-        ).length;
-        const clientRetention = this.clients.length > 0 ? 
-            Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
-
-        document.getElementById('totalSessions').textContent = totalSessions;
-        document.getElementById('totalRevenue').textContent = `€${Math.round(totalRevenue)}`;
-        document.getElementById('avgSessionPrice').textContent = `€${Math.round(avgSessionPrice)}`;
-        document.getElementById('clientRetention').textContent = `${clientRetention}%`;
-    }
-
-    // Utility Methods
-    exportData(type) {
-        let data, filename;
-        
-        switch(type) {
-            case 'all':
-                data = {
-                    clients: this.clients,
-                    sessions: this.sessions,
-                    inventory: this.inventory,
-                    exportDate: new Date().toISOString(),
-                    version: 'InkManager Pro Complete Version',
-                    statistics: {
-                        totalClients: this.clients.length,
-                        totalSessions: this.sessions.length,
-                        totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
-                        totalInventory: this.inventory.length
+                const materialSelect = document.getElementById('materialItem');
+                materialSelect.innerHTML = '<option value="">Select item...</option>';
+                this.inventory.forEach(item => {
+                    if (item.qty > 0) {
+                        materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
                     }
-                };
-                filename = 'inkmanager-pro-complete-backup.json';
-                break;
-            case 'clients':
-                data = this.clients;
-                filename = 'inkmanager-pro-clients.json';
-                break;
-            case 'sessions':
-                data = this.sessions;
-                filename = 'inkmanager-pro-sessions.json';
-                break;
-            case 'inventory':
-                data = this.inventory;
-                filename = 'inkmanager-pro-inventory.json';
-                break;
+                });
+
+                if (sessionId) {
+                    const session = this.sessions.find(s => s.id === sessionId);
+                    if (session) {
+                        document.getElementById('sessionClient').value = session.clientId;
+                        document.getElementById('sessionTitle').value = session.title;
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(new Date(session.dateTime));
+                        document.getElementById('sessionDuration').value = session.duration || 2;
+                        document.getElementById('sessionPrice').value = session.price || '';
+                        document.getElementById('sessionNotes').value = session.notes || '';
+                        
+                        if (session.materialsUsed && session.materialsUsed.length > 0) {
+                            this.currentSessionMaterials = [...session.materialsUsed];
+                            this.refreshMaterialsList();
+                        }
+                        
+                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
+                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
+                        this.editingSessionId = sessionId;
+                    }
+                } else {
+                    document.getElementById('sessionForm').reset();
+                    
+                    if (selectedDate) {
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(selectedDate);
+                    } else {
+                        const nextHour = new Date();
+                        nextHour.setHours(nextHour.getHours() + 1);
+                        nextHour.setMinutes(0);
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+                    }
+                    
+                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
+                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
+                    this.editingSessionId = null;
+                }
+
+                document.getElementById('sessionModal').style.display = 'block';
+            }
+
+            closeSessionModal() {
+                document.getElementById('sessionModal').style.display = 'none';
+                this.editingSessionId = null;
+                this.currentSessionMaterials = [];
+                this.refreshMaterialsList();
+            }
+
+            saveSession() {
+                const clientId = document.getElementById('sessionClient').value;
+                const title = document.getElementById('sessionTitle').value.trim();
+                const dateTime = document.getElementById('sessionDateTime').value;
+                const duration = parseFloat(document.getElementById('sessionDuration').value) || 2;
+                const price = parseFloat(document.getElementById('sessionPrice').value) || 0;
+                const notes = document.getElementById('sessionNotes').value.trim();
+
+                if (!clientId || !title || !dateTime) {
+                    this.showNotification('Please fill in all required fields');
+                    return;
+                }
+
+                if (this.editingSessionId) {
+                    const sessionIndex = this.sessions.findIndex(s => s.id === this.editingSessionId);
+                    if (sessionIndex !== -1) {
+                        const oldMaterials = [...this.sessions[sessionIndex].materialsUsed];
+                        
+                        oldMaterials.forEach(material => {
+                            const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                            if (itemIndex > -1) {
+                                this.inventory[itemIndex].qty += material.quantity;
+                            }
+                        });
+                        
+                        this.sessions[sessionIndex] = {
+                            ...this.sessions[sessionIndex],
+                            clientId: clientId,
+                            title: title,
+                            dateTime: dateTime,
+                            duration: duration,
+                            price: price,
+                            notes: notes,
+                            materialsUsed: [...this.currentSessionMaterials],
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.deductMaterialsFromInventory();
+                        
+                        this.safeSaveData();
+                        this.closeSessionModal();
+                        this.refreshAll();
+                        this.showNotification('✅ Session updated successfully!');
+                    }
+                } else {
+                    const session = {
+                        id: 'session-' + Date.now(),
+                        clientId: clientId,
+                        title: title,
+                        dateTime: dateTime,
+                        duration: duration,
+                        price: price,
+                        notes: notes,
+                        materialsUsed: [...this.currentSessionMaterials],
+                        createdAt: new Date().toISOString(),
+                        status: 'scheduled'
+                    };
+
+                    this.sessions.push(session);
+                    this.deductMaterialsFromInventory();
+                    this.safeSaveData();
+                    this.closeSessionModal();
+                    this.refreshAll();
+                    this.showNotification('✅ Session scheduled successfully!');
+                }
+            }
+
+            refreshSessions() {
+                const container = document.getElementById('sessionsList');
+                const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+
+                if (allSessions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-plus"></i>
+                            <h3>No Sessions Yet</h3>
+                            <p>Schedule your first professional tattoo session</p>
+                            <button class="btn btn-primary" id="addFirstSession">
+                                <i class="fas fa-plus"></i> Create First Session
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
+                    return;
+                }
+
+                container.innerHTML = allSessions.map(session => {
+                    const sessionDate = new Date(session.dateTime);
+                    const isPast = sessionDate < new Date();
+                    const isToday = sessionDate.toDateString() === new Date().toDateString();
+                    const statusClass = isPast ? 'completed' : (isToday ? 'urgent' : 'upcoming');
+                    const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
+                    const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
+                    
+                    const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
+                        ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        : '';
+                    
+                    return `
+                        <div class="session-item">
+                            <div class="item-content" onclick="app.showSection('sessions')">
+                                <div class="item-title">${session.title}</div>
+                                <div class="item-meta">
+                                    <strong>Client:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>When:</strong> ${sessionDate.toLocaleString()}<br>
+                                    <strong>Duration:</strong> ${session.duration} hours<br>
+                                    <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
+                                    ${session.price ? `<strong>Price:</strong> €${session.price}` : ''}
+                                    ${materialsText}
+                                    ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
+                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>Last updated: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openSessionModal('${session.id}')" title="Edit Session">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')" title="Delete Session">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            deleteSession(sessionId) {
+                if (confirm('Are you sure you want to delete this session?')) {
+                    const session = this.sessions.find(s => s.id === sessionId);
+                    if (session && session.materialsUsed) {
+                        session.materialsUsed.forEach(material => {
+                            const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                            if (itemIndex > -1) {
+                                this.inventory[itemIndex].qty += material.quantity;
+                            }
+                        });
+                    }
+                    
+                    this.sessions = this.sessions.filter(s => s.id !== sessionId);
+                    this.safeSaveData();
+                    this.refreshAll();
+                    this.showNotification('🗑️ Session deleted (materials restored to inventory)');
+                }
+            }
+
+            // Inventory Management
+            openInventoryModal(itemId = null) {
+                document.getElementById('inventoryForm').reset();
+                
+                if (itemId) {
+                    const item = this.inventory.find(i => i.id === itemId);
+                    if (item) {
+                        document.getElementById('itemName').value = item.name;
+                        document.getElementById('itemType').value = item.type;
+                        document.getElementById('itemQty').value = item.qty;
+                        document.getElementById('itemAlert').value = item.alert || 5;
+                        document.getElementById('itemPrice').value = item.price || '';
+                        document.getElementById('itemNotes').value = item.notes || '';
+                        
+                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Inventory Item';
+                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Update Item';
+                        this.editingItemId = itemId;
+                    }
+                } else {
+                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
+                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
+                    this.editingItemId = null;
+                }
+                
+                document.getElementById('inventoryModal').style.display = 'block';
+                setTimeout(() => document.getElementById('itemName').focus(), 300);
+            }
+
+            closeInventoryModal() {
+                document.getElementById('inventoryModal').style.display = 'none';
+                this.editingItemId = null;
+            }
+
+            saveInventoryItem() {
+                const name = document.getElementById('itemName').value.trim();
+                const type = document.getElementById('itemType').value;
+                const qty = parseInt(document.getElementById('itemQty').value) || 0;
+                const alert = parseInt(document.getElementById('itemAlert').value) || 5;
+                const price = parseFloat(document.getElementById('itemPrice').value) || 0;
+                const notes = document.getElementById('itemNotes').value.trim();
+
+                if (!name || !type) {
+                    this.showNotification('Please fill all required fields');
+                    return;
+                }
+
+                if (this.editingItemId) {
+                    const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
+                    if (itemIndex !== -1) {
+                        this.inventory[itemIndex] = {
+                            ...this.inventory[itemIndex],
+                            name: name,
+                            type: type,
+                            qty: qty,
+                            alert: alert,
+                            price: price,
+                            notes: notes,
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.safeSaveData();
+                        this.closeInventoryModal();
+                        this.refreshInventory();
+                        this.refreshDashboard();
+                        this.showNotification('✅ Item updated successfully!');
+                    }
+                } else {
+                    const item = {
+                        id: 'item-' + Date.now(),
+                        name: name,
+                        type: type,
+                        qty: qty,
+                        alert: alert,
+                        price: price,
+                        notes: notes,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    this.inventory.push(item);
+                    this.safeSaveData();
+                    this.closeInventoryModal();
+                    this.refreshInventory();
+                    this.refreshDashboard();
+                    this.showNotification('✅ Inventory item added!');
+                }
+            }
+
+            refreshInventory() {
+                const container = document.getElementById('inventoryList');
+                const alertsContainer = document.getElementById('inventoryAlerts');
+                
+                if (this.inventory.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No Inventory Items</h3>
+                            <p>Track your needles, ink, and professional supplies</p>
+                            <button class="btn btn-primary" id="addFirstItem">
+                                <i class="fas fa-plus"></i> Add First Item
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
+                    return;
+                }
+
+                container.innerHTML = this.inventory.map(item => {
+                    const isLowStock = item.qty <= item.alert;
+                    const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
+                    const typeIcons = {
+                        'needle': '🪡',
+                        'ink': '🎨',
+                        'machine': '⚡',
+                        'supply': '📦',
+                        'aftercare': '🧴',
+                        'safety': '🧤'
+                    };
+                    const icon = typeIcons[item.type] || '📋';
+                    
+                    return `
+                        <div class="inventory-item">
+                            <div class="item-content" onclick="app.showSection('inventory')">
+                                <div class="item-title">
+                                    ${icon} ${item.name}
+                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Low Stock</span>' : ''}
+                                </div>
+                                <div class="item-meta">
+                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ Alert at: ${item.alert}</div>
+                                    <div>🏷️ ${item.type} ${item.price ? `| 💰 €${item.price} per unit` : ''}</div>
+                                    ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
+                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openInventoryModal('${item.id}')" title="Edit Item">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteInventoryItem('${item.id}')" title="Delete Item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                if (lowStock.length > 0) {
+                    alertsContainer.innerHTML = `
+                        <div class="card" style="border-left: 5px solid var(--warning); background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-exclamation-triangle"></i> Low Stock Alerts
+                                    </h4>
+                                    <p style="margin: 0; color: rgba(255,255,255,0.8);">
+                                        ${lowStock.length} item${lowStock.length > 1 ? 's' : ''} need${lowStock.length > 1 ? '' : 's'} restocking
+                                    </p>
+                                </div>
+                                <button class="btn btn-warning" onclick="app.showSection('inventory')">
+                                    <i class="fas fa-boxes"></i> Manage Inventory
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    alertsContainer.innerHTML = '';
+                }
+            }
+
+            searchInventory(query) {
+                const container = document.getElementById('inventoryList');
+                const filteredItems = this.inventory.filter(item => 
+                    item.name.toLowerCase().includes(query.toLowerCase()) ||
+                    item.type.toLowerCase().includes(query.toLowerCase()) ||
+                    (item.notes && item.notes.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                if (filteredItems.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No items found matching your search</div>';
+                    return;
+                }
+
+                container.innerHTML = filteredItems.map(item => `
+                    <div class="inventory-item" onclick="app.openInventoryModal('${item.id}')">
+                        <div class="item-content">
+                            <div class="item-title">${item.name}</div>
+                            <div class="item-meta">
+                                📦 ${item.qty} in stock<br>
+                                🏷️ ${item.type}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            deleteInventoryItem(itemId) {
+                if (confirm('Are you sure you want to delete this inventory item? This action cannot be undone.')) {
+                    this.inventory = this.inventory.filter(i => i.id !== itemId);
+                    this.safeSaveData();
+                    this.refreshInventory();
+                    this.refreshDashboard();
+                    this.showNotification('🗑️ Item deleted');
+                }
+            }
+
+            // Dashboard
+            refreshDashboard() {
+                document.getElementById('totalClients').textContent = this.clients.length;
+                
+                const upcomingSessions = this.sessions.filter(s => new Date(s.dateTime) > new Date());
+                document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
+
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+                const monthlyRevenue = this.sessions
+                    .filter(s => {
+                        const sessionDate = new Date(s.dateTime);
+                        return sessionDate.getMonth() === currentMonth && 
+                               sessionDate.getFullYear() === currentYear;
+                    })
+                    .reduce((sum, session) => sum + (session.price || 0), 0);
+                document.getElementById('monthlyRevenue').textContent = `€${monthlyRevenue}`;
+
+                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                document.getElementById('lowStockItems').textContent = lowStock.length;
+
+                const today = new Date().toDateString();
+                const todaysSessions = this.sessions.filter(s => 
+                    new Date(s.dateTime).toDateString() === today
+                ).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+                
+                const todayContainer = document.getElementById('todaysSessions');
+                
+                if (todaysSessions.length === 0) {
+                    todayContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No Sessions Today</h3>
+                            <p>Your schedule is clear for today</p>
+                            <button class="btn btn-primary" onclick="app.showSection('sessions')">
+                                <i class="fas fa-plus"></i> Schedule a Session
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    todayContainer.innerHTML = `
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="color: var(--primary); margin-bottom: 12px;">
+                                <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
+                            </h4>
+                        </div>
+                        ${todaysSessions.map(session => {
+                            const sessionTime = new Date(session.dateTime);
+                            const now = new Date();
+                            const timeDiff = sessionTime - now;
+                            const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60));
+                            const isUrgent = hoursUntil <= 2 && hoursUntil >= 0;
+                            const isCompleted = sessionTime < now;
+                            
+                            let statusClass = '';
+                            let statusIcon = '🕒';
+                            let statusText = `In ${hoursUntil}h`;
+                            
+                            if (isUrgent) {
+                                statusClass = 'urgent';
+                                statusIcon = '⚠️';
+                                statusText = 'Starting soon!';
+                            } else if (isCompleted) {
+                                statusClass = 'completed';
+                                statusIcon = '✅';
+                                statusText = 'Completed';
+                            } else if (hoursUntil < 0) {
+                                statusClass = 'completed';
+                                statusIcon = '✅';
+                                statusText = 'Completed';
+                            }
+                            
+                            return `
+                                <div class="todays-session-item ${statusClass}" onclick="app.showSection('sessions')">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; font-size: 1.1em; color: var(--light); margin-bottom: 6px;">
+                                                ${session.title}
+                                            </div>
+                                            <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.4;">
+                                                <div>👤 ${this.getClientName(session.clientId)}</div>
+                                                <div>🕐 ${sessionTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                                <div>${session.price ? `💰 €${session.price}` : ''}</div>
+                                                <div style="color: ${isUrgent ? 'var(--warning)' : 'var(--success)'}; font-weight: 600; margin-top: 4px;">
+                                                    ${statusIcon} ${statusText}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: 10px;">
+                                            <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    `;
+                }
+
+                const insightsContainer = document.getElementById('dashboardInsights');
+                if (this.sessions.length > 0) {
+                    const totalRevenue = this.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
+                    const avgSessionPrice = totalRevenue / this.sessions.length;
+                    const returningClients = this.clients.filter(client => 
+                        this.sessions.filter(s => s.clientId === client.id).length > 1
+                    ).length;
+                    
+                    insightsContainer.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                            <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
+                            </div>
+                            <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">€${Math.round(avgSessionPrice)}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
+                            </div>
+                            <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Calendar
+            refreshCalendar() {
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                
+                document.getElementById('calendarMonth').textContent = 
+                    `${monthNames[this.currentMonth]} ${this.currentYear}`;
+
+                const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startingDay = firstDay.getDay();
+
+                const calendarGrid = document.getElementById('calendarGrid');
+                calendarGrid.innerHTML = '';
+
+                const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                dayNames.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day header';
+                    dayElement.textContent = day;
+                    calendarGrid.appendChild(dayElement);
+                });
+
+                for (let i = 0; i < startingDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day';
+                    calendarGrid.appendChild(emptyDay);
+                }
+
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    
+                    const currentDate = new Date(this.currentYear, this.currentMonth, day);
+                    const isToday = currentDate.toDateString() === today.toDateString();
+                    
+                    if (isToday) {
+                        dayElement.classList.add('today');
+                    }
+
+                    const daySessions = this.getSessionsForDate(currentDate);
+                    if (daySessions.length > 0) {
+                        dayElement.classList.add('has-event');
+                    }
+
+                    dayElement.innerHTML = `
+                        <div class="day-number">${day}</div>
+                        ${daySessions.slice(0, 2).map(session => `
+                            <div class="event" title="${session.title} - ${this.getClientName(session.clientId)}" onclick="event.stopPropagation(); app.showSection('sessions')">
+                                ${session.title}
+                            </div>
+                        `).join('')}
+                        ${daySessions.length > 2 ? `<div class="event">+${daySessions.length - 2} more</div>` : ''}
+                    `;
+
+                    dayElement.addEventListener('click', () => {
+                        this.selectedDate = currentDate;
+                        this.openSessionModal(null, currentDate);
+                    });
+
+                    calendarGrid.appendChild(dayElement);
+                }
+            }
+
+            getSessionsForDate(date) {
+                return this.sessions.filter(session => {
+                    const sessionDate = new Date(session.dateTime);
+                    return sessionDate.getDate() === date.getDate() &&
+                           sessionDate.getMonth() === date.getMonth() &&
+                           sessionDate.getFullYear() === date.getFullYear();
+                });
+            }
+
+            changeMonth(direction) {
+                this.currentMonth += direction;
+                if (this.currentMonth < 0) {
+                    this.currentMonth = 11;
+                    this.currentYear--;
+                } else if (this.currentMonth > 11) {
+                    this.currentMonth = 0;
+                    this.currentYear++;
+                }
+                this.refreshCalendar();
+            }
+
+            // Reports
+            refreshReports() {
+                const totalSessions = this.sessions.length;
+                const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
+                const avgSessionPrice = totalSessions > 0 ? totalRevenue / totalSessions : 0;
+                
+                const clientsWithMultipleSessions = this.clients.filter(client => 
+                    this.sessions.filter(s => s.clientId === client.id).length > 1
+                ).length;
+                const clientRetention = this.clients.length > 0 ? 
+                    Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
+
+                document.getElementById('totalSessions').textContent = totalSessions;
+                document.getElementById('totalRevenue').textContent = `€${Math.round(totalRevenue)}`;
+                document.getElementById('avgSessionPrice').textContent = `€${Math.round(avgSessionPrice)}`;
+                document.getElementById('clientRetention').textContent = `${clientRetention}%`;
+            }
+
+            // Utility Methods
+            exportData(type) {
+                let data, filename;
+                
+                switch(type) {
+                    case 'all':
+                        data = {
+                            clients: this.clients,
+                            sessions: this.sessions,
+                            inventory: this.inventory,
+                            exportDate: new Date().toISOString(),
+                            version: 'InkManager Pro Complete Version',
+                            statistics: {
+                                totalClients: this.clients.length,
+                                totalSessions: this.sessions.length,
+                                totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
+                                totalInventory: this.inventory.length
+                            }
+                        };
+                        filename = 'inkmanager-pro-complete-backup.json';
+                        break;
+                    case 'clients':
+                        data = this.clients;
+                        filename = 'inkmanager-pro-clients.json';
+                        break;
+                    case 'sessions':
+                        data = this.sessions;
+                        filename = 'inkmanager-pro-sessions.json';
+                        break;
+                    case 'inventory':
+                        data = this.inventory;
+                        filename = 'inkmanager-pro-inventory.json';
+                        break;
+                }
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('💾 Data exported successfully!');
+            }
+
+            formatDateTime(date) {
+                return date.toISOString().slice(0, 16);
+            }
+
+            getClientName(clientId) {
+                const client = this.clients.find(c => c.id === clientId);
+                return client ? client.name : 'Unknown Client';
+            }
+
+            showNotification(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 4000);
+            }
+
+            safeSaveData() {
+                try {
+                    this.saveData();
+                } catch (error) {
+                    console.error('Save error:', error);
+                    this.showNotification('⚠️ Save failed - storage might be full');
+                }
+            }
+
+            saveData() {
+                localStorage.setItem('inkmanager_clients', JSON.stringify(this.clients));
+                localStorage.setItem('inkmanager_sessions', JSON.stringify(this.sessions));
+                localStorage.setItem('inkmanager_inventory', JSON.stringify(this.inventory));
+            }
         }
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        this.showNotification('💾 Data exported successfully!');
-    }
 
-    formatDateTime(date) {
-        return date.toISOString().slice(0, 16);
-    }
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            window.app = new InkManagerPro();
+            
+            setTimeout(() => {
+                window.app.refreshAll();
+            }, 100);
+        });
 
-    getClientName(clientId) {
-        const client = this.clients.find(c => c.id === clientId);
-        return client ? client.name : 'Unknown Client';
-    }
-
-    showNotification(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 4000);
-    }
-
-    safeSaveData() {
-        try {
-            this.saveData();
-        } catch (error) {
-            console.error('Save error:', error);
-            this.showNotification('⚠️ Save failed - storage might be full');
-        }
-    }
-
-    saveData() {
-        localStorage.setItem('inkmanager_clients', JSON.stringify(this.clients));
-        localStorage.setItem('inkmanager_sessions', JSON.stringify(this.sessions));
-        localStorage.setItem('inkmanager_inventory', JSON.stringify(this.inventory));
-    }
-}
-
-// Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
-    window.app = new InkManagerPro();
-    
-    setTimeout(() => {
-        window.app.refreshAll();
-    }, 100);
-});
-
-console.log('🚀 InkManager Pro Complete Version - Ready!');
+        console.log('🚀 InkManager Pro Complete Version - Ready!');
     </script>
 </body>
 </html>
-
-
-
-
