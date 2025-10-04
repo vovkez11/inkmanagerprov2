@@ -1515,6 +1515,17 @@
                 this.setupPWA();
                 this.refreshAll();
                 console.log('🎨 InkManager Pro - Complete Version Initialized');
+                // Debug PWA installation
+console.log('🔍 Checking PWA installation support...');
+console.log('Standalone:', window.navigator.standalone);
+console.log('Display mode:', window.matchMedia('(display-mode: standalone)').matches);
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('🎯 PWA Install Prompt triggered!');
+    deferredPrompt = e;
+    document.getElementById('installButton').style.display = 'inline-flex';
+});
             }
 
             setupPWA() {
@@ -2730,5 +2741,6 @@ if ('serviceWorker' in navigator) {
     </script>
 </body>
 </html>
+
 
 
