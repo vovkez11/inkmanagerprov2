@@ -2,7 +2,7 @@
   "name": "InkManager Pro",
   "short_name": "InkManager", 
   "description": "Professional tattoo studio management for tattoo artists",
-  "start_url": "/inkmanagerprov2/",
+  "start_url": "/inkmanagerprov2/index.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#00bcd4",
