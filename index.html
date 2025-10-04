@@ -1519,8 +1519,16 @@
 
             setupPWA() {
                 // Register Service Worker
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('./sw.js')
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/inkmanagerprov2/sw.js', { scope: '/inkmanagerprov2/' })
+        .then((registration) => {
+            console.log('🎯 Service Worker registered successfully!');
+            console.log('Scope:', registration.scope);
+        })
+        .catch((error) => {
+            console.log('❌ Service Worker registration failed:', error);
+        });
+}
                         .then(registration => {
                             console.log('✅ Service Worker registered:', registration);
                         })
@@ -2722,4 +2730,5 @@
     </script>
 </body>
 </html>
+
 
