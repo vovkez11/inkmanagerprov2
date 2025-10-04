@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inkmanager-v4';
+const CACHE_NAME = 'inkmanager-v5';
 const urlsToCache = [
   '/inkmanagerprov2/',
   '/inkmanagerprov2/index.html',
@@ -8,32 +8,32 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('🛠️ Service Worker installing for InkManager Pro...');
+  console.log('🛠️ Service Worker installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('📦 Cache opened, adding files...');
         return cache.addAll(urlsToCache);
       })
-      .then(() => {
-        console.log('✅ All files cached successfully!');
-      })
-      .catch((error) => {
-        console.log('❌ Cache failed:', error);
-      })
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  // Fix for Chrome PWA navigation issues
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('/inkmanagerprov2/index.html')
+        .then((response) => {
+          return response || fetch(event.request);
+        })
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        if (response) {
-          console.log('✅ Serving from cache:', event.request.url);
-          return response;
-        }
-        console.log('🌐 Fetching from network:', event.request.url);
-        return fetch(event.request);
+        return response || fetch(event.request);
       })
   );
 });
