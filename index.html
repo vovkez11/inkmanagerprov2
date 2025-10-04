@@ -1494,7 +1494,8 @@
     </div>
 
     <script>
-    // INKMANAGER PRO - COMPLETE EDITING SYSTEM
+  <script>
+// INKMANAGER PRO - COMPLETE WORKING VERSION
 class InkManagerPro {
     constructor() {
         this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
@@ -1514,7 +1515,7 @@ class InkManagerPro {
         this.setupEventListeners();
         this.setupPWA();
         this.refreshAll();
-        console.log('🎨 InkManager Pro - Complete Editing System Initialized');
+        console.log('🎨 InkManager Pro - Complete Version Initialized');
     }
 
     setupPWA() {
@@ -1528,19 +1529,16 @@ class InkManagerPro {
         const installButton = document.getElementById('installButton');
         const installPrompt = document.getElementById('installPrompt');
 
-        // Listen for install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             console.log('🎯 PWA Install Prompt triggered');
             e.preventDefault();
             deferredPrompt = e;
             
-            // Show install button
             if (installButton) {
                 installButton.style.display = 'inline-flex';
                 installButton.classList.add('pulse');
             }
             
-            // Show install prompt after 5 seconds
             setTimeout(() => {
                 if (deferredPrompt && installPrompt) {
                     installPrompt.classList.add('show');
@@ -1548,7 +1546,6 @@ class InkManagerPro {
             }, 5000);
         });
 
-        // Install button click
         if (installButton) {
             installButton.addEventListener('click', async () => {
                 if (deferredPrompt) {
@@ -1566,7 +1563,6 @@ class InkManagerPro {
             });
         }
 
-        // Install prompt buttons
         if (document.getElementById('installConfirmBtn')) {
             document.getElementById('installConfirmBtn').addEventListener('click', async () => {
                 if (deferredPrompt) {
@@ -1586,14 +1582,12 @@ class InkManagerPro {
             });
         }
 
-        // Check if already installed
         window.addEventListener('appinstalled', (evt) => {
             console.log('🏠 PWA was installed');
             if (installButton) installButton.style.display = 'none';
             if (installPrompt) installPrompt.classList.remove('show');
         });
 
-        // Hide install button if already in standalone mode
         if (window.matchMedia('(display-mode: standalone)').matches) {
             console.log('📱 Running in standalone mode');
             if (installButton) installButton.style.display = 'none';
@@ -1659,7 +1653,40 @@ class InkManagerPro {
         document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
     }
 
-    // NEW: Materials Used Functions
+    // Navigation and Section Management
+    showSection(sectionId) {
+        console.log('Showing section:', sectionId);
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(sectionId).classList.add('active');
+        document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        
+        this.refreshSection(sectionId);
+    }
+
+    refreshSection(sectionId) {
+        console.log('Refreshing section:', sectionId);
+        switch(sectionId) {
+            case 'dashboard': this.refreshDashboard(); break;
+            case 'clients': this.refreshClients(); break;
+            case 'sessions': this.refreshSessions(); break;
+            case 'inventory': this.refreshInventory(); break;
+            case 'calendar': this.refreshCalendar(); break;
+            case 'reports': this.refreshReports(); break;
+        }
+    }
+
+    refreshAll() {
+        this.refreshDashboard();
+        this.refreshClients();
+        this.refreshSessions();
+        this.refreshInventory();
+        this.refreshCalendar();
+        this.refreshReports();
+    }
+
+    // Materials Management
     updateMaterialMaxQuantity(itemId) {
         const materialQty = document.getElementById('materialQty');
         if (!itemId) {
@@ -1694,7 +1721,6 @@ class InkManagerPro {
             return;
         }
 
-        // Check if item already added
         const existingIndex = this.currentSessionMaterials.findIndex(m => m.itemId === itemId);
         if (existingIndex > -1) {
             this.currentSessionMaterials[existingIndex].quantity += quantity;
@@ -1709,7 +1735,6 @@ class InkManagerPro {
 
         this.refreshMaterialsList();
         
-        // Reset form
         document.getElementById('materialItem').value = '';
         document.getElementById('materialQty').value = '1';
         document.getElementById('materialQty').max = '';
@@ -1742,7 +1767,6 @@ class InkManagerPro {
         `).join('');
     }
 
-    // Update inventory after session completion
     deductMaterialsFromInventory() {
         this.currentSessionMaterials.forEach(material => {
             const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
@@ -1756,12 +1780,11 @@ class InkManagerPro {
         this.saveData();
     }
 
-    // ENHANCED: Client Management with Editing
+    // Client Management
     openClientModal(clientId = null) {
         document.getElementById('clientForm').reset();
         
         if (clientId) {
-            // EDIT MODE
             const client = this.clients.find(c => c.id === clientId);
             if (client) {
                 document.getElementById('clientName').value = client.name;
@@ -1777,7 +1800,6 @@ class InkManagerPro {
                 this.editingClientId = clientId;
             }
         } else {
-            // CREATE MODE
             document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
             document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
             this.editingClientId = null;
@@ -1808,7 +1830,6 @@ class InkManagerPro {
         }
 
         if (this.editingClientId) {
-            // UPDATE existing client
             const clientIndex = this.clients.findIndex(c => c.id === this.editingClientId);
             if (clientIndex !== -1) {
                 this.clients[clientIndex] = {
@@ -1830,7 +1851,6 @@ class InkManagerPro {
                 this.showNotification('✅ Client updated successfully!');
             }
         } else {
-            // CREATE new client
             const client = {
                 id: 'client-' + Date.now(),
                 name: name,
@@ -1855,7 +1875,6 @@ class InkManagerPro {
         }
     }
 
-    // ENHANCED: Client List with Edit Buttons
     refreshClients() {
         const container = document.getElementById('clientsList');
         
@@ -1912,6 +1931,32 @@ class InkManagerPro {
         }).join('');
     }
 
+    searchClients(query) {
+        const container = document.getElementById('clientsList');
+        const filteredClients = this.clients.filter(client => 
+            client.name.toLowerCase().includes(query.toLowerCase()) ||
+            (client.phone && client.phone.includes(query)) ||
+            (client.email && client.email.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        if (filteredClients.length === 0) {
+            container.innerHTML = '<div class="empty-state">No clients found matching your search</div>';
+            return;
+        }
+
+        container.innerHTML = filteredClients.map(client => `
+            <div class="client-item" onclick="app.openClientModal('${client.id}')">
+                <div class="item-content">
+                    <div class="item-title">${client.name}</div>
+                    <div class="item-meta">
+                        ${client.phone ? `<i class="fas fa-phone"></i> ${client.phone}<br>` : ''}
+                        ${client.email ? `<i class="fas fa-envelope"></i> ${client.email}` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     deleteClient(clientId) {
         if (confirm('Are you sure you want to delete this client and all their sessions?')) {
             this.clients = this.clients.filter(c => c.id !== clientId);
@@ -1922,7 +1967,7 @@ class InkManagerPro {
         }
     }
 
-    // ENHANCED: Session Management with Editing
+    // Session Management
     openSessionModal(sessionId = null, selectedDate = null) {
         if (this.clients.length === 0) {
             this.showNotification('Please add clients first!');
@@ -1930,7 +1975,6 @@ class InkManagerPro {
             return;
         }
 
-        // Reset materials for new session, or load for editing
         this.currentSessionMaterials = [];
         
         const clientSelect = document.getElementById('sessionClient');
@@ -1939,7 +1983,6 @@ class InkManagerPro {
             clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
         });
 
-        // Populate materials dropdown
         const materialSelect = document.getElementById('materialItem');
         materialSelect.innerHTML = '<option value="">Select item...</option>';
         this.inventory.forEach(item => {
@@ -1948,11 +1991,9 @@ class InkManagerPro {
             }
         });
 
-        // EDIT MODE - Load existing session data
         if (sessionId) {
             const session = this.sessions.find(s => s.id === sessionId);
             if (session) {
-                // Fill form with existing data
                 document.getElementById('sessionClient').value = session.clientId;
                 document.getElementById('sessionTitle').value = session.title;
                 document.getElementById('sessionDateTime').value = this.formatDateTime(new Date(session.dateTime));
@@ -1960,38 +2001,29 @@ class InkManagerPro {
                 document.getElementById('sessionPrice').value = session.price || '';
                 document.getElementById('sessionNotes').value = session.notes || '';
                 
-                // Load materials used
                 if (session.materialsUsed && session.materialsUsed.length > 0) {
                     this.currentSessionMaterials = [...session.materialsUsed];
                     this.refreshMaterialsList();
                 }
                 
-                // Update modal title for edit mode
                 document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
                 document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
-                
-                // Store the session ID being edited
                 this.editingSessionId = sessionId;
             }
         } else {
-            // CREATE MODE - Clear form
             document.getElementById('sessionForm').reset();
             
-            // Set date if provided (from calendar click)
             if (selectedDate) {
                 document.getElementById('sessionDateTime').value = this.formatDateTime(selectedDate);
             } else {
-                // Set to next hour
                 const nextHour = new Date();
                 nextHour.setHours(nextHour.getHours() + 1);
                 nextHour.setMinutes(0);
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
             }
             
-            // Update modal title for create mode
             document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
             document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
-            
             this.editingSessionId = null;
         }
 
@@ -2019,13 +2051,10 @@ class InkManagerPro {
         }
 
         if (this.editingSessionId) {
-            // EDIT MODE - Update existing session
             const sessionIndex = this.sessions.findIndex(s => s.id === this.editingSessionId);
             if (sessionIndex !== -1) {
-                // Store old materials to restore inventory if needed
                 const oldMaterials = [...this.sessions[sessionIndex].materialsUsed];
                 
-                // Restore old materials to inventory first
                 oldMaterials.forEach(material => {
                     const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
                     if (itemIndex > -1) {
@@ -2033,7 +2062,6 @@ class InkManagerPro {
                     }
                 });
                 
-                // Update session with new data
                 this.sessions[sessionIndex] = {
                     ...this.sessions[sessionIndex],
                     clientId: clientId,
@@ -2046,7 +2074,6 @@ class InkManagerPro {
                     updatedAt: new Date().toISOString()
                 };
                 
-                // Deduct new materials from inventory
                 this.deductMaterialsFromInventory();
                 
                 this.safeSaveData();
@@ -2055,7 +2082,6 @@ class InkManagerPro {
                 this.showNotification('✅ Session updated successfully!');
             }
         } else {
-            // CREATE MODE - New session
             const session = {
                 id: 'session-' + Date.now(),
                 clientId: clientId,
@@ -2070,10 +2096,7 @@ class InkManagerPro {
             };
 
             this.sessions.push(session);
-            
-            // Deduct materials from inventory
             this.deductMaterialsFromInventory();
-            
             this.safeSaveData();
             this.closeSessionModal();
             this.refreshAll();
@@ -2081,7 +2104,6 @@ class InkManagerPro {
         }
     }
 
-    // ENHANCED: Session List with Edit Buttons
     refreshSessions() {
         const container = document.getElementById('sessionsList');
         const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
@@ -2109,7 +2131,6 @@ class InkManagerPro {
             const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
             const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
             
-            // Show materials used
             const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
                 ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
                 : '';
@@ -2144,7 +2165,6 @@ class InkManagerPro {
 
     deleteSession(sessionId) {
         if (confirm('Are you sure you want to delete this session?')) {
-            // Restore materials to inventory before deleting
             const session = this.sessions.find(s => s.id === sessionId);
             if (session && session.materialsUsed) {
                 session.materialsUsed.forEach(material => {
@@ -2162,12 +2182,11 @@ class InkManagerPro {
         }
     }
 
-    // ENHANCED: Inventory Management with Editing
+    // Inventory Management
     openInventoryModal(itemId = null) {
         document.getElementById('inventoryForm').reset();
         
         if (itemId) {
-            // EDIT MODE
             const item = this.inventory.find(i => i.id === itemId);
             if (item) {
                 document.getElementById('itemName').value = item.name;
@@ -2182,7 +2201,6 @@ class InkManagerPro {
                 this.editingItemId = itemId;
             }
         } else {
-            // CREATE MODE
             document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
             document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
             this.editingItemId = null;
@@ -2211,7 +2229,6 @@ class InkManagerPro {
         }
 
         if (this.editingItemId) {
-            // UPDATE existing item
             const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
             if (itemIndex !== -1) {
                 this.inventory[itemIndex] = {
@@ -2232,7 +2249,6 @@ class InkManagerPro {
                 this.showNotification('✅ Item updated successfully!');
             }
         } else {
-            // CREATE new item
             const item = {
                 id: 'item-' + Date.now(),
                 name: name,
@@ -2253,7 +2269,6 @@ class InkManagerPro {
         }
     }
 
-    // ENHANCED: Inventory List with Edit Buttons
     refreshInventory() {
         const container = document.getElementById('inventoryList');
         const alertsContainer = document.getElementById('inventoryAlerts');
@@ -2312,7 +2327,6 @@ class InkManagerPro {
             `;
         }).join('');
 
-        // Show low stock alerts
         const lowStock = this.inventory.filter(item => item.qty <= item.alert);
         if (lowStock.length > 0) {
             alertsContainer.innerHTML = `
@@ -2337,6 +2351,32 @@ class InkManagerPro {
         }
     }
 
+    searchInventory(query) {
+        const container = document.getElementById('inventoryList');
+        const filteredItems = this.inventory.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase()) ||
+            item.type.toLowerCase().includes(query.toLowerCase()) ||
+            (item.notes && item.notes.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        if (filteredItems.length === 0) {
+            container.innerHTML = '<div class="empty-state">No items found matching your search</div>';
+            return;
+        }
+
+        container.innerHTML = filteredItems.map(item => `
+            <div class="inventory-item" onclick="app.openInventoryModal('${item.id}')">
+                <div class="item-content">
+                    <div class="item-title">${item.name}</div>
+                    <div class="item-meta">
+                        📦 ${item.qty} in stock<br>
+                        🏷️ ${item.type}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     deleteInventoryItem(itemId) {
         if (confirm('Are you sure you want to delete this inventory item? This action cannot be undone.')) {
             this.inventory = this.inventory.filter(i => i.id !== itemId);
@@ -2347,28 +2387,330 @@ class InkManagerPro {
         }
     }
 
-    // The rest of your existing methods remain the same...
-    // (refreshDashboard, searchClients, searchInventory, refreshCalendar, changeMonth, getSessionsForDate, refreshReports, exportData, formatDateTime, getClientName, showNotification, safeSaveData, saveData, showSection, refreshSection, refreshAll)
+    // Dashboard
+    refreshDashboard() {
+        document.getElementById('totalClients').textContent = this.clients.length;
+        
+        const upcomingSessions = this.sessions.filter(s => new Date(s.dateTime) > new Date());
+        document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
 
-    // ... [Include all your existing methods from the previous version here]
-    // They remain exactly the same, just adding the enhanced editing features above
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        const monthlyRevenue = this.sessions
+            .filter(s => {
+                const sessionDate = new Date(s.dateTime);
+                return sessionDate.getMonth() === currentMonth && 
+                       sessionDate.getFullYear() === currentYear;
+            })
+            .reduce((sum, session) => sum + (session.price || 0), 0);
+        document.getElementById('monthlyRevenue').textContent = `€${monthlyRevenue}`;
+
+        const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+        document.getElementById('lowStockItems').textContent = lowStock.length;
+
+        const today = new Date().toDateString();
+        const todaysSessions = this.sessions.filter(s => 
+            new Date(s.dateTime).toDateString() === today
+        ).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+        
+        const todayContainer = document.getElementById('todaysSessions');
+        
+        if (todaysSessions.length === 0) {
+            todayContainer.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>No Sessions Today</h3>
+                    <p>Your schedule is clear for today</p>
+                    <button class="btn btn-primary" onclick="app.showSection('sessions')">
+                        <i class="fas fa-plus"></i> Schedule a Session
+                    </button>
+                </div>
+            `;
+        } else {
+            todayContainer.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: var(--primary); margin-bottom: 12px;">
+                        <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
+                    </h4>
+                </div>
+                ${todaysSessions.map(session => {
+                    const sessionTime = new Date(session.dateTime);
+                    const now = new Date();
+                    const timeDiff = sessionTime - now;
+                    const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60));
+                    const isUrgent = hoursUntil <= 2 && hoursUntil >= 0;
+                    const isCompleted = sessionTime < now;
+                    
+                    let statusClass = '';
+                    let statusIcon = '🕒';
+                    let statusText = `In ${hoursUntil}h`;
+                    
+                    if (isUrgent) {
+                        statusClass = 'urgent';
+                        statusIcon = '⚠️';
+                        statusText = 'Starting soon!';
+                    } else if (isCompleted) {
+                        statusClass = 'completed';
+                        statusIcon = '✅';
+                        statusText = 'Completed';
+                    } else if (hoursUntil < 0) {
+                        statusClass = 'completed';
+                        statusIcon = '✅';
+                        statusText = 'Completed';
+                    }
+                    
+                    return `
+                        <div class="todays-session-item ${statusClass}" onclick="app.showSection('sessions')">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 1.1em; color: var(--light); margin-bottom: 6px;">
+                                        ${session.title}
+                                    </div>
+                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.4;">
+                                        <div>👤 ${this.getClientName(session.clientId)}</div>
+                                        <div>🕐 ${sessionTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                        <div>${session.price ? `💰 €${session.price}` : ''}</div>
+                                        <div style="color: ${isUrgent ? 'var(--warning)' : 'var(--success)'}; font-weight: 600; margin-top: 4px;">
+                                            ${statusIcon} ${statusText}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 10px;">
+                                    <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+
+        const insightsContainer = document.getElementById('dashboardInsights');
+        if (this.sessions.length > 0) {
+            const totalRevenue = this.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
+            const avgSessionPrice = totalRevenue / this.sessions.length;
+            const returningClients = this.clients.filter(client => 
+                this.sessions.filter(s => s.clientId === client.id).length > 1
+            ).length;
+            
+            insightsContainer.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
+                        <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
+                    </div>
+                    <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">€${Math.round(avgSessionPrice)}</div>
+                        <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
+                    </div>
+                    <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
+                        <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // Calendar
+    refreshCalendar() {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+        
+        document.getElementById('calendarMonth').textContent = 
+            `${monthNames[this.currentMonth]} ${this.currentYear}`;
+
+        const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+        const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDay = firstDay.getDay();
+
+        const calendarGrid = document.getElementById('calendarGrid');
+        calendarGrid.innerHTML = '';
+
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        dayNames.forEach(day => {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day header';
+            dayElement.textContent = day;
+            calendarGrid.appendChild(dayElement);
+        });
+
+        for (let i = 0; i < startingDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day';
+            calendarGrid.appendChild(emptyDay);
+        }
+
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            
+            const currentDate = new Date(this.currentYear, this.currentMonth, day);
+            const isToday = currentDate.toDateString() === today.toDateString();
+            
+            if (isToday) {
+                dayElement.classList.add('today');
+            }
+
+            const daySessions = this.getSessionsForDate(currentDate);
+            if (daySessions.length > 0) {
+                dayElement.classList.add('has-event');
+            }
+
+            dayElement.innerHTML = `
+                <div class="day-number">${day}</div>
+                ${daySessions.slice(0, 2).map(session => `
+                    <div class="event" title="${session.title} - ${this.getClientName(session.clientId)}" onclick="event.stopPropagation(); app.showSection('sessions')">
+                        ${session.title}
+                    </div>
+                `).join('')}
+                ${daySessions.length > 2 ? `<div class="event">+${daySessions.length - 2} more</div>` : ''}
+            `;
+
+            dayElement.addEventListener('click', () => {
+                this.selectedDate = currentDate;
+                this.openSessionModal(currentDate);
+            });
+
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    getSessionsForDate(date) {
+        return this.sessions.filter(session => {
+            const sessionDate = new Date(session.dateTime);
+            return sessionDate.getDate() === date.getDate() &&
+                   sessionDate.getMonth() === date.getMonth() &&
+                   sessionDate.getFullYear() === date.getFullYear();
+        });
+    }
+
+    changeMonth(direction) {
+        this.currentMonth += direction;
+        if (this.currentMonth < 0) {
+            this.currentMonth = 11;
+            this.currentYear--;
+        } else if (this.currentMonth > 11) {
+            this.currentMonth = 0;
+            this.currentYear++;
+        }
+        this.refreshCalendar();
+    }
+
+    // Reports
+    refreshReports() {
+        const totalSessions = this.sessions.length;
+        const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
+        const avgSessionPrice = totalSessions > 0 ? totalRevenue / totalSessions : 0;
+        
+        const clientsWithMultipleSessions = this.clients.filter(client => 
+            this.sessions.filter(s => s.clientId === client.id).length > 1
+        ).length;
+        const clientRetention = this.clients.length > 0 ? 
+            Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
+
+        document.getElementById('totalSessions').textContent = totalSessions;
+        document.getElementById('totalRevenue').textContent = `€${Math.round(totalRevenue)}`;
+        document.getElementById('avgSessionPrice').textContent = `€${Math.round(avgSessionPrice)}`;
+        document.getElementById('clientRetention').textContent = `${clientRetention}%`;
+    }
+
+    // Utility Methods
+    exportData(type) {
+        let data, filename;
+        
+        switch(type) {
+            case 'all':
+                data = {
+                    clients: this.clients,
+                    sessions: this.sessions,
+                    inventory: this.inventory,
+                    exportDate: new Date().toISOString(),
+                    version: 'InkManager Pro Complete Version',
+                    statistics: {
+                        totalClients: this.clients.length,
+                        totalSessions: this.sessions.length,
+                        totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
+                        totalInventory: this.inventory.length
+                    }
+                };
+                filename = 'inkmanager-pro-complete-backup.json';
+                break;
+            case 'clients':
+                data = this.clients;
+                filename = 'inkmanager-pro-clients.json';
+                break;
+            case 'sessions':
+                data = this.sessions;
+                filename = 'inkmanager-pro-sessions.json';
+                break;
+            case 'inventory':
+                data = this.inventory;
+                filename = 'inkmanager-pro-inventory.json';
+                break;
+        }
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('💾 Data exported successfully!');
+    }
+
+    formatDateTime(date) {
+        return date.toISOString().slice(0, 16);
+    }
+
+    getClientName(clientId) {
+        const client = this.clients.find(c => c.id === clientId);
+        return client ? client.name : 'Unknown Client';
+    }
+
+    showNotification(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    safeSaveData() {
+        try {
+            this.saveData();
+        } catch (error) {
+            console.error('Save error:', error);
+            this.showNotification('⚠️ Save failed - storage might be full');
+        }
+    }
+
+    saveData() {
+        localStorage.setItem('inkmanager_clients', JSON.stringify(this.clients));
+        localStorage.setItem('inkmanager_sessions', JSON.stringify(this.sessions));
+        localStorage.setItem('inkmanager_inventory', JSON.stringify(this.inventory));
+    }
 }
 
-// Initialize the COMPLETE EDITING SYSTEM
+// Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     window.app = new InkManagerPro();
     
-    // Re-bind event listeners after a short delay
     setTimeout(() => {
         window.app.refreshAll();
     }, 100);
 });
 
-console.log('🚀 InkManager Pro Complete Editing System - Ready!');
-console.log('📱 Full CRUD operations for all sections');
-console.log('💎 Professional tattoo studio management');
+console.log('🚀 InkManager Pro Complete Version - Ready!');
+</script>
     </script>
 </body>
 </html>
+
 
 
