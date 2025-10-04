@@ -1,0 +1,23 @@
+{
+  "name": "InkManager Pro",
+  "short_name": "InkManager", 
+  "description": "Professional tattoo studio management for tattoo artists",
+  "start_url": "/inkmanagerprov2/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#00bcd4",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity"]
+}
