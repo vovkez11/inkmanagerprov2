@@ -9,7 +9,6 @@
     
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦇</text></svg>">
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -100,6 +99,7 @@
             font-weight: 300;
         }
 
+        /* === INSTALL BUTTON STYLES === */
         .install-btn {
             background: linear-gradient(135deg, var(--success) 0%, #66bb6a 100%);
             color: white;
@@ -113,11 +113,51 @@
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
             min-height: 50px;
             min-width: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .install-btn.pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .install-btn:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--darker);
+            padding: 20px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: none;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90%;
+            animation: toastSlideUp 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 600;
+        }
+
+        .install-prompt.show {
+            display: flex;
         }
 
         /* Navigation */
@@ -347,6 +387,33 @@
             transition: transform 0.1s;
         }
 
+        /* === FIX FORM DROPDOWN STYLING === */
+        select.form-control {
+            background: linear-gradient(135deg, var(--dark) 0%, #222 100%) !important;
+            color: var(--light) !important;
+            border: 2px solid rgba(255,255,255,0.1) !important;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300bcd4' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 16px center !important;
+            background-size: 16px !important;
+            padding-right: 45px !important;
+        }
+
+        select.form-control:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.15) !important;
+            outline: none !important;
+        }
+
+        select.form-control option {
+            background: var(--dark) !important;
+            color: var(--light) !important;
+            padding: 12px !important;
+        }
+
         /* Forms */
         .form-group {
             margin-bottom: 20px;
@@ -367,7 +434,7 @@
             border-radius: var(--border-radius);
             background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
             color: var(--light);
-            font-size: 16px; /* Prevent zoom on iOS */
+            font-size: 16px;
             transition: var(--transition);
             font-family: inherit;
             min-height: 50px;
@@ -378,6 +445,65 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.15);
             transform: translateY(-2px);
+        }
+
+        /* Materials Used Section */
+        .materials-section {
+            background: rgba(0, 188, 212, 0.05);
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 15px;
+        }
+
+        .material-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .material-qty {
+            width: 80px;
+            text-align: center;
+        }
+
+        .remove-material {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .remove-material:hover {
+            transform: scale(1.1);
         }
 
         /* Stats Grid */
@@ -716,33 +842,6 @@
             }
         }
 
-        /* Install Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: var(--darker);
-            padding: 20px 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            z-index: 1000;
-            display: none;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 90%;
-            animation: toastSlideUp 0.4s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .install-prompt.show {
-            display: flex;
-        }
-
         /* Today's Sessions Special Styling */
         .todays-session-item {
             background: linear-gradient(135deg, rgba(0,188,212,0.15) 0%, rgba(255,64,129,0.1) 100%);
@@ -825,6 +924,11 @@
             .card {
                 padding: 20px;
             }
+
+            .materials-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -879,17 +983,6 @@
         }
     </style>
 </head>
-     <div class="install-prompt" id="installPrompt">
-        <span style="font-weight: 600;">Install InkManager Pro for the ultimate experience?</span>
-        <div style="display: flex; gap: 12px;">
-            <button class="btn btn-success" id="installConfirmBtn">
-                <i class="fas fa-download"></i> Install Now
-            </button>
-            <button class="btn btn-outline" id="installDismissBtn">
-                Maybe Later
-            </button>
-        </div>
-    </div>
 <body>
     <div class="app-container">
         <!-- Professional Header -->
@@ -1288,6 +1381,34 @@
                     </div>
                 </div>
 
+                <!-- NEW: Materials Used Section -->
+                <div class="materials-section">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-syringe"></i> Materials Used
+                    </h4>
+                    
+                    <div class="materials-grid">
+                        <div class="form-group">
+                            <label class="form-label">Item</label>
+                            <select class="form-control" id="materialItem">
+                                <option value="">Select item...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control material-qty" id="materialQty" 
+                                   min="1" value="1" placeholder="Qty">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="addMaterialBtn" style="min-height: 50px;">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+
+                    <div id="materialsList">
+                        <!-- Materials will be added here dynamically -->
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label">Session Notes</label>
                     <textarea class="form-control" id="sessionNotes" 
@@ -1373,7 +1494,7 @@
     </div>
 
     <script>
-        // INKMANAGER PRO - MOBILE OPTIMIZED MASTERPIECE
+        // INKMANAGER PRO - COMPLETE UPDATED VERSION
         class InkManagerPro {
             constructor() {
                 this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
@@ -1383,6 +1504,7 @@
                 this.currentYear = new Date().getFullYear();
                 this.editingClientId = null;
                 this.editingItemId = null;
+                this.currentSessionMaterials = []; // NEW: Track materials for current session
                 
                 this.init();
             }
@@ -1391,7 +1513,7 @@
                 this.setupEventListeners();
                 this.setupPWA();
                 this.refreshAll();
-                console.log('🎨 InkManager Pro - Mobile Masterpiece Initialized');
+                console.log('🎨 InkManager Pro - Complete Version Initialized');
             }
 
             setupPWA() {
@@ -1405,47 +1527,75 @@
                 const installButton = document.getElementById('installButton');
                 const installPrompt = document.getElementById('installPrompt');
 
+                // Listen for install prompt
                 window.addEventListener('beforeinstallprompt', (e) => {
+                    console.log('🎯 PWA Install Prompt triggered');
                     e.preventDefault();
                     deferredPrompt = e;
-                    installButton.style.display = 'block';
                     
+                    // Show install button
+                    if (installButton) {
+                        installButton.style.display = 'inline-flex';
+                        installButton.classList.add('pulse');
+                    }
+                    
+                    // Show install prompt after 5 seconds
                     setTimeout(() => {
-                        if (deferredPrompt) installPrompt.classList.add('show');
+                        if (deferredPrompt && installPrompt) {
+                            installPrompt.classList.add('show');
+                        }
                     }, 5000);
                 });
 
-                installButton.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            installButton.style.display = 'none';
-                            installPrompt.classList.remove('show');
-                            this.showNotification('🎉 App installed successfully!');
+                // Install button click
+                if (installButton) {
+                    installButton.addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            
+                            if (outcome === 'accepted') {
+                                console.log('✅ User accepted install');
+                                installButton.style.display = 'none';
+                                if (installPrompt) installPrompt.classList.remove('show');
+                                this.showNotification('🎉 App installed successfully!');
+                            }
+                            deferredPrompt = null;
                         }
-                        deferredPrompt = null;
-                    }
-                });
+                    });
+                }
 
-                document.getElementById('installConfirmBtn').addEventListener('click', () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
+                // Install prompt buttons
+                if (document.getElementById('installConfirmBtn')) {
+                    document.getElementById('installConfirmBtn').addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            if (outcome === 'accepted') {
                                 installPrompt.classList.remove('show');
                             }
                             deferredPrompt = null;
-                        });
-                    }
+                        }
+                    });
+                }
+
+                if (document.getElementById('installDismissBtn')) {
+                    document.getElementById('installDismissBtn').addEventListener('click', () => {
+                        installPrompt.classList.remove('show');
+                    });
+                }
+
+                // Check if already installed
+                window.addEventListener('appinstalled', (evt) => {
+                    console.log('🏠 PWA was installed');
+                    if (installButton) installButton.style.display = 'none';
+                    if (installPrompt) installPrompt.classList.remove('show');
                 });
 
-                document.getElementById('installDismissBtn').addEventListener('click', () => {
-                    installPrompt.classList.remove('show');
-                });
-
+                // Hide install button if already in standalone mode
                 if (window.matchMedia('(display-mode: standalone)').matches) {
-                    installButton.style.display = 'none';
+                    console.log('📱 Running in standalone mode');
+                    if (installButton) installButton.style.display = 'none';
                 }
             }
 
@@ -1477,6 +1627,12 @@
                     this.saveSession();
                 });
 
+                // NEW: Materials Management
+                document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
+                document.getElementById('materialItem').addEventListener('change', (e) => {
+                    this.updateMaterialMaxQuantity(e.target.value);
+                });
+
                 // Inventory Management
                 document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
                 document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
@@ -1500,6 +1656,103 @@
                 nextHour.setHours(nextHour.getHours() + 1);
                 nextHour.setMinutes(0);
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+            }
+
+            // NEW: Materials Used Functions
+            updateMaterialMaxQuantity(itemId) {
+                const materialQty = document.getElementById('materialQty');
+                if (!itemId) {
+                    materialQty.max = '';
+                    return;
+                }
+
+                const item = this.inventory.find(i => i.id === itemId);
+                if (item) {
+                    materialQty.max = item.qty;
+                    materialQty.placeholder = `Max: ${item.qty}`;
+                }
+            }
+
+            addMaterialToSession() {
+                const itemId = document.getElementById('materialItem').value;
+                const quantity = parseInt(document.getElementById('materialQty').value) || 1;
+
+                if (!itemId) {
+                    this.showNotification('Please select an item');
+                    return;
+                }
+
+                const item = this.inventory.find(i => i.id === itemId);
+                if (!item) {
+                    this.showNotification('Item not found');
+                    return;
+                }
+
+                if (quantity > item.qty) {
+                    this.showNotification(`Only ${item.qty} available in stock`);
+                    return;
+                }
+
+                // Check if item already added
+                const existingIndex = this.currentSessionMaterials.findIndex(m => m.itemId === itemId);
+                if (existingIndex > -1) {
+                    this.currentSessionMaterials[existingIndex].quantity += quantity;
+                } else {
+                    this.currentSessionMaterials.push({
+                        itemId: itemId,
+                        itemName: item.name,
+                        quantity: quantity,
+                        type: item.type
+                    });
+                }
+
+                this.refreshMaterialsList();
+                
+                // Reset form
+                document.getElementById('materialItem').value = '';
+                document.getElementById('materialQty').value = '1';
+                document.getElementById('materialQty').max = '';
+                document.getElementById('materialQty').placeholder = 'Qty';
+
+                this.showNotification(`✅ ${item.name} added to materials`);
+            }
+
+            removeMaterial(index) {
+                this.currentSessionMaterials.splice(index, 1);
+                this.refreshMaterialsList();
+            }
+
+            refreshMaterialsList() {
+                const container = document.getElementById('materialsList');
+                
+                if (this.currentSessionMaterials.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No materials added yet</div>';
+                    return;
+                }
+
+                container.innerHTML = this.currentSessionMaterials.map((material, index) => `
+                    <div class="material-item">
+                        <div>${material.itemName}</div>
+                        <div>Qty: ${material.quantity}</div>
+                        <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Update inventory after session completion
+            deductMaterialsFromInventory() {
+                this.currentSessionMaterials.forEach(material => {
+                    const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                    if (itemIndex > -1) {
+                        this.inventory[itemIndex].qty -= material.quantity;
+                        if (this.inventory[itemIndex].qty < 0) {
+                            this.inventory[itemIndex].qty = 0;
+                        }
+                    }
+                });
+                this.saveData();
             }
 
             showSection(sectionId) {
@@ -1532,7 +1785,6 @@
                 this.refreshReports();
             }
 
-            // Dashboard - PERFECTLY WORKING TODAY'S SESSIONS
             refreshDashboard() {
                 // Update stats
                 document.getElementById('totalClients').textContent = this.clients.length;
@@ -1556,7 +1808,7 @@
                 const lowStock = this.inventory.filter(item => item.qty <= item.alert);
                 document.getElementById('lowStockItems').textContent = lowStock.length;
 
-                // TODAY'S SESSIONS - PERFECTLY WORKING
+                // TODAY'S SESSIONS
                 const today = new Date().toDateString();
                 const todaysSessions = this.sessions.filter(s => 
                     new Date(s.dateTime).toDateString() === today
@@ -1664,12 +1916,10 @@
                 }
             }
 
-            // Client Management - PERFECT
             openClientModal(clientId = null) {
                 document.getElementById('clientForm').reset();
                 
                 if (clientId) {
-                    // EDIT MODE
                     const client = this.clients.find(c => c.id === clientId);
                     if (client) {
                         document.getElementById('clientName').value = client.name;
@@ -1685,7 +1935,6 @@
                         this.editingClientId = clientId;
                     }
                 } else {
-                    // CREATE MODE
                     document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
                     document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
                     this.editingClientId = null;
@@ -1715,7 +1964,6 @@
                 }
 
                 if (this.editingClientId) {
-                    // UPDATE existing client
                     const clientIndex = this.clients.findIndex(c => c.id === this.editingClientId);
                     if (clientIndex !== -1) {
                         this.clients[clientIndex] = {
@@ -1736,7 +1984,6 @@
                         this.showNotification('✅ Client updated successfully!');
                     }
                 } else {
-                    // CREATE new client
                     const client = {
                         id: 'client-' + Date.now(),
                         name: name,
@@ -1849,7 +2096,6 @@
                 }
             }
 
-            // Session Management - PERFECT
             openSessionModal(selectedDate = null) {
                 if (this.clients.length === 0) {
                     this.showNotification('Please add clients first!');
@@ -1857,10 +2103,23 @@
                     return;
                 }
 
+                // Reset materials for new session
+                this.currentSessionMaterials = [];
+                this.refreshMaterialsList();
+
                 const clientSelect = document.getElementById('sessionClient');
                 clientSelect.innerHTML = '<option value="">Select a client...</option>';
                 this.clients.forEach(client => {
                     clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+                });
+
+                // NEW: Populate materials dropdown
+                const materialSelect = document.getElementById('materialItem');
+                materialSelect.innerHTML = '<option value="">Select item...</option>';
+                this.inventory.forEach(item => {
+                    if (item.qty > 0) {
+                        materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
+                    }
                 });
 
                 // Set date if provided (from calendar click)
@@ -1908,11 +2167,16 @@
                     duration: duration,
                     price: price,
                     notes: notes,
+                    materialsUsed: [...this.currentSessionMaterials], // NEW: Store materials used
                     createdAt: new Date().toISOString(),
                     status: 'scheduled'
                 };
 
                 this.sessions.push(session);
+                
+                // NEW: Deduct materials from inventory
+                this.deductMaterialsFromInventory();
+                
                 this.safeSaveData();
                 this.closeSessionModal();
                 this.refreshAll();
@@ -1921,7 +2185,7 @@
 
             refreshSessions() {
                 const container = document.getElementById('sessionsList');
-                const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime)); // Most recent first
+                const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
 
                 if (allSessions.length === 0) {
                     container.innerHTML = `
@@ -1946,6 +2210,11 @@
                     const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
                     const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
                     
+                    // NEW: Show materials used
+                    const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
+                        ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        : '';
+                    
                     return `
                         <div class="session-item" onclick="app.showSection('sessions')">
                             <div class="item-content">
@@ -1956,6 +2225,7 @@
                                     <strong>Duration:</strong> ${session.duration} hours<br>
                                     <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
                                     ${session.price ? `<strong>Price:</strong> €${session.price}` : ''}
+                                    ${materialsText}
                                     ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
                                 </div>
                             </div>
@@ -1978,12 +2248,10 @@
                 }
             }
 
-            // Inventory Management - PERFECT
             openInventoryModal(itemId = null) {
                 document.getElementById('inventoryForm').reset();
                 
                 if (itemId) {
-                    // EDIT MODE
                     const item = this.inventory.find(i => i.id === itemId);
                     if (item) {
                         document.getElementById('itemName').value = item.name;
@@ -1998,7 +2266,6 @@
                         this.editingItemId = itemId;
                     }
                 } else {
-                    // CREATE MODE
                     document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
                     document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
                     this.editingItemId = null;
@@ -2026,7 +2293,6 @@
                 }
 
                 if (this.editingItemId) {
-                    // UPDATE existing item
                     const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
                     if (itemIndex !== -1) {
                         this.inventory[itemIndex] = {
@@ -2046,7 +2312,6 @@
                         this.showNotification('✅ Item updated successfully!');
                     }
                 } else {
-                    // CREATE new item
                     const item = {
                         id: 'item-' + Date.now(),
                         name: name,
@@ -2182,7 +2447,6 @@
                 }
             }
 
-            // Calendar - PERFECT
             refreshCalendar() {
                 const monthNames = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"];
@@ -2274,7 +2538,6 @@
                 this.refreshCalendar();
             }
 
-            // Reports - PERFECT
             refreshReports() {
                 const totalSessions = this.sessions.length;
                 const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
@@ -2293,7 +2556,6 @@
                 document.getElementById('clientRetention').textContent = `${clientRetention}%`;
             }
 
-            // Data Export
             exportData(type) {
                 let data, filename;
                 
@@ -2304,7 +2566,7 @@
                             sessions: this.sessions,
                             inventory: this.inventory,
                             exportDate: new Date().toISOString(),
-                            version: 'InkManager Pro Mobile Masterpiece',
+                            version: 'InkManager Pro Complete Version',
                             statistics: {
                                 totalClients: this.clients.length,
                                 totalSessions: this.sessions.length,
@@ -2312,7 +2574,7 @@
                                 totalInventory: this.inventory.length
                             }
                         };
-                        filename = 'inkmanager-pro-mobile-backup.json';
+                        filename = 'inkmanager-pro-complete-backup.json';
                         break;
                     case 'clients':
                         data = this.clients;
@@ -2372,7 +2634,7 @@
             }
         }
 
-        // Initialize the MOBILE MASTERPIECE
+        // Initialize the COMPLETE VERSION
         document.addEventListener('DOMContentLoaded', function() {
             window.app = new InkManagerPro();
             
@@ -2382,10 +2644,9 @@
             }, 100);
         });
 
-        console.log('🚀 InkManager Pro Mobile Masterpiece - Ready for Deployment');
-        console.log('📱 Perfectly optimized for all devices');
+        console.log('🚀 InkManager Pro Complete Version - Ready!');
+        console.log('📱 All fixes included + Materials Tracking');
         console.log('💎 Professional tattoo studio management');
     </script>
 </body>
-
 </html>
