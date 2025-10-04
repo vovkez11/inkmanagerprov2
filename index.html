@@ -1515,31 +1515,12 @@
                 this.setupPWA();
                 this.refreshAll();
                 console.log('🎨 InkManager Pro - Complete Version Initialized');
-                // Debug PWA installation
-console.log('🔍 Checking PWA installation support...');
-console.log('Standalone:', window.navigator.standalone);
-console.log('Display mode:', window.matchMedia('(display-mode: standalone)').matches);
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('🎯 PWA Install Prompt triggered!');
-    deferredPrompt = e;
-    document.getElementById('installButton').style.display = 'inline-flex';
-});
             }
 
             setupPWA() {
                 // Register Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/inkmanagerprov2/sw.js', { scope: '/inkmanagerprov2/' })
-        .then((registration) => {
-            console.log('🎯 Service Worker registered successfully!');
-            console.log('Scope:', registration.scope);
-        })
-        .catch((error) => {
-            console.log('❌ Service Worker registration failed:', error);
-        });
-}
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('./sw.js')
                         .then(registration => {
                             console.log('✅ Service Worker registered:', registration);
                         })
@@ -1627,15 +1608,13 @@ if ('serviceWorker' in navigator) {
             }
 
             setupEventListeners() {
-                // Fixed Navigation for Chrome PWA
-document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        console.log('🎯 Nav button clicked:', e.currentTarget.dataset.section);
-        e.preventDefault();
-        e.stopPropagation();
-        this.showSection(e.currentTarget.dataset.section);
-    });
-});
+                // Navigation
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.showSection(e.currentTarget.dataset.section);
+                    });
+                });
 
                 // Client Management
                 document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
@@ -1690,7 +1669,6 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
             // Navigation and Section Management
             showSection(sectionId) {
-                console.log('Showing section:', sectionId);
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 
@@ -1701,7 +1679,6 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
             }
 
             refreshSection(sectionId) {
-                console.log('Refreshing section:', sectionId);
                 switch(sectionId) {
                     case 'dashboard': this.refreshDashboard(); break;
                     case 'clients': this.refreshClients(); break;
@@ -2744,7 +2721,3 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     </script>
 </body>
 </html>
-
-
-
-
