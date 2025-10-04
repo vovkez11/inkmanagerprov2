@@ -1627,12 +1627,15 @@ if ('serviceWorker' in navigator) {
             }
 
             setupEventListeners() {
-                // Navigation
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.showSection(e.currentTarget.dataset.section);
-                    });
-                });
+                // Fixed Navigation for Chrome PWA
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        console.log('🎯 Nav button clicked:', e.currentTarget.dataset.section);
+        e.preventDefault();
+        e.stopPropagation();
+        this.showSection(e.currentTarget.dataset.section);
+    });
+});
 
                 // Client Management
                 document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
@@ -2741,6 +2744,7 @@ if ('serviceWorker' in navigator) {
     </script>
 </body>
 </html>
+
 
 
 
