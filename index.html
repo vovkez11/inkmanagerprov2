@@ -21,9 +21,9 @@
         --primary-light: #80deea;
         --secondary: #ff4081;
         --accent: #ff9800;
-        --dark: #1a1a1a;
-        --darker: #111;
-        --dark-gray: #2a2a2a;
+        --dark: #0d1117;
+        --darker: #010409;
+        --dark-gray: #161b22;
         --light: #f5f5f5;
         --success: #4caf50;
         --warning: #ff9800;
@@ -47,13 +47,105 @@
         min-height: 100vh;
         padding: 0;
         overflow-x: hidden;
+        display: flex;
     }
 
+    /* Sidebar Navigation */
+    #sidebar {
+        width: 280px;
+        background: linear-gradient(180deg, var(--dark-gray) 0%, var(--darker) 100%);
+        border-right: 1px solid #30363d;
+        padding: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        box-shadow: 2px 0 20px rgba(0,0,0,0.6);
+        z-index: 1000;
+    }
+
+    .logo {
+        font-family: 'Permanent Marker', cursive;
+        color: var(--primary);
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+        letter-spacing: 1.5px;
+        padding: 0 1.5rem;
+    }
+
+    .nav-section {
+        margin-bottom: 2rem;
+    }
+
+    .nav-section-title {
+        color: var(--primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.7;
+        font-weight: 600;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 2rem;
+        color: var(--light);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+        margin: 0.15rem 0;
+        cursor: pointer;
+    }
+
+    .nav-link:hover {
+        background: linear-gradient(90deg, rgba(0, 188, 212, 0.1) 0%, transparent 100%);
+        color: var(--primary);
+        border-left-color: var(--primary);
+    }
+
+    .nav-link.active {
+        background: linear-gradient(90deg, rgba(0, 188, 212, 0.15) 0%, transparent 100%);
+        color: var(--primary);
+        border-left-color: var(--primary);
+    }
+
+    .nav-link i {
+        margin-right: 15px;
+        font-size: 1.3rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Language Selector */
+    .language-selector {
+        padding: 0 2rem;
+        margin-top: auto;
+        margin-bottom: 1rem;
+    }
+
+    .language-selector select {
+        width: 100%;
+        padding: 10px;
+        background: var(--dark);
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        color: var(--light);
+        font-size: 0.9rem;
+    }
+
+    /* Main Content Area */
     .app-container {
-        max-width: 1400px;
-        margin: 0 auto;
+        flex-grow: 1;
+        max-width: calc(100% - 280px);
         padding: 20px;
-        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
     }
 
     /* Header */
@@ -77,18 +169,6 @@
         right: 0;
         height: 3px;
         background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-    }
-
-    .logo {
-        font-family: 'Permanent Marker', cursive;
-        font-size: 2.8em;
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 10px;
-        text-shadow: 0 4px 20px rgba(0, 188, 212, 0.3);
     }
 
     .tagline {
@@ -158,75 +238,6 @@
 
     .install-prompt.show {
         display: flex;
-    }
-
-    /* Navigation */
-    .nav-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 25px;
-    }
-
-    .nav-btn {
-        padding: 18px 12px;
-        background: linear-gradient(135deg, var(--dark-gray) 0%, #333 100%);
-        color: var(--light);
-        border: none;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        font-size: 0.85em;
-        font-weight: 600;
-        border: 2px solid transparent;
-        position: relative;
-        overflow: hidden;
-        min-height: 70px;
-    }
-
-    .nav-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        transition: var(--transition);
-    }
-
-    .nav-btn:hover::before {
-        left: 100%;
-    }
-
-    .nav-btn:hover {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: var(--darker);
-        border-color: var(--primary-light);
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 10px 30px rgba(0, 188, 212, 0.3);
-    }
-
-    .nav-btn.active {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        color: var(--darker);
-        border-color: var(--primary-light);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4);
-    }
-
-    .nav-btn:active {
-        transform: scale(0.95);
-        transition: transform 0.1s;
-    }
-
-    .nav-btn i {
-        font-size: 1.6em;
-        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
     }
 
     /* Sections */
@@ -871,13 +882,26 @@
 
     /* Responsive Design */
     @media (max-width: 768px) {
-        .app-container {
-            padding: 15px;
+        #sidebar {
+            width: 70px;
         }
-        
-        .nav-container {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+
+        .logo, .nav-link span, .nav-section-title {
+            display: none;
+        }
+
+        .nav-link {
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .nav-link i {
+            margin-right: 0;
+        }
+
+        .app-container {
+            max-width: calc(100% - 70px);
+            padding: 15px;
         }
         
         .stats-grid {
@@ -910,12 +934,6 @@
             text-align: center;
             padding: 20px;
         }
-        
-        .logo {
-            font-size: 2.2em;
-            flex-direction: column;
-            gap: 10px;
-        }
 
         .app-header {
             padding: 20px 15px;
@@ -932,16 +950,8 @@
     }
 
     @media (max-width: 480px) {
-        .nav-container {
-            grid-template-columns: 1fr;
-        }
-        
         .stats-grid {
             grid-template-columns: 1fr;
-        }
-        
-        .logo {
-            font-size: 1.8em;
         }
         
         .card {
@@ -984,6 +994,56 @@
 </style>
 </head>
 <body>
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar">
+        <div class="logo">InkManager Pro</div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" data-i18n="main_navigation">Main Navigation</div>
+            <a class="nav-link active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span>
+            </a>
+            <a class="nav-link" data-section="clients">
+                <i class="fas fa-users"></i> <span data-i18n="clients">Clients</span>
+            </a>
+            <a class="nav-link" data-section="sessions">
+                <i class="fas fa-calendar-check"></i> <span data-i18n="sessions">Sessions</span>
+            </a>
+            <a class="nav-link" data-section="inventory">
+                <i class="fas fa-boxes"></i> <span data-i18n="inventory">Inventory</span>
+            </a>
+            <a class="nav-link" data-section="calendar">
+                <i class="fas fa-calendar-day"></i> <span data-i18n="calendar">Calendar</span>
+            </a>
+            <a class="nav-link" data-section="reports">
+                <i class="fas fa-chart-bar"></i> <span data-i18n="reports">Reports</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title" data-i18n="quick_actions">Quick Actions</div>
+            <a class="nav-link" id="quickAddClient">
+                <i class="fas fa-user-plus"></i> <span data-i18n="add_client">Add Client</span>
+            </a>
+            <a class="nav-link" id="quickAddSession">
+                <i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span>
+            </a>
+            <a class="nav-link" id="quickAddInventory">
+                <i class="fas fa-box-open"></i> <span data-i18n="add_inventory">Add Inventory</span>
+            </a>
+        </div>
+
+        <div class="language-selector">
+            <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="ru">Русский</option>
+                <option value="he">עברית</option>
+            </select>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
     <div class="app-container">
         <!-- Professional Header -->
         <div class="app-header">
@@ -991,37 +1051,9 @@
                 <i class="fas fa-dragon"></i>
                 InkManager Pro
             </div>
-            <div class="tagline">Professional Tattoo Studio Management System</div>
+            <div class="tagline" data-i18n="tagline">Professional Tattoo Studio Management System</div>
             <button class="install-btn" id="installButton">
-                <i class="fas fa-download"></i> Install App
-            </button>
-        </div>
-
-        <!-- Navigation -->
-        <div class="nav-container">
-            <button class="nav-btn active" data-section="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </button>
-            <button class="nav-btn" data-section="clients">
-                <i class="fas fa-users"></i>
-                Clients
-            </button>
-            <button class="nav-btn" data-section="sessions">
-                <i class="fas fa-calendar-alt"></i>
-                Sessions
-            </button>
-            <button class="nav-btn" data-section="inventory">
-                <i class="fas fa-syringe"></i>
-                Inventory
-            </button>
-            <button class="nav-btn" data-section="calendar">
-                <i class="fas fa-calendar-day"></i>
-                Calendar
-            </button>
-            <button class="nav-btn" data-section="reports">
-                <i class="fas fa-chart-bar"></i>
-                Reports
+                <i class="fas fa-download"></i> <span data-i18n="install_app">Install App</span>
             </button>
         </div>
 
@@ -1030,29 +1062,29 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-tachometer-alt"></i> Studio Overview
+                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="studio_overview">Studio Overview</span>
                     </h2>
                     <button class="btn btn-outline" onclick="app.exportData('all')">
-                        <i class="fas fa-download"></i> Backup Data
+                        <i class="fas fa-download"></i> <span data-i18n="backup_data">Backup Data</span>
                     </button>
                 </div>
                 
                 <div class="stats-grid">
                     <div class="stat-card" onclick="app.showSection('clients')">
                         <div class="stat-value" id="totalClients">0</div>
-                        <div class="stat-label">Total Clients</div>
+                        <div class="stat-label" data-i18n="total_clients">Total Clients</div>
                     </div>
                     <div class="stat-card" onclick="app.showSection('sessions')">
                         <div class="stat-value" id="upcomingSessions">0</div>
-                        <div class="stat-label">Upcoming Sessions</div>
+                        <div class="stat-label" data-i18n="upcoming_sessions">Upcoming Sessions</div>
                     </div>
                     <div class="stat-card" onclick="app.showSection('reports')">
                         <div class="stat-value" id="monthlyRevenue">€0</div>
-                        <div class="stat-label">Monthly Revenue</div>
+                        <div class="stat-label" data-i18n="monthly_revenue">Monthly Revenue</div>
                     </div>
                     <div class="stat-card" onclick="app.showSection('inventory')">
                         <div class="stat-value" id="lowStockItems">0</div>
-                        <div class="stat-label">Low Stock Items</div>
+                        <div class="stat-label" data-i18n="low_stock_items">Low Stock Items</div>
                     </div>
                 </div>
             </div>
@@ -1060,15 +1092,15 @@
             <!-- Today's Sessions -->
             <div class="card">
                 <h3 class="card-title" onclick="app.showSection('sessions')">
-                    <i class="fas fa-calendar-check"></i> Today's Schedule
+                    <i class="fas fa-calendar-check"></i> <span data-i18n="todays_schedule">Today's Schedule</span>
                 </h3>
                 <div id="todaysSessions">
                     <div class="empty-state">
                         <i class="fas fa-calendar-times"></i>
-                        <h3>No Sessions Today</h3>
-                        <p>Your schedule is clear for today</p>
+                        <h3 data-i18n="no_sessions_today">No Sessions Today</h3>
+                        <p data-i18n="schedule_clear">Your schedule is clear for today</p>
                         <button class="btn btn-primary" onclick="app.showSection('sessions')">
-                            <i class="fas fa-plus"></i> Schedule a Session
+                            <i class="fas fa-plus"></i> <span data-i18n="schedule_session">Schedule a Session</span>
                         </button>
                     </div>
                 </div>
@@ -1076,13 +1108,13 @@
 
             <div class="card">
                 <h3 class="card-title" onclick="app.showSection('reports')">
-                    <i class="fas fa-chart-line"></i> Quick Insights
+                    <i class="fas fa-chart-line"></i> <span data-i18n="quick_insights">Quick Insights</span>
                 </h3>
                 <div id="dashboardInsights">
                     <div class="empty-state">
                         <i class="fas fa-chart-pie"></i>
-                        <h3>No Data Yet</h3>
-                        <p>Start adding clients and sessions to see insights</p>
+                        <h3 data-i18n="no_data_yet">No Data Yet</h3>
+                        <p data-i18n="start_adding_data">Start adding clients and sessions to see insights</p>
                     </div>
                 </div>
             </div>
@@ -1093,25 +1125,25 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-users"></i> Client Management
+                        <i class="fas fa-users"></i> <span data-i18n="client_management">Client Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addClientBtn">
-                        <i class="fas fa-plus"></i> New Client
+                        <i class="fas fa-plus"></i> <span data-i18n="new_client">New Client</span>
                     </button>
                 </div>
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="clientSearch" 
-                           placeholder="🔍 Search clients by name, phone, or email...">
+                           placeholder="🔍 Search clients by name, phone, or email..." data-i18n-placeholder="search_clients">
                 </div>
 
                 <div id="clientsList">
                     <div class="empty-state">
                         <i class="fas fa-users"></i>
-                        <h3>No Clients Yet</h3>
-                        <p>Start building your professional client database</p>
+                        <h3 data-i18n="no_clients_yet">No Clients Yet</h3>
+                        <p data-i18n="build_client_database">Start building your professional client database</p>
                         <button class="btn btn-primary" id="addFirstClient">
-                            <i class="fas fa-plus"></i> Add Your First Client
+                            <i class="fas fa-plus"></i> <span data-i18n="add_first_client">Add Your First Client</span>
                         </button>
                     </div>
                 </div>
@@ -1123,20 +1155,20 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-calendar-alt"></i> Session Management
+                        <i class="fas fa-calendar-alt"></i> <span data-i18n="session_management">Session Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addSessionBtn">
-                        <i class="fas fa-plus"></i> New Session
+                        <i class="fas fa-plus"></i> <span data-i18n="new_session">New Session</span>
                     </button>
                 </div>
 
                 <div id="sessionsList">
                     <div class="empty-state">
                         <i class="fas fa-calendar-plus"></i>
-                        <h3>No Sessions Scheduled</h3>
-                        <p>Schedule your first professional tattoo session</p>
+                        <h3 data-i18n="no_sessions_scheduled">No Sessions Scheduled</h3>
+                        <p data-i18n="schedule_first_session">Schedule your first professional tattoo session</p>
                         <button class="btn btn-primary" id="addFirstSession">
-                            <i class="fas fa-plus"></i> Create First Session
+                            <i class="fas fa-plus"></i> <span data-i18n="create_first_session">Create First Session</span>
                         </button>
                     </div>
                 </div>
@@ -1148,25 +1180,25 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-syringe"></i> Inventory Management
+                        <i class="fas fa-syringe"></i> <span data-i18n="inventory_management">Inventory Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addInventoryBtn">
-                        <i class="fas fa-plus"></i> New Item
+                        <i class="fas fa-plus"></i> <span data-i18n="new_item">New Item</span>
                     </button>
                 </div>
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="inventorySearch" 
-                           placeholder="🔍 Search inventory items...">
+                           placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
                 <div id="inventoryList">
                     <div class="empty-state">
                         <i class="fas fa-box-open"></i>
-                        <h3>No Inventory Items</h3>
-                        <p>Track your needles, ink, and professional supplies</p>
+                        <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
+                        <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
                         <button class="btn btn-primary" id="addFirstItem">
-                            <i class="fas fa-plus"></i> Add First Item
+                            <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
                         </button>
                     </div>
                 </div>
@@ -1180,20 +1212,20 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-calendar-day"></i> Studio Calendar
+                        <i class="fas fa-calendar-day"></i> <span data-i18n="studio_calendar">Studio Calendar</span>
                     </h2>
                     <button class="btn btn-primary" id="addCalendarSessionBtn">
-                        <i class="fas fa-plus"></i> New Session
+                        <i class="fas fa-plus"></i> <span data-i18n="new_session">New Session</span>
                     </button>
                 </div>
 
                 <div class="calendar-controls">
                     <button class="btn btn-outline" id="prevMonthBtn">
-                        <i class="fas fa-chevron-left"></i> Previous
+                        <i class="fas fa-chevron-left"></i> <span data-i18n="previous">Previous</span>
                     </button>
                     <h3 id="calendarMonth" style="color: var(--primary); font-weight: 700; font-size: 1.3em;"></h3>
                     <button class="btn btn-outline" id="nextMonthBtn">
-                        Next <i class="fas fa-chevron-right"></i>
+                        <span data-i18n="next">Next</span> <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
 
@@ -1208,43 +1240,43 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title" onclick="app.showSection('dashboard')">
-                        <i class="fas fa-chart-bar"></i> Analytics & Reports
+                        <i class="fas fa-chart-bar"></i> <span data-i18n="analytics_reports">Analytics & Reports</span>
                     </h2>
                 </div>
 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value" id="totalSessions">0</div>
-                        <div class="stat-label">Total Sessions</div>
+                        <div class="stat-label" data-i18n="total_sessions">Total Sessions</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="totalRevenue">€0</div>
-                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-label" data-i18n="total_revenue">Total Revenue</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="avgSessionPrice">€0</div>
-                        <div class="stat-label">Avg Session Price</div>
+                        <div class="stat-label" data-i18n="avg_session_price">Avg Session Price</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="clientRetention">0%</div>
-                        <div class="stat-label">Client Retention</div>
+                        <div class="stat-label" data-i18n="client_retention">Client Retention</div>
                     </div>
                 </div>
 
                 <div style="margin: 25px 0;">
-                    <h3 class="card-title"><i class="fas fa-download"></i> Data Export</h3>
+                    <h3 class="card-title"><i class="fas fa-download"></i> <span data-i18n="data_export">Data Export</span></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px;">
                         <button class="btn btn-success" onclick="app.exportData('all')">
-                            <i class="fas fa-database"></i> Full Backup
+                            <i class="fas fa-database"></i> <span data-i18n="full_backup">Full Backup</span>
                         </button>
                         <button class="btn btn-outline" onclick="app.exportData('clients')">
-                            <i class="fas fa-users"></i> Export Clients
+                            <i class="fas fa-users"></i> <span data-i18n="export_clients">Export Clients</span>
                         </button>
                         <button class="btn btn-outline" onclick="app.exportData('sessions')">
-                            <i class="fas fa-calendar"></i> Export Sessions
+                            <i class="fas fa-calendar"></i> <span data-i18n="export_sessions">Export Sessions</span>
                         </button>
                         <button class="btn btn-outline" onclick="app.exportData('inventory')">
-                            <i class="fas fa-box"></i> Export Inventory
+                            <i class="fas fa-box"></i> <span data-i18n="export_inventory">Export Inventory</span>
                         </button>
                     </div>
                 </div>
@@ -1257,13 +1289,13 @@
 
     <!-- Install Prompt -->
     <div class="install-prompt" id="installPrompt">
-        <span style="font-weight: 600; font-size: 1em;">Install InkManager Pro for the ultimate experience?</span>
+        <span style="font-weight: 600; font-size: 1em;" data-i18n="install_prompt">Install InkManager Pro for the ultimate experience?</span>
         <div style="display: flex; gap: 12px;">
             <button class="btn btn-success" id="installConfirmBtn">
-                <i class="fas fa-download"></i> Install Now
+                <i class="fas fa-download"></i> <span data-i18n="install_now">Install Now</span>
             </button>
             <button class="btn btn-outline" id="installDismissBtn">
-                Maybe Later
+                <span data-i18n="maybe_later">Maybe Later</span>
             </button>
         </div>
     </div>
@@ -1272,67 +1304,67 @@
     <div id="clientModal" class="modal">
         <div class="modal-content">
             <div class="card-header">
-                <h3 class="card-title" id="clientModalTitle"><i class="fas fa-user-plus"></i> Create New Client</h3>
+                <h3 class="card-title" id="clientModalTitle"><i class="fas fa-user-plus"></i> <span data-i18n="create_new_client">Create New Client</span></h3>
                 <button class="btn btn-danger" id="closeClientModalBtn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <form id="clientForm">
                 <div class="form-group">
-                    <label class="form-label">Full Name *</label>
-                    <input type="text" class="form-control" id="clientName" placeholder="John Smith" required>
+                    <label class="form-label" data-i18n="full_name">Full Name *</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="John Smith" data-i18n-placeholder="name_placeholder" required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="clientPhone" placeholder="+1 (555) 123-4567">
+                        <label class="form-label" data-i18n="phone_number">Phone Number</label>
+                        <input type="tel" class="form-control" id="clientPhone" placeholder="+1 (555) 123-4567" data-i18n-placeholder="phone_placeholder">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="clientEmail" placeholder="john@example.com">
+                        <label class="form-label" data-i18n="email_address">Email Address</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="john@example.com" data-i18n-placeholder="email_placeholder">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label">Birth Date</label>
+                        <label class="form-label" data-i18n="birth_date">Birth Date</label>
                         <input type="date" class="form-control" id="clientBirthDate">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Skin Type</label>
+                        <label class="form-label" data-i18n="skin_type">Skin Type</label>
                         <select class="form-control" id="clientSkinType">
-                            <option value="">Select skin type...</option>
-                            <option value="normal">Normal</option>
-                            <option value="sensitive">Sensitive</option>
-                            <option value="oily">Oily</option>
-                            <option value="dry">Dry</option>
-                            <option value="combination">Combination</option>
+                            <option value="" data-i18n="select_skin_type">Select skin type...</option>
+                            <option value="normal" data-i18n="normal">Normal</option>
+                            <option value="sensitive" data-i18n="sensitive">Sensitive</option>
+                            <option value="oily" data-i18n="oily">Oily</option>
+                            <option value="dry" data-i18n="dry">Dry</option>
+                            <option value="combination" data-i18n="combination">Combination</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Emergency Contact</label>
+                    <label class="form-label" data-i18n="emergency_contact">Emergency Contact</label>
                     <input type="text" class="form-control" id="clientEmergencyContact" 
-                           placeholder="Name and phone number">
+                           placeholder="Name and phone number" data-i18n-placeholder="emergency_placeholder">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Notes & Preferences</label>
+                    <label class="form-label" data-i18n="notes_preferences">Notes & Preferences</label>
                     <textarea class="form-control" id="clientNotes" 
                               placeholder="Allergies, style preferences, important medical notes, design ideas..." 
-                              rows="4"></textarea>
+                              data-i18n-placeholder="notes_placeholder" rows="4"></textarea>
                 </div>
 
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn btn-outline" id="cancelClientBtn" style="flex: 1;">
-                        <i class="fas fa-times"></i> Cancel
+                        <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveClientBtn" style="flex: 2;">
-                        <i class="fas fa-save"></i> Save Client
+                        <i class="fas fa-save"></i> <span data-i18n="save_client">Save Client</span>
                     </button>
                 </div>
             </form>
@@ -1343,64 +1375,64 @@
     <div id="sessionModal" class="modal">
         <div class="modal-content">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-calendar-plus"></i> Schedule Session</h3>
+                <h3 class="card-title"><i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span></h3>
                 <button class="btn btn-danger" id="closeSessionModalBtn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <form id="sessionForm">
                 <div class="form-group">
-                    <label class="form-label">Client *</label>
+                    <label class="form-label" data-i18n="client">Client *</label>
                     <select class="form-control" id="sessionClient" required>
-                        <option value="">Select a client...</option>
+                        <option value="" data-i18n="select_client">Select a client...</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Session Title *</label>
+                    <label class="form-label" data-i18n="session_title">Session Title *</label>
                     <input type="text" class="form-control" id="sessionTitle" 
-                           placeholder="e.g., Sleeve Outline, Cover-up, New Tattoo..." required>
+                           placeholder="e.g., Sleeve Outline, Cover-up, New Tattoo..." data-i18n-placeholder="session_title_placeholder" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Date & Time *</label>
+                    <label class="form-label" data-i18n="date_time">Date & Time *</label>
                     <input type="datetime-local" class="form-control" id="sessionDateTime" required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label">Duration (hours)</label>
+                        <label class="form-label" data-i18n="duration_hours">Duration (hours)</label>
                         <input type="number" class="form-control" id="sessionDuration" 
                                placeholder="2" min="1" max="12" step="0.5" value="2">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Price (€)</label>
+                        <label class="form-label" data-i18n="price">Price (€)</label>
                         <input type="number" class="form-control" id="sessionPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
                 </div>
 
-                <!-- NEW: Materials Used Section -->
+                <!-- Materials Used Section -->
                 <div class="materials-section">
                     <h4 style="color: var(--primary); margin-bottom: 15px;">
-                        <i class="fas fa-syringe"></i> Materials Used
+                        <i class="fas fa-syringe"></i> <span data-i18n="materials_used">Materials Used</span>
                     </h4>
                     
                     <div class="materials-grid">
                         <div class="form-group">
-                            <label class="form-label">Item</label>
+                            <label class="form-label" data-i18n="item">Item</label>
                             <select class="form-control" id="materialItem">
-                                <option value="">Select item...</option>
+                                <option value="" data-i18n="select_item">Select item...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Quantity</label>
+                            <label class="form-label" data-i18n="quantity">Quantity</label>
                             <input type="number" class="form-control material-qty" id="materialQty" 
                                    min="1" value="1" placeholder="Qty">
                         </div>
                         <button type="button" class="btn btn-primary" id="addMaterialBtn" style="min-height: 50px;">
-                            <i class="fas fa-plus"></i> Add
+                            <i class="fas fa-plus"></i> <span data-i18n="add">Add</span>
                         </button>
                     </div>
 
@@ -1410,14 +1442,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Session Notes</label>
+                    <label class="form-label" data-i18n="session_notes">Session Notes</label>
                     <textarea class="form-control" id="sessionNotes" 
                               placeholder="Design details, placement, special requests, aftercare instructions..." 
-                              rows="4"></textarea>
+                              data-i18n-placeholder="session_notes_placeholder" rows="4"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1em;">
-                    <i class="fas fa-save"></i> Save Session
+                    <i class="fas fa-save"></i> <span data-i18n="save_session">Save Session</span>
                 </button>
             </form>
         </div>
@@ -1427,34 +1459,34 @@
     <div id="inventoryModal" class="modal">
         <div class="modal-content">
             <div class="card-header">
-                <h3 class="card-title" id="inventoryModalTitle"><i class="fas fa-box"></i> New Inventory Item</h3>
+                <h3 class="card-title" id="inventoryModalTitle"><i class="fas fa-box"></i> <span data-i18n="new_inventory_item">New Inventory Item</span></h3>
                 <button class="btn btn-danger" id="closeInventoryModalBtn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <form id="inventoryForm">
                 <div class="form-group">
-                    <label class="form-label">Item Name *</label>
+                    <label class="form-label" data-i18n="item_name">Item Name *</label>
                     <input type="text" class="form-control" id="itemName" 
-                           placeholder="Round Liner 5RL, Eternal Ink Black, Disposable Grips..." required>
+                           placeholder="Round Liner 5RL, Eternal Ink Black, Disposable Grips..." data-i18n-placeholder="item_name_placeholder" required>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label">Type *</label>
+                        <label class="form-label" data-i18n="type">Type *</label>
                         <select class="form-control" id="itemType" required>
-                            <option value="">Select type...</option>
-                            <option value="needle">Needle</option>
-                            <option value="ink">Ink</option>
-                            <option value="machine">Machine</option>
-                            <option value="supply">Supply</option>
-                            <option value="aftercare">Aftercare</option>
-                            <option value="safety">Safety Equipment</option>
+                            <option value="" data-i18n="select_type">Select type...</option>
+                            <option value="needle" data-i18n="needle">Needle</option>
+                            <option value="ink" data-i18n="ink">Ink</option>
+                            <option value="machine" data-i18n="machine">Machine</option>
+                            <option value="supply" data-i18n="supply">Supply</option>
+                            <option value="aftercare" data-i18n="aftercare">Aftercare</option>
+                            <option value="safety" data-i18n="safety">Safety Equipment</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Current Quantity *</label>
+                        <label class="form-label" data-i18n="current_quantity">Current Quantity *</label>
                         <input type="number" class="form-control" id="itemQty" 
                                placeholder="10" min="0" required value="10">
                     </div>
@@ -1462,31 +1494,31 @@
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label">Low Stock Alert</label>
+                        <label class="form-label" data-i18n="low_stock_alert">Low Stock Alert</label>
                         <input type="number" class="form-control" id="itemAlert" 
                                placeholder="5" min="1" value="5">
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Price per Unit (€)</label>
+                        <label class="form-label" data-i18n="price_per_unit">Price per Unit (€)</label>
                         <input type="number" class="form-control" id="itemPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Supplier & Notes</label>
+                    <label class="form-label" data-i18n="supplier_notes">Supplier & Notes</label>
                     <textarea class="form-control" id="itemNotes" 
                               placeholder="Supplier information, color codes, expiration dates..." 
-                              rows="3"></textarea>
+                              data-i18n-placeholder="supplier_notes_placeholder" rows="3"></textarea>
                 </div>
                 
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn btn-outline" id="cancelInventoryBtn" style="flex: 1;">
-                        Cancel
+                        <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveInventoryBtn" style="flex: 2;">
-                        <i class="fas fa-save"></i> Save Item
+                        <i class="fas fa-save"></i> <span data-i18n="save_item">Save Item</span>
                     </button>
                 </div>
             </form>
@@ -1494,7 +1526,7 @@
     </div>
 
     <script>
-        // INKMANAGER PRO - COMPLETE WORKING VERSION
+        // INKMANAGER PRO - COMPLETE WORKING VERSION WITH MULTI-LANGUAGE SUPPORT
         class InkManagerPro {
             constructor() {
                 this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
@@ -1506,6 +1538,559 @@
                 this.editingItemId = null;
                 this.editingSessionId = null;
                 this.currentSessionMaterials = [];
+                this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
+                
+                // Translation resources
+                this.translations = {
+                    en: {
+                        // Navigation
+                        "main_navigation": "Main Navigation",
+                        "dashboard": "Dashboard",
+                        "clients": "Clients",
+                        "sessions": "Sessions",
+                        "inventory": "Inventory",
+                        "calendar": "Calendar",
+                        "reports": "Reports",
+                        "quick_actions": "Quick Actions",
+                        "add_client": "Add Client",
+                        "schedule_session": "Schedule Session",
+                        "add_inventory": "Add Inventory",
+                        
+                        // Header
+                        "tagline": "Professional Tattoo Studio Management System",
+                        "install_app": "Install App",
+                        
+                        // Dashboard
+                        "studio_overview": "Studio Overview",
+                        "backup_data": "Backup Data",
+                        "total_clients": "Total Clients",
+                        "upcoming_sessions": "Upcoming Sessions",
+                        "monthly_revenue": "Monthly Revenue",
+                        "low_stock_items": "Low Stock Items",
+                        "todays_schedule": "Today's Schedule",
+                        "no_sessions_today": "No Sessions Today",
+                        "schedule_clear": "Your schedule is clear for today",
+                        "quick_insights": "Quick Insights",
+                        "no_data_yet": "No Data Yet",
+                        "start_adding_data": "Start adding clients and sessions to see insights",
+                        
+                        // Clients
+                        "client_management": "Client Management",
+                        "new_client": "New Client",
+                        "search_clients": "🔍 Search clients by name, phone, or email...",
+                        "no_clients_yet": "No Clients Yet",
+                        "build_client_database": "Start building your professional client database",
+                        "add_first_client": "Add Your First Client",
+                        
+                        // Sessions
+                        "session_management": "Session Management",
+                        "new_session": "New Session",
+                        "no_sessions_scheduled": "No Sessions Scheduled",
+                        "schedule_first_session": "Schedule your first professional tattoo session",
+                        "create_first_session": "Create First Session",
+                        
+                        // Inventory
+                        "inventory_management": "Inventory Management",
+                        "new_item": "New Item",
+                        "search_inventory": "🔍 Search inventory items...",
+                        "no_inventory_items": "No Inventory Items",
+                        "track_supplies": "Track your needles, ink, and professional supplies",
+                        "add_first_item": "Add First Item",
+                        
+                        // Calendar
+                        "studio_calendar": "Studio Calendar",
+                        "previous": "Previous",
+                        "next": "Next",
+                        
+                        // Reports
+                        "analytics_reports": "Analytics & Reports",
+                        "total_sessions": "Total Sessions",
+                        "total_revenue": "Total Revenue",
+                        "avg_session_price": "Avg Session Price",
+                        "client_retention": "Client Retention",
+                        "data_export": "Data Export",
+                        "full_backup": "Full Backup",
+                        "export_clients": "Export Clients",
+                        "export_sessions": "Export Sessions",
+                        "export_inventory": "Export Inventory",
+                        
+                        // Install Prompt
+                        "install_prompt": "Install InkManager Pro for the ultimate experience?",
+                        "install_now": "Install Now",
+                        "maybe_later": "Maybe Later",
+                        
+                        // Client Modal
+                        "create_new_client": "Create New Client",
+                        "full_name": "Full Name",
+                        "name_placeholder": "John Smith",
+                        "phone_number": "Phone Number",
+                        "phone_placeholder": "+1 (555) 123-4567",
+                        "email_address": "Email Address",
+                        "email_placeholder": "john@example.com",
+                        "birth_date": "Birth Date",
+                        "skin_type": "Skin Type",
+                        "select_skin_type": "Select skin type...",
+                        "normal": "Normal",
+                        "sensitive": "Sensitive",
+                        "oily": "Oily",
+                        "dry": "Dry",
+                        "combination": "Combination",
+                        "emergency_contact": "Emergency Contact",
+                        "emergency_placeholder": "Name and phone number",
+                        "notes_preferences": "Notes & Preferences",
+                        "notes_placeholder": "Allergies, style preferences, important medical notes, design ideas...",
+                        "cancel": "Cancel",
+                        "save_client": "Save Client",
+                        
+                        // Session Modal
+                        "schedule_session": "Schedule Session",
+                        "client": "Client",
+                        "select_client": "Select a client...",
+                        "session_title": "Session Title",
+                        "session_title_placeholder": "e.g., Sleeve Outline, Cover-up, New Tattoo...",
+                        "date_time": "Date & Time",
+                        "duration_hours": "Duration (hours)",
+                        "price": "Price (€)",
+                        "materials_used": "Materials Used",
+                        "item": "Item",
+                        "select_item": "Select item...",
+                        "quantity": "Quantity",
+                        "add": "Add",
+                        "session_notes": "Session Notes",
+                        "session_notes_placeholder": "Design details, placement, special requests, aftercare instructions...",
+                        "save_session": "Save Session",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "New Inventory Item",
+                        "item_name": "Item Name",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, Disposable Grips...",
+                        "type": "Type",
+                        "select_type": "Select type...",
+                        "needle": "Needle",
+                        "ink": "Ink",
+                        "machine": "Machine",
+                        "supply": "Supply",
+                        "aftercare": "Aftercare",
+                        "safety": "Safety Equipment",
+                        "current_quantity": "Current Quantity",
+                        "low_stock_alert": "Low Stock Alert",
+                        "price_per_unit": "Price per Unit (€)",
+                        "supplier_notes": "Supplier & Notes",
+                        "supplier_notes_placeholder": "Supplier information, color codes, expiration dates...",
+                        "save_item": "Save Item"
+                    },
+                    es: {
+                        // Navigation
+                        "main_navigation": "Navegación Principal",
+                        "dashboard": "Panel",
+                        "clients": "Clientes",
+                        "sessions": "Sesiones",
+                        "inventory": "Inventario",
+                        "calendar": "Calendario",
+                        "reports": "Informes",
+                        "quick_actions": "Acciones Rápidas",
+                        "add_client": "Agregar Cliente",
+                        "schedule_session": "Programar Sesión",
+                        "add_inventory": "Agregar Inventario",
+                        
+                        // Header
+                        "tagline": "Sistema Profesional de Gestión de Estudios de Tatuajes",
+                        "install_app": "Instalar App",
+                        
+                        // Dashboard
+                        "studio_overview": "Resumen del Estudio",
+                        "backup_data": "Respaldar Datos",
+                        "total_clients": "Clientes Totales",
+                        "upcoming_sessions": "Sesiones Próximas",
+                        "monthly_revenue": "Ingresos Mensuales",
+                        "low_stock_items": "Artículos Bajos en Stock",
+                        "todays_schedule": "Horario de Hoy",
+                        "no_sessions_today": "No Hay Sesiones Hoy",
+                        "schedule_clear": "Tu horario está libre para hoy",
+                        "quick_insights": "Información Rápida",
+                        "no_data_yet": "Aún No Hay Datos",
+                        "start_adding_data": "Comienza agregando clientes y sesiones para ver información",
+                        
+                        // Clients
+                        "client_management": "Gestión de Clientes",
+                        "new_client": "Nuevo Cliente",
+                        "search_clients": "🔍 Buscar clientes por nombre, teléfono o email...",
+                        "no_clients_yet": "Aún No Hay Clientes",
+                        "build_client_database": "Comienza a construir tu base de datos profesional de clientes",
+                        "add_first_client": "Agregar Tu Primer Cliente",
+                        
+                        // Sessions
+                        "session_management": "Gestión de Sesiones",
+                        "new_session": "Nueva Sesión",
+                        "no_sessions_scheduled": "No Hay Sesiones Programadas",
+                        "schedule_first_session": "Programa tu primera sesión profesional de tatuaje",
+                        "create_first_session": "Crear Primera Sesión",
+                        
+                        // Inventory
+                        "inventory_management": "Gestión de Inventario",
+                        "new_item": "Nuevo Artículo",
+                        "search_inventory": "🔍 Buscar artículos de inventario...",
+                        "no_inventory_items": "No Hay Artículos en Inventario",
+                        "track_supplies": "Rastrea tus agujas, tinta y suministros profesionales",
+                        "add_first_item": "Agregar Primer Artículo",
+                        
+                        // Calendar
+                        "studio_calendar": "Calendario del Estudio",
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        
+                        // Reports
+                        "analytics_reports": "Análisis e Informes",
+                        "total_sessions": "Sesiones Totales",
+                        "total_revenue": "Ingresos Totales",
+                        "avg_session_price": "Precio Promedio por Sesión",
+                        "client_retention": "Retención de Clientes",
+                        "data_export": "Exportar Datos",
+                        "full_backup": "Respaldo Completo",
+                        "export_clients": "Exportar Clientes",
+                        "export_sessions": "Exportar Sesiones",
+                        "export_inventory": "Exportar Inventario",
+                        
+                        // Install Prompt
+                        "install_prompt": "¿Instalar InkManager Pro para la mejor experiencia?",
+                        "install_now": "Instalar Ahora",
+                        "maybe_later": "Quizás Más Tarde",
+                        
+                        // Client Modal
+                        "create_new_client": "Crear Nuevo Cliente",
+                        "full_name": "Nombre Completo",
+                        "name_placeholder": "Juan Pérez",
+                        "phone_number": "Número de Teléfono",
+                        "phone_placeholder": "+1 (555) 123-4567",
+                        "email_address": "Correo Electrónico",
+                        "email_placeholder": "juan@ejemplo.com",
+                        "birth_date": "Fecha de Nacimiento",
+                        "skin_type": "Tipo de Piel",
+                        "select_skin_type": "Seleccionar tipo de piel...",
+                        "normal": "Normal",
+                        "sensitive": "Sensible",
+                        "oily": "Grasa",
+                        "dry": "Seca",
+                        "combination": "Mixta",
+                        "emergency_contact": "Contacto de Emergencia",
+                        "emergency_placeholder": "Nombre y número de teléfono",
+                        "notes_preferences": "Notas y Preferencias",
+                        "notes_placeholder": "Alergias, preferencias de estilo, notas médicas importantes, ideas de diseño...",
+                        "cancel": "Cancelar",
+                        "save_client": "Guardar Cliente",
+                        
+                        // Session Modal
+                        "schedule_session": "Programar Sesión",
+                        "client": "Cliente",
+                        "select_client": "Seleccionar un cliente...",
+                        "session_title": "Título de la Sesión",
+                        "session_title_placeholder": "ej., Contorno de Manga, Cover-up, Tatuaje Nuevo...",
+                        "date_time": "Fecha y Hora",
+                        "duration_hours": "Duración (horas)",
+                        "price": "Precio (€)",
+                        "materials_used": "Materiales Utilizados",
+                        "item": "Artículo",
+                        "select_item": "Seleccionar artículo...",
+                        "quantity": "Cantidad",
+                        "add": "Agregar",
+                        "session_notes": "Notas de la Sesión",
+                        "session_notes_placeholder": "Detalles del diseño, ubicación, solicitudes especiales, instrucciones de cuidado posterior...",
+                        "save_session": "Guardar Sesión",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "Nuevo Artículo de Inventario",
+                        "item_name": "Nombre del Artículo",
+                        "item_name_placeholder": "Round Liner 5RL, Tinta Eternal Negra, Empuñaduras Desechables...",
+                        "type": "Tipo",
+                        "select_type": "Seleccionar tipo...",
+                        "needle": "Aguja",
+                        "ink": "Tinta",
+                        "machine": "Máquina",
+                        "supply": "Suministro",
+                        "aftercare": "Cuidado Posterior",
+                        "safety": "Equipo de Seguridad",
+                        "current_quantity": "Cantidad Actual",
+                        "low_stock_alert": "Alerta de Stock Bajo",
+                        "price_per_unit": "Precio por Unidad (€)",
+                        "supplier_notes": "Proveedor y Notas",
+                        "supplier_notes_placeholder": "Información del proveedor, códigos de color, fechas de vencimiento...",
+                        "save_item": "Guardar Artículo"
+                    },
+                    ru: {
+                        // Navigation
+                        "main_navigation": "Основная Навигация",
+                        "dashboard": "Панель управления",
+                        "clients": "Клиенты",
+                        "sessions": "Сеансы",
+                        "inventory": "Инвентарь",
+                        "calendar": "Календарь",
+                        "reports": "Отчеты",
+                        "quick_actions": "Быстрые действия",
+                        "add_client": "Добавить клиента",
+                        "schedule_session": "Запланировать сеанс",
+                        "add_inventory": "Добавить инвентарь",
+                        
+                        // Header
+                        "tagline": "Профессиональная система управления тату-студией",
+                        "install_app": "Установить приложение",
+                        
+                        // Dashboard
+                        "studio_overview": "Обзор студии",
+                        "backup_data": "Резервная копия данных",
+                        "total_clients": "Всего клиентов",
+                        "upcoming_sessions": "Предстоящие сеансы",
+                        "monthly_revenue": "Ежемесячный доход",
+                        "low_stock_items": "Товары с низким запасом",
+                        "todays_schedule": "Сегодняшнее расписание",
+                        "no_sessions_today": "Сегодня нет сеансов",
+                        "schedule_clear": "Ваше расписание на сегодня свободно",
+                        "quick_insights": "Быстрая аналитика",
+                        "no_data_yet": "Пока нет данных",
+                        "start_adding_data": "Начните добавлять клиентов и сеансы, чтобы увидеть аналитику",
+                        
+                        // Clients
+                        "client_management": "Управление клиентами",
+                        "new_client": "Новый клиент",
+                        "search_clients": "🔍 Поиск клиентов по имени, телефону или email...",
+                        "no_clients_yet": "Пока нет клиентов",
+                        "build_client_database": "Начните создавать свою профессиональную базу клиентов",
+                        "add_first_client": "Добавить первого клиента",
+                        
+                        // Sessions
+                        "session_management": "Управление сеансами",
+                        "new_session": "Новый сеанс",
+                        "no_sessions_scheduled": "Нет запланированных сеансов",
+                        "schedule_first_session": "Запланируйте свой первый профессиональный тату-сеанс",
+                        "create_first_session": "Создать первый сеанс",
+                        
+                        // Inventory
+                        "inventory_management": "Управление инвентарем",
+                        "new_item": "Новый предмет",
+                        "search_inventory": "🔍 Поиск предметов инвентаря...",
+                        "no_inventory_items": "Нет предметов в инвентаре",
+                        "track_supplies": "Отслеживайте свои иглы, чернила и профессиональные принадлежности",
+                        "add_first_item": "Добавить первый предмет",
+                        
+                        // Calendar
+                        "studio_calendar": "Календарь студии",
+                        "previous": "Предыдущий",
+                        "next": "Следующий",
+                        
+                        // Reports
+                        "analytics_reports": "Аналитика и отчеты",
+                        "total_sessions": "Всего сеансов",
+                        "total_revenue": "Общий доход",
+                        "avg_session_price": "Средняя цена сеанса",
+                        "client_retention": "Удержание клиентов",
+                        "data_export": "Экспорт данных",
+                        "full_backup": "Полная резервная копия",
+                        "export_clients": "Экспорт клиентов",
+                        "export_sessions": "Экспорт сеансов",
+                        "export_inventory": "Экспорт инвентаря",
+                        
+                        // Install Prompt
+                        "install_prompt": "Установить InkManager Pro для лучшего опыта?",
+                        "install_now": "Установить сейчас",
+                        "maybe_later": "Возможно позже",
+                        
+                        // Client Modal
+                        "create_new_client": "Создать нового клиента",
+                        "full_name": "Полное имя",
+                        "name_placeholder": "Иван Иванов",
+                        "phone_number": "Номер телефона",
+                        "phone_placeholder": "+7 (999) 123-4567",
+                        "email_address": "Адрес электронной почты",
+                        "email_placeholder": "ivan@example.com",
+                        "birth_date": "Дата рождения",
+                        "skin_type": "Тип кожи",
+                        "select_skin_type": "Выберите тип кожи...",
+                        "normal": "Нормальная",
+                        "sensitive": "Чувствительная",
+                        "oily": "Жирная",
+                        "dry": "Сухая",
+                        "combination": "Комбинированная",
+                        "emergency_contact": "Контакт для экстренных случаев",
+                        "emergency_placeholder": "Имя и номер телефона",
+                        "notes_preferences": "Заметки и предпочтения",
+                        "notes_placeholder": "Аллергии, предпочтения по стилю, важные медицинские заметки, идеи дизайна...",
+                        "cancel": "Отмена",
+                        "save_client": "Сохранить клиента",
+                        
+                        // Session Modal
+                        "schedule_session": "Запланировать сеанс",
+                        "client": "Клиент",
+                        "select_client": "Выберите клиента...",
+                        "session_title": "Название сеанса",
+                        "session_title_placeholder": "напр., Контур рукава, Перекрытие, Новый тату...",
+                        "date_time": "Дата и время",
+                        "duration_hours": "Продолжительность (часы)",
+                        "price": "Цена (€)",
+                        "materials_used": "Использованные материалы",
+                        "item": "Предмет",
+                        "select_item": "Выберите предмет...",
+                        "quantity": "Количество",
+                        "add": "Добавить",
+                        "session_notes": "Заметки к сеансу",
+                        "session_notes_placeholder": "Детали дизайна, расположение, особые пожелания, инструкции по уходу...",
+                        "save_session": "Сохранить сеанс",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "Новый предмет инвентаря",
+                        "item_name": "Название предмета",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, Одноразовые рукоятки...",
+                        "type": "Тип",
+                        "select_type": "Выберите тип...",
+                        "needle": "Игла",
+                        "ink": "Чернила",
+                        "machine": "Машинка",
+                        "supply": "Расходные материалы",
+                        "aftercare": "Уход после",
+                        "safety": "Средства безопасности",
+                        "current_quantity": "Текущее количество",
+                        "low_stock_alert": "Оповещение о низком запасе",
+                        "price_per_unit": "Цена за единицу (€)",
+                        "supplier_notes": "Поставщик и заметки",
+                        "supplier_notes_placeholder": "Информация о поставщике, коды цветов, сроки годности...",
+                        "save_item": "Сохранить предмет"
+                    },
+                    he: {
+                        // Navigation
+                        "main_navigation": "ניווט ראשי",
+                        "dashboard": "לוח בקרה",
+                        "clients": "לקוחות",
+                        "sessions": "פגישות",
+                        "inventory": "מלאי",
+                        "calendar": "לוח שנה",
+                        "reports": "דוחות",
+                        "quick_actions": "פעולות מהירות",
+                        "add_client": "הוסף לקוח",
+                        "schedule_session": "תזמן פגישה",
+                        "add_inventory": "הוסף מלאי",
+                        
+                        // Header
+                        "tagline": "מערכת ניהול מקצועית לסטודיו קעקועים",
+                        "install_app": "התקן אפליקציה",
+                        
+                        // Dashboard
+                        "studio_overview": "סקירת הסטודיו",
+                        "backup_data": "גיבוי נתונים",
+                        "total_clients": "סך הלקוחות",
+                        "upcoming_sessions": "פגישות קרובות",
+                        "monthly_revenue": "הכנסה חודשית",
+                        "low_stock_items": "פריטים במלאי נמוך",
+                        "todays_schedule": "לוח הזמנים להיום",
+                        "no_sessions_today": "אין פגישות היום",
+                        "schedule_clear": "לוח הזמנים שלך פנוי להיום",
+                        "quick_insights": "תובנות מהירות",
+                        "no_data_yet": "אין עדיין נתונים",
+                        "start_adding_data": "התחל להוסיף לקוחות ופגישות כדי לראות תובנות",
+                        
+                        // Clients
+                        "client_management": "ניהול לקוחות",
+                        "new_client": "לקוח חדש",
+                        "search_clients": "🔍 חפש לקוחות לפי שם, טלפון או אימייל...",
+                        "no_clients_yet": "אין עדיין לקוחות",
+                        "build_client_database": "התחל לבנות את מסד הנתונים המקצועי שלך של לקוחות",
+                        "add_first_client": "הוסף את הלקוח הראשון שלך",
+                        
+                        // Sessions
+                        "session_management": "ניהול פגישות",
+                        "new_session": "פגישה חדשה",
+                        "no_sessions_scheduled": "אין פגישות מתוזמנות",
+                        "schedule_first_session": "תזמן את פגישת הקעקוע המקצועית הראשונה שלך",
+                        "create_first_session": "צור פגישה ראשונה",
+                        
+                        // Inventory
+                        "inventory_management": "ניהול מלאי",
+                        "new_item": "פריט חדש",
+                        "search_inventory": "🔍 חפש פריטי מלאי...",
+                        "no_inventory_items": "אין פריטים במלאי",
+                        "track_supplies": "עקוב אחר המחטים, הדיו והאספקה המקצועית שלך",
+                        "add_first_item": "הוסף פריט ראשון",
+                        
+                        // Calendar
+                        "studio_calendar": "לוח שנה של הסטודיו",
+                        "previous": "קודם",
+                        "next": "הבא",
+                        
+                        // Reports
+                        "analytics_reports": "ניתוחים ודוחות",
+                        "total_sessions": "סך הפגישות",
+                        "total_revenue": "סך ההכנסות",
+                        "avg_session_price": "מחיר פגישה ממוצע",
+                        "client_retention": "שמירת לקוחות",
+                        "data_export": "ייצוא נתונים",
+                        "full_backup": "גיבוי מלא",
+                        "export_clients": "ייצוא לקוחות",
+                        "export_sessions": "ייצוא פגישות",
+                        "export_inventory": "ייצוא מלאי",
+                        
+                        // Install Prompt
+                        "install_prompt": "להתקין את InkManager Pro לחוויה הטובה ביותר?",
+                        "install_now": "התקן עכשיו",
+                        "maybe_later": "אולי מאוחר יותר",
+                        
+                        // Client Modal
+                        "create_new_client": "צור לקוח חדש",
+                        "full_name": "שם מלא",
+                        "name_placeholder": "דוד כהן",
+                        "phone_number": "מספר טלפון",
+                        "phone_placeholder": "+972 (50) 123-4567",
+                        "email_address": "כתובת אימייל",
+                        "email_placeholder": "david@example.com",
+                        "birth_date": "תאריך לידה",
+                        "skin_type": "סוג עור",
+                        "select_skin_type": "בחר סוג עור...",
+                        "normal": "רגיל",
+                        "sensitive": "רגיש",
+                        "oily": "שומני",
+                        "dry": "יבש",
+                        "combination": "מעורב",
+                        "emergency_contact": "איש קשר לחירום",
+                        "emergency_placeholder": "שם ומספר טלפון",
+                        "notes_preferences": "הערות והעדפות",
+                        "notes_placeholder": "אלרגיות, העדפות סגנון, הערות רפואיות חשובות, רעיונות לעיצוב...",
+                        "cancel": "ביטול",
+                        "save_client": "שמור לקוח",
+                        
+                        // Session Modal
+                        "schedule_session": "תזמן פגישה",
+                        "client": "לקוח",
+                        "select_client": "בחר לקוח...",
+                        "session_title": "כותרת הפגישה",
+                        "session_title_placeholder": "לדוגמה, מתאר שרוול, כיסוי, קעקוע חדש...",
+                        "date_time": "תאריך ושעה",
+                        "duration_hours": "משך (שעות)",
+                        "price": "מחיר (€)",
+                        "materials_used": "חומרים בשימוש",
+                        "item": "פריט",
+                        "select_item": "בחר פריט...",
+                        "quantity": "כמות",
+                        "add": "הוסף",
+                        "session_notes": "הערות לפגישה",
+                        "session_notes_placeholder": "פרטי עיצוב, מיקום, בקשות מיוחדות, הוראות טיפול לאחר...",
+                        "save_session": "שמור פגישה",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "פריט מלאי חדש",
+                        "item_name": "שם הפריט",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, ידיות חד-פעמיות...",
+                        "type": "סוג",
+                        "select_type": "בחר סוג...",
+                        "needle": "מחט",
+                        "ink": "דיו",
+                        "machine": "מכונה",
+                        "supply": "אספקה",
+                        "aftercare": "טיפול לאחר",
+                        "safety": "ציוד בטיחות",
+                        "current_quantity": "כמות נוכחית",
+                        "low_stock_alert": "התראת מלאי נמוך",
+                        "price_per_unit": "מחיר ליחידה (€)",
+                        "supplier_notes": "ספק והערות",
+                        "supplier_notes_placeholder": "מידע על הספק, קודי צבע, תאריכי תפוגה...",
+                        "save_item": "שמור פריט"
+                    }
+                };
                 
                 this.init();
             }
@@ -1513,8 +2098,36 @@
             init() {
                 this.setupEventListeners();
                 this.setupPWA();
+                this.setLanguage(this.currentLanguage);
                 this.refreshAll();
                 console.log('🎨 InkManager Pro - Complete Version Initialized');
+            }
+
+            setLanguage(lang) {
+                this.currentLanguage = lang;
+                localStorage.setItem('inkmanager_language', lang);
+                
+                // Update language selector
+                document.getElementById('languageSelect').value = lang;
+                
+                // Update all translatable elements
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (this.translations[lang] && this.translations[lang][key]) {
+                        element.textContent = this.translations[lang][key];
+                    }
+                });
+                
+                // Update placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (this.translations[lang] && this.translations[lang][key]) {
+                        element.placeholder = this.translations[lang][key];
+                    }
+                });
+                
+                // Refresh the current page to update dynamic content
+                this.refreshSection(this.currentSection || 'dashboard');
             }
 
             setupPWA() {
@@ -1609,11 +2222,21 @@
 
             setupEventListeners() {
                 // Navigation
-                document.querySelectorAll('.nav-btn').forEach(btn => {
+                document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
                         this.showSection(e.currentTarget.dataset.section);
                     });
+                });
+
+                // Quick Actions
+                document.getElementById('quickAddClient').addEventListener('click', () => this.openClientModal());
+                document.getElementById('quickAddSession').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('quickAddInventory').addEventListener('click', () => this.openInventoryModal());
+
+                // Language Selector
+                document.getElementById('languageSelect').addEventListener('change', (e) => {
+                    this.setLanguage(e.target.value);
                 });
 
                 // Client Management
@@ -1669,8 +2292,9 @@
 
             // Navigation and Section Management
             showSection(sectionId) {
+                this.currentSection = sectionId;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
                 
                 document.getElementById(sectionId).classList.add('active');
                 document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
@@ -1894,10 +2518,10 @@
                     container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
-                            <h3>No Clients Yet</h3>
-                            <p>Start building your professional client database</p>
+                            <h3 data-i18n="no_clients_yet">No Clients Yet</h3>
+                            <p data-i18n="build_client_database">Start building your professional client database</p>
                             <button class="btn btn-primary" id="addFirstClient">
-                                <i class="fas fa-plus"></i> Add Your First Client
+                                <i class="fas fa-plus"></i> <span data-i18n="add_first_client">Add Your First Client</span>
                             </button>
                         </div>
                     `;
@@ -2124,10 +2748,10 @@
                     container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-calendar-plus"></i>
-                            <h3>No Sessions Yet</h3>
-                            <p>Schedule your first professional tattoo session</p>
+                            <h3 data-i18n="no_sessions_scheduled">No Sessions Scheduled</h3>
+                            <p data-i18n="schedule_first_session">Schedule your first professional tattoo session</p>
                             <button class="btn btn-primary" id="addFirstSession">
-                                <i class="fas fa-plus"></i> Create First Session
+                                <i class="fas fa-plus"></i> <span data-i18n="create_first_session">Create First Session</span>
                             </button>
                         </div>
                     `;
@@ -2289,10 +2913,10 @@
                     container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-box-open"></i>
-                            <h3>No Inventory Items</h3>
-                            <p>Track your needles, ink, and professional supplies</p>
+                            <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
+                            <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
                             <button class="btn btn-primary" id="addFirstItem">
-                                <i class="fas fa-plus"></i> Add First Item
+                                <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
                             </button>
                         </div>
                     `;
@@ -2431,10 +3055,10 @@
                     todayContainer.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-calendar-times"></i>
-                            <h3>No Sessions Today</h3>
-                            <p>Your schedule is clear for today</p>
+                            <h3 data-i18n="no_sessions_today">No Sessions Today</h3>
+                            <p data-i18n="schedule_clear">Your schedule is clear for today</p>
                             <button class="btn btn-primary" onclick="app.showSection('sessions')">
-                                <i class="fas fa-plus"></i> Schedule a Session
+                                <i class="fas fa-plus"></i> <span data-i18n="schedule_session">Schedule a Session</span>
                             </button>
                         </div>
                     `;
@@ -2719,7 +3343,5 @@
 
         console.log('🚀 InkManager Pro Complete Version - Ready!');
     </script>
-    <script src="https://unpkg.com/i18next@23.6.3/i18next.min.js"></script>
 </body>
 </html>
-
