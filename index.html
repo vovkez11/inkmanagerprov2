@@ -1,1 +1,3348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkManager Pro - Professional Tattoo Studio Management</title>
+    <meta name="description" content="Complete tattoo studio management system for professional artists">
+    <meta name="theme-color" content="#00bcd4">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<style>
+    :root {
+        --primary: #00bcd4;
+        --primary-dark: #008ba3;
+        --primary-light: #80deea;
+        --secondary: #ff4081;
+        --accent: #ff9800;
+        --dark: #0d1117;
+        --darker: #010409;
+        --dark-gray: #161b22;
+        --light: #f5f5f5;
+        --success: #4caf50;
+        --warning: #ff9800;
+        --danger: #f44336;
+        --border-radius: 16px;
+        --shadow: 0 12px 40px rgba(0,0,0,0.4);
+        --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        color: var(--light);
+        line-height: 1.7;
+        min-height: 100vh;
+        padding: 0;
+        overflow-x: hidden;
+        display: flex;
+    }
+
+    /* Sidebar Navigation */
+    #sidebar {
+        width: 280px;
+        background: linear-gradient(180deg, var(--dark-gray) 0%, var(--darker) 100%);
+        border-right: 1px solid #30363d;
+        padding: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        box-shadow: 2px 0 20px rgba(0,0,0,0.6);
+        z-index: 1000;
+    }
+
+    .logo {
+        font-family: 'Permanent Marker', cursive;
+        color: var(--primary);
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+        letter-spacing: 1.5px;
+        padding: 0 1.5rem;
+    }
+
+    .nav-section {
+        margin-bottom: 2rem;
+    }
+
+    .nav-section-title {
+        color: var(--primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.7;
+        font-weight: 600;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 2rem;
+        color: var(--light);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+        margin: 0.15rem 0;
+        cursor: pointer;
+    }
+
+    .nav-link:hover {
+        background: linear-gradient(90deg, rgba(0, 188, 212, 0.1) 0%, transparent 100%);
+        color: var(--primary);
+        border-left-color: var(--primary);
+    }
+
+    .nav-link.active {
+        background: linear-gradient(90deg, rgba(0, 188, 212, 0.15) 0%, transparent 100%);
+        color: var(--primary);
+        border-left-color: var(--primary);
+    }
+
+    .nav-link i {
+        margin-right: 15px;
+        font-size: 1.3rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Language Selector */
+    .language-selector {
+        padding: 0 2rem;
+        margin-top: auto;
+        margin-bottom: 1rem;
+    }
+
+    .language-selector select {
+        width: 100%;
+        padding: 10px;
+        background: var(--dark);
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        color: var(--light);
+        font-size: 0.9rem;
+    }
+
+    /* Main Content Area */
+    .app-container {
+        flex-grow: 1;
+        max-width: calc(100% - 280px);
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    /* Header */
+    .app-header {
+        background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
+        padding: 25px;
+        text-align: center;
+        border-radius: var(--border-radius);
+        margin-bottom: 25px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .app-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    }
+
+    .tagline {
+        color: var(--primary-light);
+        font-size: 1.2em;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        font-weight: 300;
+    }
+
+    /* Install Button */
+    .install-btn {
+        background: linear-gradient(135deg, var(--success) 0%, #66bb6a 100%);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        display: none;
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+        min-height: 50px;
+        min-width: 140px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .install-btn.pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .install-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    /* Install Prompt */
+    .install-prompt {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--darker);
+        padding: 20px 25px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        display: none;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 90%;
+        animation: toastSlideUp 0.4s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        font-weight: 600;
+    }
+
+    .install-prompt.show {
+        display: flex;
+    }
+
+    /* Sections */
+    .section {
+        display: none;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .section.active {
+        display: block;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Cards */
+    .card {
+        background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        transform: scaleX(0);
+        transition: var(--transition);
+    }
+
+    .card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    .card-title {
+        font-size: 1.5em;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 8px 16px;
+        border-radius: 10px;
+    }
+
+    .card-title:hover {
+        background: rgba(0, 188, 212, 0.1);
+        transform: translateX(5px);
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 14px 24px;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1em;
+        position: relative;
+        overflow: hidden;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: var(--transition);
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--darker);
+        box-shadow: 0 6px 20px rgba(0, 188, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 188, 212, 0.4);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success) 0%, #66bb6a 100%);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger) 0%, #ef5350 100%);
+        color: white;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, var(--warning) 0%, #ffb74d 100%);
+        color: var(--darker);
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+
+    .btn-outline:hover {
+        background: var(--primary);
+        color: var(--darker);
+        transform: translateY(-2px);
+    }
+
+    .btn:active {
+        transform: scale(0.95);
+        transition: transform 0.1s;
+    }
+
+    /* Form Dropdown Styling */
+    select.form-control {
+        background: linear-gradient(135deg, var(--dark) 0%, #222 100%) !important;
+        color: var(--light) !important;
+        border: 2px solid rgba(255,255,255,0.1) !important;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300bcd4' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 16px center !important;
+        background-size: 16px !important;
+        padding-right: 45px !important;
+    }
+
+    select.form-control:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.15) !important;
+        outline: none !important;
+    }
+
+    select.form-control option {
+        background: var(--dark) !important;
+        color: var(--light) !important;
+        padding: 12px !important;
+    }
+
+    /* Forms */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 1em;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 16px;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: var(--border-radius);
+        background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
+        color: var(--light);
+        font-size: 16px;
+        transition: var(--transition);
+        font-family: inherit;
+        min-height: 50px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Materials Used Section */
+    .materials-section {
+        background: rgba(0, 188, 212, 0.05);
+        border: 1px solid rgba(0, 188, 212, 0.2);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .materials-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr auto;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 15px;
+    }
+
+    .material-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 12px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .material-qty {
+        width: 80px;
+        text-align: center;
+    }
+
+    .remove-material {
+        background: var(--danger);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .remove-material:hover {
+        transform: scale(1.1);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
+        padding: 25px;
+        text-align: center;
+        border-radius: var(--border-radius);
+        border-left: 5px solid var(--primary);
+        transition: var(--transition);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(0,188,212,0.1) 0%, transparent 100%);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: var(--shadow);
+        border-left-color: var(--secondary);
+    }
+
+    .stat-value {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 8px;
+        line-height: 1;
+        text-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .stat-label {
+        color: var(--light);
+        opacity: 0.9;
+        font-size: 0.95em;
+        font-weight: 600;
+    }
+
+    /* Lists */
+    .client-item, .session-item, .inventory-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        transition: var(--transition);
+        cursor: pointer;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, rgba(42,42,42,0.8) 0%, rgba(50,50,50,0.6) 100%);
+    }
+
+    .client-item:hover, .session-item:hover, .inventory-item:hover {
+        background: linear-gradient(135deg, rgba(0,188,212,0.15) 0%, rgba(255,64,129,0.1) 100%);
+        transform: translateX(10px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .item-content {
+        flex: 1;
+    }
+
+    .item-title {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: var(--light);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .item-meta {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9em;
+        line-height: 1.6;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 8px;
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .client-item:hover .item-actions,
+    .session-item:hover .item-actions,
+    .inventory-item:hover .item-actions {
+        opacity: 1;
+    }
+
+    .action-btn {
+        padding: 10px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85em;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+        min-height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+    }
+
+    /* Calendar */
+    .calendar-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .calendar-day {
+        background: linear-gradient(135deg, var(--dark-gray) 0%, #333 100%);
+        min-height: 80px;
+        padding: 8px 4px;
+        border: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .calendar-day:hover {
+        background: linear-gradient(135deg, rgba(0,188,212,0.2) 0%, rgba(255,64,129,0.1) 100%);
+        transform: scale(1.05);
+        z-index: 2;
+    }
+
+    .calendar-day.header {
+        background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
+        font-weight: bold;
+        text-align: center;
+        padding: 15px 8px;
+        color: var(--primary);
+        cursor: default;
+        font-size: 0.9em;
+        min-height: 50px;
+    }
+
+    .calendar-day.header:hover {
+        background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
+        transform: none;
+    }
+
+    .calendar-day.today {
+        background: linear-gradient(135deg, rgba(0,188,212,0.3) 0%, rgba(255,64,129,0.2) 100%);
+        border: 3px solid var(--primary);
+        box-shadow: 0 0 30px rgba(0, 188, 212, 0.3);
+    }
+
+    .calendar-day.has-event::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 6px;
+        height: 6px;
+        background: var(--secondary);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--secondary);
+    }
+
+    .day-number {
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: var(--primary);
+        font-size: 1em;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .event {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--darker);
+        padding: 4px 6px;
+        margin: 2px 0;
+        border-radius: 4px;
+        font-size: 0.7em;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .event:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Modals */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 1000;
+        backdrop-filter: blur(15px);
+        animation: fadeIn 0.4s ease;
+        padding: 10px;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
+        padding: 30px;
+        border-radius: var(--border-radius);
+        max-width: 95%;
+        width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 2px solid var(--primary);
+        box-shadow: var(--shadow);
+        animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -60%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 60px 30px;
+        color: rgba(255,255,255,0.6);
+    }
+
+    .empty-state i {
+        font-size: 4em;
+        margin-bottom: 20px;
+        opacity: 0.4;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));
+    }
+
+    .empty-state h3 {
+        font-size: 1.6em;
+        margin-bottom: 12px;
+        color: rgba(255,255,255,0.8);
+        font-weight: 600;
+    }
+
+    .empty-state p {
+        font-size: 1em;
+        margin-bottom: 25px;
+        opacity: 0.8;
+        line-height: 1.6;
+    }
+
+    /* Toast Notifications */
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--success) 0%, #66bb6a 100%);
+        color: white;
+        padding: 16px 24px;
+        border-radius: var(--border-radius);
+        z-index: 1001;
+        display: none;
+        box-shadow: var(--shadow);
+        animation: toastSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        max-width: 90%;
+        text-align: center;
+    }
+
+    .toast.show {
+        display: block;
+    }
+
+    @keyframes toastSlideUp {
+        from {
+            bottom: -60px;
+            opacity: 0;
+        }
+        to {
+            bottom: 30px;
+            opacity: 1;
+        }
+    }
+
+    /* Today's Sessions Special Styling */
+    .todays-session-item {
+        background: linear-gradient(135deg, rgba(0,188,212,0.15) 0%, rgba(255,64,129,0.1) 100%);
+        border-left: 4px solid var(--primary);
+        padding: 18px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .todays-session-item:hover {
+        transform: translateX(10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .todays-session-item.urgent {
+        border-left-color: var(--warning);
+        background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);
+    }
+
+    .todays-session-item.completed {
+        border-left-color: var(--success);
+        background: linear-gradient(135deg, rgba(76,175,80,0.15) 0%, rgba(0,188,212,0.1) 100%);
+        opacity: 0.8;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        #sidebar {
+            width: 70px;
+        }
+
+        .logo, .nav-link span, .nav-section-title {
+            display: none;
+        }
+
+        .nav-link {
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .nav-link i {
+            margin-right: 0;
+        }
+
+        .app-container {
+            max-width: calc(100% - 70px);
+            padding: 15px;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .calendar-grid {
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .client-item, .session-item, .inventory-item {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .item-actions {
+            opacity: 1;
+            width: 100%;
+            justify-content: flex-end;
+        }
+        
+        .modal-content {
+            width: 95%;
+            padding: 25px 20px;
+        }
+        
+        .install-prompt {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .app-header {
+            padding: 20px 15px;
+        }
+
+        .card {
+            padding: 20px;
+        }
+
+        .materials-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .card {
+            padding: 18px 15px;
+        }
+
+        .calendar-day {
+            min-height: 60px;
+            padding: 6px 3px;
+        }
+
+        .day-number {
+            font-size: 0.9em;
+        }
+
+        .event {
+            font-size: 0.6em;
+            padding: 3px 4px;
+        }
+
+        .form-control {
+            padding: 14px;
+        }
+    }
+
+    /* Loading Animation */
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar">
+        <div class="logo">InkManager Pro</div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" data-i18n="main_navigation">Main Navigation</div>
+            <a class="nav-link active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span>
+            </a>
+            <a class="nav-link" data-section="clients">
+                <i class="fas fa-users"></i> <span data-i18n="clients">Clients</span>
+            </a>
+            <a class="nav-link" data-section="sessions">
+                <i class="fas fa-calendar-check"></i> <span data-i18n="sessions">Sessions</span>
+            </a>
+            <a class="nav-link" data-section="inventory">
+                <i class="fas fa-boxes"></i> <span data-i18n="inventory">Inventory</span>
+            </a>
+            <a class="nav-link" data-section="calendar">
+                <i class="fas fa-calendar-day"></i> <span data-i18n="calendar">Calendar</span>
+            </a>
+            <a class="nav-link" data-section="reports">
+                <i class="fas fa-chart-bar"></i> <span data-i18n="reports">Reports</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title" data-i18n="quick_actions">Quick Actions</div>
+            <a class="nav-link" id="quickAddClient">
+                <i class="fas fa-user-plus"></i> <span data-i18n="add_client">Add Client</span>
+            </a>
+            <a class="nav-link" id="quickAddSession">
+                <i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span>
+            </a>
+            <a class="nav-link" id="quickAddInventory">
+                <i class="fas fa-box-open"></i> <span data-i18n="add_inventory">Add Inventory</span>
+            </a>
+        </div>
+
+        <div class="language-selector">
+            <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="ru">Русский</option>
+                <option value="he">עברית</option>
+            </select>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="app-container">
+        <!-- Professional Header -->
+        <div class="app-header">
+            <div class="logo">
+                <i class="fas fa-dragon"></i>
+                InkManager Pro
+            </div>
+            <div class="tagline" data-i18n="tagline">Professional Tattoo Studio Management System</div>
+            <button class="install-btn" id="installButton">
+                <i class="fas fa-download"></i> <span data-i18n="install_app">Install App</span>
+            </button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="studio_overview">Studio Overview</span>
+                    </h2>
+                    <button class="btn btn-outline" onclick="app.exportData('all')">
+                        <i class="fas fa-download"></i> <span data-i18n="backup_data">Backup Data</span>
+                    </button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="app.showSection('clients')">
+                        <div class="stat-value" id="totalClients">0</div>
+                        <div class="stat-label" data-i18n="total_clients">Total Clients</div>
+                    </div>
+                    <div class="stat-card" onclick="app.showSection('sessions')">
+                        <div class="stat-value" id="upcomingSessions">0</div>
+                        <div class="stat-label" data-i18n="upcoming_sessions">Upcoming Sessions</div>
+                    </div>
+                    <div class="stat-card" onclick="app.showSection('reports')">
+                        <div class="stat-value" id="monthlyRevenue">€0</div>
+                        <div class="stat-label" data-i18n="monthly_revenue">Monthly Revenue</div>
+                    </div>
+                    <div class="stat-card" onclick="app.showSection('inventory')">
+                        <div class="stat-value" id="lowStockItems">0</div>
+                        <div class="stat-label" data-i18n="low_stock_items">Low Stock Items</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Sessions -->
+            <div class="card">
+                <h3 class="card-title" onclick="app.showSection('sessions')">
+                    <i class="fas fa-calendar-check"></i> <span data-i18n="todays_schedule">Today's Schedule</span>
+                </h3>
+                <div id="todaysSessions">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3 data-i18n="no_sessions_today">No Sessions Today</h3>
+                        <p data-i18n="schedule_clear">Your schedule is clear for today</p>
+                        <button class="btn btn-primary" onclick="app.showSection('sessions')">
+                            <i class="fas fa-plus"></i> <span data-i18n="schedule_session">Schedule a Session</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" onclick="app.showSection('reports')">
+                    <i class="fas fa-chart-line"></i> <span data-i18n="quick_insights">Quick Insights</span>
+                </h3>
+                <div id="dashboardInsights">
+                    <div class="empty-state">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3 data-i18n="no_data_yet">No Data Yet</h3>
+                        <p data-i18n="start_adding_data">Start adding clients and sessions to see insights</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clients Section -->
+        <section id="clients" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-users"></i> <span data-i18n="client_management">Client Management</span>
+                    </h2>
+                    <button class="btn btn-primary" id="addClientBtn">
+                        <i class="fas fa-plus"></i> <span data-i18n="new_client">New Client</span>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="clientSearch" 
+                           placeholder="🔍 Search clients by name, phone, or email..." data-i18n-placeholder="search_clients">
+                </div>
+
+                <div id="clientsList">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3 data-i18n="no_clients_yet">No Clients Yet</h3>
+                        <p data-i18n="build_client_database">Start building your professional client database</p>
+                        <button class="btn btn-primary" id="addFirstClient">
+                            <i class="fas fa-plus"></i> <span data-i18n="add_first_client">Add Your First Client</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sessions Section -->
+        <section id="sessions" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-calendar-alt"></i> <span data-i18n="session_management">Session Management</span>
+                    </h2>
+                    <button class="btn btn-primary" id="addSessionBtn">
+                        <i class="fas fa-plus"></i> <span data-i18n="new_session">New Session</span>
+                    </button>
+                </div>
+
+                <div id="sessionsList">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3 data-i18n="no_sessions_scheduled">No Sessions Scheduled</h3>
+                        <p data-i18n="schedule_first_session">Schedule your first professional tattoo session</p>
+                        <button class="btn btn-primary" id="addFirstSession">
+                            <i class="fas fa-plus"></i> <span data-i18n="create_first_session">Create First Session</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-syringe"></i> <span data-i18n="inventory_management">Inventory Management</span>
+                    </h2>
+                    <button class="btn btn-primary" id="addInventoryBtn">
+                        <i class="fas fa-plus"></i> <span data-i18n="new_item">New Item</span>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="inventorySearch" 
+                           placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
+                </div>
+
+                <div id="inventoryList">
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
+                        <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
+                        <button class="btn btn-primary" id="addFirstItem">
+                            <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inventoryAlerts"></div>
+        </section>
+
+        <!-- Calendar Section -->
+        <section id="calendar" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-calendar-day"></i> <span data-i18n="studio_calendar">Studio Calendar</span>
+                    </h2>
+                    <button class="btn btn-primary" id="addCalendarSessionBtn">
+                        <i class="fas fa-plus"></i> <span data-i18n="new_session">New Session</span>
+                    </button>
+                </div>
+
+                <div class="calendar-controls">
+                    <button class="btn btn-outline" id="prevMonthBtn">
+                        <i class="fas fa-chevron-left"></i> <span data-i18n="previous">Previous</span>
+                    </button>
+                    <h3 id="calendarMonth" style="color: var(--primary); font-weight: 700; font-size: 1.3em;"></h3>
+                    <button class="btn btn-outline" id="nextMonthBtn">
+                        <span data-i18n="next">Next</span> <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                        <i class="fas fa-chart-bar"></i> <span data-i18n="analytics_reports">Analytics & Reports</span>
+                    </h2>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label" data-i18n="total_sessions">Total Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalRevenue">€0</div>
+                        <div class="stat-label" data-i18n="total_revenue">Total Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgSessionPrice">€0</div>
+                        <div class="stat-label" data-i18n="avg_session_price">Avg Session Price</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="clientRetention">0%</div>
+                        <div class="stat-label" data-i18n="client_retention">Client Retention</div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <h3 class="card-title"><i class="fas fa-download"></i> <span data-i18n="data_export">Data Export</span></h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-success" onclick="app.exportData('all')">
+                            <i class="fas fa-database"></i> <span data-i18n="full_backup">Full Backup</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="app.exportData('clients')">
+                            <i class="fas fa-users"></i> <span data-i18n="export_clients">Export Clients</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="app.exportData('sessions')">
+                            <i class="fas fa-calendar"></i> <span data-i18n="export_sessions">Export Sessions</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="app.exportData('inventory')">
+                            <i class="fas fa-box"></i> <span data-i18n="export_inventory">Export Inventory</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <span style="font-weight: 600; font-size: 1em;" data-i18n="install_prompt">Install InkManager Pro for the ultimate experience?</span>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn btn-success" id="installConfirmBtn">
+                <i class="fas fa-download"></i> <span data-i18n="install_now">Install Now</span>
+            </button>
+            <button class="btn btn-outline" id="installDismissBtn">
+                <span data-i18n="maybe_later">Maybe Later</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Client Modal -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3 class="card-title" id="clientModalTitle"><i class="fas fa-user-plus"></i> <span data-i18n="create_new_client">Create New Client</span></h3>
+                <button class="btn btn-danger" id="closeClientModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="clientForm">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="full_name">Full Name *</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="John Smith" data-i18n-placeholder="name_placeholder" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="phone_number">Phone Number</label>
+                        <input type="tel" class="form-control" id="clientPhone" placeholder="+1 (555) 123-4567" data-i18n-placeholder="phone_placeholder">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="email_address">Email Address</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="john@example.com" data-i18n-placeholder="email_placeholder">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="birth_date">Birth Date</label>
+                        <input type="date" class="form-control" id="clientBirthDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="skin_type">Skin Type</label>
+                        <select class="form-control" id="clientSkinType">
+                            <option value="" data-i18n="select_skin_type">Select skin type...</option>
+                            <option value="normal" data-i18n="normal">Normal</option>
+                            <option value="sensitive" data-i18n="sensitive">Sensitive</option>
+                            <option value="oily" data-i18n="oily">Oily</option>
+                            <option value="dry" data-i18n="dry">Dry</option>
+                            <option value="combination" data-i18n="combination">Combination</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="emergency_contact">Emergency Contact</label>
+                    <input type="text" class="form-control" id="clientEmergencyContact" 
+                           placeholder="Name and phone number" data-i18n-placeholder="emergency_placeholder">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="notes_preferences">Notes & Preferences</label>
+                    <textarea class="form-control" id="clientNotes" 
+                              placeholder="Allergies, style preferences, important medical notes, design ideas..." 
+                              data-i18n-placeholder="notes_placeholder" rows="4"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 25px;">
+                    <button type="button" class="btn btn-outline" id="cancelClientBtn" style="flex: 1;">
+                        <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveClientBtn" style="flex: 2;">
+                        <i class="fas fa-save"></i> <span data-i18n="save_client">Save Client</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Session Modal -->
+    <div id="sessionModal" class="modal">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span></h3>
+                <button class="btn btn-danger" id="closeSessionModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="sessionForm">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="client">Client *</label>
+                    <select class="form-control" id="sessionClient" required>
+                        <option value="" data-i18n="select_client">Select a client...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="session_title">Session Title *</label>
+                    <input type="text" class="form-control" id="sessionTitle" 
+                           placeholder="e.g., Sleeve Outline, Cover-up, New Tattoo..." data-i18n-placeholder="session_title_placeholder" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="date_time">Date & Time *</label>
+                    <input type="datetime-local" class="form-control" id="sessionDateTime" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="duration_hours">Duration (hours)</label>
+                        <input type="number" class="form-control" id="sessionDuration" 
+                               placeholder="2" min="1" max="12" step="0.5" value="2">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="price">Price (€)</label>
+                        <input type="number" class="form-control" id="sessionPrice" 
+                               placeholder="0.00" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <!-- Materials Used Section -->
+                <div class="materials-section">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-syringe"></i> <span data-i18n="materials_used">Materials Used</span>
+                    </h4>
+                    
+                    <div class="materials-grid">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="item">Item</label>
+                            <select class="form-control" id="materialItem">
+                                <option value="" data-i18n="select_item">Select item...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="quantity">Quantity</label>
+                            <input type="number" class="form-control material-qty" id="materialQty" 
+                                   min="1" value="1" placeholder="Qty">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="addMaterialBtn" style="min-height: 50px;">
+                            <i class="fas fa-plus"></i> <span data-i18n="add">Add</span>
+                        </button>
+                    </div>
+
+                    <div id="materialsList">
+                        <!-- Materials will be added here dynamically -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="session_notes">Session Notes</label>
+                    <textarea class="form-control" id="sessionNotes" 
+                              placeholder="Design details, placement, special requests, aftercare instructions..." 
+                              data-i18n-placeholder="session_notes_placeholder" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1em;">
+                    <i class="fas fa-save"></i> <span data-i18n="save_session">Save Session</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3 class="card-title" id="inventoryModalTitle"><i class="fas fa-box"></i> <span data-i18n="new_inventory_item">New Inventory Item</span></h3>
+                <button class="btn btn-danger" id="closeInventoryModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="inventoryForm">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="item_name">Item Name *</label>
+                    <input type="text" class="form-control" id="itemName" 
+                           placeholder="Round Liner 5RL, Eternal Ink Black, Disposable Grips..." data-i18n-placeholder="item_name_placeholder" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="type">Type *</label>
+                        <select class="form-control" id="itemType" required>
+                            <option value="" data-i18n="select_type">Select type...</option>
+                            <option value="needle" data-i18n="needle">Needle</option>
+                            <option value="ink" data-i18n="ink">Ink</option>
+                            <option value="machine" data-i18n="machine">Machine</option>
+                            <option value="supply" data-i18n="supply">Supply</option>
+                            <option value="aftercare" data-i18n="aftercare">Aftercare</option>
+                            <option value="safety" data-i18n="safety">Safety Equipment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="current_quantity">Current Quantity *</label>
+                        <input type="number" class="form-control" id="itemQty" 
+                               placeholder="10" min="0" required value="10">
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="low_stock_alert">Low Stock Alert</label>
+                        <input type="number" class="form-control" id="itemAlert" 
+                               placeholder="5" min="1" value="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="price_per_unit">Price per Unit (€)</label>
+                        <input type="number" class="form-control" id="itemPrice" 
+                               placeholder="0.00" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="supplier_notes">Supplier & Notes</label>
+                    <textarea class="form-control" id="itemNotes" 
+                              placeholder="Supplier information, color codes, expiration dates..." 
+                              data-i18n-placeholder="supplier_notes_placeholder" rows="3"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 25px;">
+                    <button type="button" class="btn btn-outline" id="cancelInventoryBtn" style="flex: 1;">
+                        <span data-i18n="cancel">Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveInventoryBtn" style="flex: 2;">
+                        <i class="fas fa-save"></i> <span data-i18n="save_item">Save Item</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // INKMANAGER PRO - COMPLETE WORKING VERSION WITH MULTI-LANGUAGE SUPPORT
+        class InkManagerPro {
+            constructor() {
+                this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
+                this.sessions = JSON.parse(localStorage.getItem('inkmanager_sessions')) || [];
+                this.inventory = JSON.parse(localStorage.getItem('inkmanager_inventory')) || [];
+                this.currentMonth = new Date().getMonth();
+                this.currentYear = new Date().getFullYear();
+                this.editingClientId = null;
+                this.editingItemId = null;
+                this.editingSessionId = null;
+                this.currentSessionMaterials = [];
+                this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
+                
+                // Translation resources
+                this.translations = {
+                    en: {
+                        // Navigation
+                        "main_navigation": "Main Navigation",
+                        "dashboard": "Dashboard",
+                        "clients": "Clients",
+                        "sessions": "Sessions",
+                        "inventory": "Inventory",
+                        "calendar": "Calendar",
+                        "reports": "Reports",
+                        "quick_actions": "Quick Actions",
+                        "add_client": "Add Client",
+                        "schedule_session": "Schedule Session",
+                        "add_inventory": "Add Inventory",
+                        
+                        // Header
+                        "tagline": "Professional Tattoo Studio Management System",
+                        "install_app": "Install App",
+                        
+                        // Dashboard
+                        "studio_overview": "Studio Overview",
+                        "backup_data": "Backup Data",
+                        "total_clients": "Total Clients",
+                        "upcoming_sessions": "Upcoming Sessions",
+                        "monthly_revenue": "Monthly Revenue",
+                        "low_stock_items": "Low Stock Items",
+                        "todays_schedule": "Today's Schedule",
+                        "no_sessions_today": "No Sessions Today",
+                        "schedule_clear": "Your schedule is clear for today",
+                        "quick_insights": "Quick Insights",
+                        "no_data_yet": "No Data Yet",
+                        "start_adding_data": "Start adding clients and sessions to see insights",
+                        
+                        // Clients
+                        "client_management": "Client Management",
+                        "new_client": "New Client",
+                        "search_clients": "🔍 Search clients by name, phone, or email...",
+                        "no_clients_yet": "No Clients Yet",
+                        "build_client_database": "Start building your professional client database",
+                        "add_first_client": "Add Your First Client",
+                        
+                        // Sessions
+                        "session_management": "Session Management",
+                        "new_session": "New Session",
+                        "no_sessions_scheduled": "No Sessions Scheduled",
+                        "schedule_first_session": "Schedule your first professional tattoo session",
+                        "create_first_session": "Create First Session",
+                        
+                        // Inventory
+                        "inventory_management": "Inventory Management",
+                        "new_item": "New Item",
+                        "search_inventory": "🔍 Search inventory items...",
+                        "no_inventory_items": "No Inventory Items",
+                        "track_supplies": "Track your needles, ink, and professional supplies",
+                        "add_first_item": "Add First Item",
+                        
+                        // Calendar
+                        "studio_calendar": "Studio Calendar",
+                        "previous": "Previous",
+                        "next": "Next",
+                        
+                        // Reports
+                        "analytics_reports": "Analytics & Reports",
+                        "total_sessions": "Total Sessions",
+                        "total_revenue": "Total Revenue",
+                        "avg_session_price": "Avg Session Price",
+                        "client_retention": "Client Retention",
+                        "data_export": "Data Export",
+                        "full_backup": "Full Backup",
+                        "export_clients": "Export Clients",
+                        "export_sessions": "Export Sessions",
+                        "export_inventory": "Export Inventory",
+                        
+                        // Install Prompt
+                        "install_prompt": "Install InkManager Pro for the ultimate experience?",
+                        "install_now": "Install Now",
+                        "maybe_later": "Maybe Later",
+                        
+                        // Client Modal
+                        "create_new_client": "Create New Client",
+                        "full_name": "Full Name",
+                        "name_placeholder": "John Smith",
+                        "phone_number": "Phone Number",
+                        "phone_placeholder": "+1 (555) 123-4567",
+                        "email_address": "Email Address",
+                        "email_placeholder": "john@example.com",
+                        "birth_date": "Birth Date",
+                        "skin_type": "Skin Type",
+                        "select_skin_type": "Select skin type...",
+                        "normal": "Normal",
+                        "sensitive": "Sensitive",
+                        "oily": "Oily",
+                        "dry": "Dry",
+                        "combination": "Combination",
+                        "emergency_contact": "Emergency Contact",
+                        "emergency_placeholder": "Name and phone number",
+                        "notes_preferences": "Notes & Preferences",
+                        "notes_placeholder": "Allergies, style preferences, important medical notes, design ideas...",
+                        "cancel": "Cancel",
+                        "save_client": "Save Client",
+                        
+                        // Session Modal
+                        "schedule_session": "Schedule Session",
+                        "client": "Client",
+                        "select_client": "Select a client...",
+                        "session_title": "Session Title",
+                        "session_title_placeholder": "e.g., Sleeve Outline, Cover-up, New Tattoo...",
+                        "date_time": "Date & Time",
+                        "duration_hours": "Duration (hours)",
+                        "price": "Price (€)",
+                        "materials_used": "Materials Used",
+                        "item": "Item",
+                        "select_item": "Select item...",
+                        "quantity": "Quantity",
+                        "add": "Add",
+                        "session_notes": "Session Notes",
+                        "session_notes_placeholder": "Design details, placement, special requests, aftercare instructions...",
+                        "save_session": "Save Session",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "New Inventory Item",
+                        "item_name": "Item Name",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, Disposable Grips...",
+                        "type": "Type",
+                        "select_type": "Select type...",
+                        "needle": "Needle",
+                        "ink": "Ink",
+                        "machine": "Machine",
+                        "supply": "Supply",
+                        "aftercare": "Aftercare",
+                        "safety": "Safety Equipment",
+                        "current_quantity": "Current Quantity",
+                        "low_stock_alert": "Low Stock Alert",
+                        "price_per_unit": "Price per Unit (€)",
+                        "supplier_notes": "Supplier & Notes",
+                        "supplier_notes_placeholder": "Supplier information, color codes, expiration dates...",
+                        "save_item": "Save Item"
+                    },
+                    es: {
+                        // Navigation
+                        "main_navigation": "Navegación Principal",
+                        "dashboard": "Panel",
+                        "clients": "Clientes",
+                        "sessions": "Sesiones",
+                        "inventory": "Inventario",
+                        "calendar": "Calendario",
+                        "reports": "Informes",
+                        "quick_actions": "Acciones Rápidas",
+                        "add_client": "Agregar Cliente",
+                        "schedule_session": "Programar Sesión",
+                        "add_inventory": "Agregar Inventario",
+                        
+                        // Header
+                        "tagline": "Sistema Profesional de Gestión de Estudios de Tatuajes",
+                        "install_app": "Instalar App",
+                        
+                        // Dashboard
+                        "studio_overview": "Resumen del Estudio",
+                        "backup_data": "Respaldar Datos",
+                        "total_clients": "Clientes Totales",
+                        "upcoming_sessions": "Sesiones Próximas",
+                        "monthly_revenue": "Ingresos Mensuales",
+                        "low_stock_items": "Artículos Bajos en Stock",
+                        "todays_schedule": "Horario de Hoy",
+                        "no_sessions_today": "No Hay Sesiones Hoy",
+                        "schedule_clear": "Tu horario está libre para hoy",
+                        "quick_insights": "Información Rápida",
+                        "no_data_yet": "Aún No Hay Datos",
+                        "start_adding_data": "Comienza agregando clientes y sesiones para ver información",
+                        
+                        // Clients
+                        "client_management": "Gestión de Clientes",
+                        "new_client": "Nuevo Cliente",
+                        "search_clients": "🔍 Buscar clientes por nombre, teléfono o email...",
+                        "no_clients_yet": "Aún No Hay Clientes",
+                        "build_client_database": "Comienza a construir tu base de datos profesional de clientes",
+                        "add_first_client": "Agregar Tu Primer Cliente",
+                        
+                        // Sessions
+                        "session_management": "Gestión de Sesiones",
+                        "new_session": "Nueva Sesión",
+                        "no_sessions_scheduled": "No Hay Sesiones Programadas",
+                        "schedule_first_session": "Programa tu primera sesión profesional de tatuaje",
+                        "create_first_session": "Crear Primera Sesión",
+                        
+                        // Inventory
+                        "inventory_management": "Gestión de Inventario",
+                        "new_item": "Nuevo Artículo",
+                        "search_inventory": "🔍 Buscar artículos de inventario...",
+                        "no_inventory_items": "No Hay Artículos en Inventario",
+                        "track_supplies": "Rastrea tus agujas, tinta y suministros profesionales",
+                        "add_first_item": "Agregar Primer Artículo",
+                        
+                        // Calendar
+                        "studio_calendar": "Calendario del Estudio",
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        
+                        // Reports
+                        "analytics_reports": "Análisis e Informes",
+                        "total_sessions": "Sesiones Totales",
+                        "total_revenue": "Ingresos Totales",
+                        "avg_session_price": "Precio Promedio por Sesión",
+                        "client_retention": "Retención de Clientes",
+                        "data_export": "Exportar Datos",
+                        "full_backup": "Respaldo Completo",
+                        "export_clients": "Exportar Clientes",
+                        "export_sessions": "Exportar Sesiones",
+                        "export_inventory": "Exportar Inventario",
+                        
+                        // Install Prompt
+                        "install_prompt": "¿Instalar InkManager Pro para la mejor experiencia?",
+                        "install_now": "Instalar Ahora",
+                        "maybe_later": "Quizás Más Tarde",
+                        
+                        // Client Modal
+                        "create_new_client": "Crear Nuevo Cliente",
+                        "full_name": "Nombre Completo",
+                        "name_placeholder": "Juan Pérez",
+                        "phone_number": "Número de Teléfono",
+                        "phone_placeholder": "+1 (555) 123-4567",
+                        "email_address": "Correo Electrónico",
+                        "email_placeholder": "juan@ejemplo.com",
+                        "birth_date": "Fecha de Nacimiento",
+                        "skin_type": "Tipo de Piel",
+                        "select_skin_type": "Seleccionar tipo de piel...",
+                        "normal": "Normal",
+                        "sensitive": "Sensible",
+                        "oily": "Grasa",
+                        "dry": "Seca",
+                        "combination": "Mixta",
+                        "emergency_contact": "Contacto de Emergencia",
+                        "emergency_placeholder": "Nombre y número de teléfono",
+                        "notes_preferences": "Notas y Preferencias",
+                        "notes_placeholder": "Alergias, preferencias de estilo, notas médicas importantes, ideas de diseño...",
+                        "cancel": "Cancelar",
+                        "save_client": "Guardar Cliente",
+                        
+                        // Session Modal
+                        "schedule_session": "Programar Sesión",
+                        "client": "Cliente",
+                        "select_client": "Seleccionar un cliente...",
+                        "session_title": "Título de la Sesión",
+                        "session_title_placeholder": "ej., Contorno de Manga, Cover-up, Tatuaje Nuevo...",
+                        "date_time": "Fecha y Hora",
+                        "duration_hours": "Duración (horas)",
+                        "price": "Precio (€)",
+                        "materials_used": "Materiales Utilizados",
+                        "item": "Artículo",
+                        "select_item": "Seleccionar artículo...",
+                        "quantity": "Cantidad",
+                        "add": "Agregar",
+                        "session_notes": "Notas de la Sesión",
+                        "session_notes_placeholder": "Detalles del diseño, ubicación, solicitudes especiales, instrucciones de cuidado posterior...",
+                        "save_session": "Guardar Sesión",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "Nuevo Artículo de Inventario",
+                        "item_name": "Nombre del Artículo",
+                        "item_name_placeholder": "Round Liner 5RL, Tinta Eternal Negra, Empuñaduras Desechables...",
+                        "type": "Tipo",
+                        "select_type": "Seleccionar tipo...",
+                        "needle": "Aguja",
+                        "ink": "Tinta",
+                        "machine": "Máquina",
+                        "supply": "Suministro",
+                        "aftercare": "Cuidado Posterior",
+                        "safety": "Equipo de Seguridad",
+                        "current_quantity": "Cantidad Actual",
+                        "low_stock_alert": "Alerta de Stock Bajo",
+                        "price_per_unit": "Precio por Unidad (€)",
+                        "supplier_notes": "Proveedor y Notas",
+                        "supplier_notes_placeholder": "Información del proveedor, códigos de color, fechas de vencimiento...",
+                        "save_item": "Guardar Artículo"
+                    },
+                    ru: {
+                        // Navigation
+                        "main_navigation": "Основная Навигация",
+                        "dashboard": "Панель управления",
+                        "clients": "Клиенты",
+                        "sessions": "Сеансы",
+                        "inventory": "Инвентарь",
+                        "calendar": "Календарь",
+                        "reports": "Отчеты",
+                        "quick_actions": "Быстрые действия",
+                        "add_client": "Добавить клиента",
+                        "schedule_session": "Запланировать сеанс",
+                        "add_inventory": "Добавить инвентарь",
+                        
+                        // Header
+                        "tagline": "Профессиональная система управления тату-студией",
+                        "install_app": "Установить приложение",
+                        
+                        // Dashboard
+                        "studio_overview": "Обзор студии",
+                        "backup_data": "Резервная копия данных",
+                        "total_clients": "Всего клиентов",
+                        "upcoming_sessions": "Предстоящие сеансы",
+                        "monthly_revenue": "Ежемесячный доход",
+                        "low_stock_items": "Товары с низким запасом",
+                        "todays_schedule": "Сегодняшнее расписание",
+                        "no_sessions_today": "Сегодня нет сеансов",
+                        "schedule_clear": "Ваше расписание на сегодня свободно",
+                        "quick_insights": "Быстрая аналитика",
+                        "no_data_yet": "Пока нет данных",
+                        "start_adding_data": "Начните добавлять клиентов и сеансы, чтобы увидеть аналитику",
+                        
+                        // Clients
+                        "client_management": "Управление клиентами",
+                        "new_client": "Новый клиент",
+                        "search_clients": "🔍 Поиск клиентов по имени, телефону или email...",
+                        "no_clients_yet": "Пока нет клиентов",
+                        "build_client_database": "Начните создавать свою профессиональную базу клиентов",
+                        "add_first_client": "Добавить первого клиента",
+                        
+                        // Sessions
+                        "session_management": "Управление сеансами",
+                        "new_session": "Новый сеанс",
+                        "no_sessions_scheduled": "Нет запланированных сеансов",
+                        "schedule_first_session": "Запланируйте свой первый профессиональный тату-сеанс",
+                        "create_first_session": "Создать первый сеанс",
+                        
+                        // Inventory
+                        "inventory_management": "Управление инвентарем",
+                        "new_item": "Новый предмет",
+                        "search_inventory": "🔍 Поиск предметов инвентаря...",
+                        "no_inventory_items": "Нет предметов в инвентаре",
+                        "track_supplies": "Отслеживайте свои иглы, чернила и профессиональные принадлежности",
+                        "add_first_item": "Добавить первый предмет",
+                        
+                        // Calendar
+                        "studio_calendar": "Календарь студии",
+                        "previous": "Предыдущий",
+                        "next": "Следующий",
+                        
+                        // Reports
+                        "analytics_reports": "Аналитика и отчеты",
+                        "total_sessions": "Всего сеансов",
+                        "total_revenue": "Общий доход",
+                        "avg_session_price": "Средняя цена сеанса",
+                        "client_retention": "Удержание клиентов",
+                        "data_export": "Экспорт данных",
+                        "full_backup": "Полная резервная копия",
+                        "export_clients": "Экспорт клиентов",
+                        "export_sessions": "Экспорт сеансов",
+                        "export_inventory": "Экспорт инвентаря",
+                        
+                        // Install Prompt
+                        "install_prompt": "Установить InkManager Pro для лучшего опыта?",
+                        "install_now": "Установить сейчас",
+                        "maybe_later": "Возможно позже",
+                        
+                        // Client Modal
+                        "create_new_client": "Создать нового клиента",
+                        "full_name": "Полное имя",
+                        "name_placeholder": "Иван Иванов",
+                        "phone_number": "Номер телефона",
+                        "phone_placeholder": "+7 (999) 123-4567",
+                        "email_address": "Адрес электронной почты",
+                        "email_placeholder": "ivan@example.com",
+                        "birth_date": "Дата рождения",
+                        "skin_type": "Тип кожи",
+                        "select_skin_type": "Выберите тип кожи...",
+                        "normal": "Нормальная",
+                        "sensitive": "Чувствительная",
+                        "oily": "Жирная",
+                        "dry": "Сухая",
+                        "combination": "Комбинированная",
+                        "emergency_contact": "Контакт для экстренных случаев",
+                        "emergency_placeholder": "Имя и номер телефона",
+                        "notes_preferences": "Заметки и предпочтения",
+                        "notes_placeholder": "Аллергии, предпочтения по стилю, важные медицинские заметки, идеи дизайна...",
+                        "cancel": "Отмена",
+                        "save_client": "Сохранить клиента",
+                        
+                        // Session Modal
+                        "schedule_session": "Запланировать сеанс",
+                        "client": "Клиент",
+                        "select_client": "Выберите клиента...",
+                        "session_title": "Название сеанса",
+                        "session_title_placeholder": "напр., Контур рукава, Перекрытие, Новый тату...",
+                        "date_time": "Дата и время",
+                        "duration_hours": "Продолжительность (часы)",
+                        "price": "Цена (€)",
+                        "materials_used": "Использованные материалы",
+                        "item": "Предмет",
+                        "select_item": "Выберите предмет...",
+                        "quantity": "Количество",
+                        "add": "Добавить",
+                        "session_notes": "Заметки к сеансу",
+                        "session_notes_placeholder": "Детали дизайна, расположение, особые пожелания, инструкции по уходу...",
+                        "save_session": "Сохранить сеанс",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "Новый предмет инвентаря",
+                        "item_name": "Название предмета",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, Одноразовые рукоятки...",
+                        "type": "Тип",
+                        "select_type": "Выберите тип...",
+                        "needle": "Игла",
+                        "ink": "Чернила",
+                        "machine": "Машинка",
+                        "supply": "Расходные материалы",
+                        "aftercare": "Уход после",
+                        "safety": "Средства безопасности",
+                        "current_quantity": "Текущее количество",
+                        "low_stock_alert": "Оповещение о низком запасе",
+                        "price_per_unit": "Цена за единицу (€)",
+                        "supplier_notes": "Поставщик и заметки",
+                        "supplier_notes_placeholder": "Информация о поставщике, коды цветов, сроки годности...",
+                        "save_item": "Сохранить предмет"
+                    },
+                    he: {
+                        // Navigation
+                        "main_navigation": "ניווט ראשי",
+                        "dashboard": "לוח בקרה",
+                        "clients": "לקוחות",
+                        "sessions": "פגישות",
+                        "inventory": "מלאי",
+                        "calendar": "לוח שנה",
+                        "reports": "דוחות",
+                        "quick_actions": "פעולות מהירות",
+                        "add_client": "הוסף לקוח",
+                        "schedule_session": "תזמן פגישה",
+                        "add_inventory": "הוסף מלאי",
+                        
+                        // Header
+                        "tagline": "מערכת ניהול מקצועית לסטודיו קעקועים",
+                        "install_app": "התקן אפליקציה",
+                        
+                        // Dashboard
+                        "studio_overview": "סקירת הסטודיו",
+                        "backup_data": "גיבוי נתונים",
+                        "total_clients": "סך הלקוחות",
+                        "upcoming_sessions": "פגישות קרובות",
+                        "monthly_revenue": "הכנסה חודשית",
+                        "low_stock_items": "פריטים במלאי נמוך",
+                        "todays_schedule": "לוח הזמנים להיום",
+                        "no_sessions_today": "אין פגישות היום",
+                        "schedule_clear": "לוח הזמנים שלך פנוי להיום",
+                        "quick_insights": "תובנות מהירות",
+                        "no_data_yet": "אין עדיין נתונים",
+                        "start_adding_data": "התחל להוסיף לקוחות ופגישות כדי לראות תובנות",
+                        
+                        // Clients
+                        "client_management": "ניהול לקוחות",
+                        "new_client": "לקוח חדש",
+                        "search_clients": "🔍 חפש לקוחות לפי שם, טלפון או אימייל...",
+                        "no_clients_yet": "אין עדיין לקוחות",
+                        "build_client_database": "התחל לבנות את מסד הנתונים המקצועי שלך של לקוחות",
+                        "add_first_client": "הוסף את הלקוח הראשון שלך",
+                        
+                        // Sessions
+                        "session_management": "ניהול פגישות",
+                        "new_session": "פגישה חדשה",
+                        "no_sessions_scheduled": "אין פגישות מתוזמנות",
+                        "schedule_first_session": "תזמן את פגישת הקעקוע המקצועית הראשונה שלך",
+                        "create_first_session": "צור פגישה ראשונה",
+                        
+                        // Inventory
+                        "inventory_management": "ניהול מלאי",
+                        "new_item": "פריט חדש",
+                        "search_inventory": "🔍 חפש פריטי מלאי...",
+                        "no_inventory_items": "אין פריטים במלאי",
+                        "track_supplies": "עקוב אחר המחטים, הדיו והאספקה המקצועית שלך",
+                        "add_first_item": "הוסף פריט ראשון",
+                        
+                        // Calendar
+                        "studio_calendar": "לוח שנה של הסטודיו",
+                        "previous": "קודם",
+                        "next": "הבא",
+                        
+                        // Reports
+                        "analytics_reports": "ניתוחים ודוחות",
+                        "total_sessions": "סך הפגישות",
+                        "total_revenue": "סך ההכנסות",
+                        "avg_session_price": "מחיר פגישה ממוצע",
+                        "client_retention": "שמירת לקוחות",
+                        "data_export": "ייצוא נתונים",
+                        "full_backup": "גיבוי מלא",
+                        "export_clients": "ייצוא לקוחות",
+                        "export_sessions": "ייצוא פגישות",
+                        "export_inventory": "ייצוא מלאי",
+                        
+                        // Install Prompt
+                        "install_prompt": "להתקין את InkManager Pro לחוויה הטובה ביותר?",
+                        "install_now": "התקן עכשיו",
+                        "maybe_later": "אולי מאוחר יותר",
+                        
+                        // Client Modal
+                        "create_new_client": "צור לקוח חדש",
+                        "full_name": "שם מלא",
+                        "name_placeholder": "דוד כהן",
+                        "phone_number": "מספר טלפון",
+                        "phone_placeholder": "+972 (50) 123-4567",
+                        "email_address": "כתובת אימייל",
+                        "email_placeholder": "david@example.com",
+                        "birth_date": "תאריך לידה",
+                        "skin_type": "סוג עור",
+                        "select_skin_type": "בחר סוג עור...",
+                        "normal": "רגיל",
+                        "sensitive": "רגיש",
+                        "oily": "שומני",
+                        "dry": "יבש",
+                        "combination": "מעורב",
+                        "emergency_contact": "איש קשר לחירום",
+                        "emergency_placeholder": "שם ומספר טלפון",
+                        "notes_preferences": "הערות והעדפות",
+                        "notes_placeholder": "אלרגיות, העדפות סגנון, הערות רפואיות חשובות, רעיונות לעיצוב...",
+                        "cancel": "ביטול",
+                        "save_client": "שמור לקוח",
+                        
+                        // Session Modal
+                        "schedule_session": "תזמן פגישה",
+                        "client": "לקוח",
+                        "select_client": "בחר לקוח...",
+                        "session_title": "כותרת הפגישה",
+                        "session_title_placeholder": "לדוגמה, מתאר שרוול, כיסוי, קעקוע חדש...",
+                        "date_time": "תאריך ושעה",
+                        "duration_hours": "משך (שעות)",
+                        "price": "מחיר (€)",
+                        "materials_used": "חומרים בשימוש",
+                        "item": "פריט",
+                        "select_item": "בחר פריט...",
+                        "quantity": "כמות",
+                        "add": "הוסף",
+                        "session_notes": "הערות לפגישה",
+                        "session_notes_placeholder": "פרטי עיצוב, מיקום, בקשות מיוחדות, הוראות טיפול לאחר...",
+                        "save_session": "שמור פגישה",
+                        
+                        // Inventory Modal
+                        "new_inventory_item": "פריט מלאי חדש",
+                        "item_name": "שם הפריט",
+                        "item_name_placeholder": "Round Liner 5RL, Eternal Ink Black, ידיות חד-פעמיות...",
+                        "type": "סוג",
+                        "select_type": "בחר סוג...",
+                        "needle": "מחט",
+                        "ink": "דיו",
+                        "machine": "מכונה",
+                        "supply": "אספקה",
+                        "aftercare": "טיפול לאחר",
+                        "safety": "ציוד בטיחות",
+                        "current_quantity": "כמות נוכחית",
+                        "low_stock_alert": "התראת מלאי נמוך",
+                        "price_per_unit": "מחיר ליחידה (€)",
+                        "supplier_notes": "ספק והערות",
+                        "supplier_notes_placeholder": "מידע על הספק, קודי צבע, תאריכי תפוגה...",
+                        "save_item": "שמור פריט"
+                    }
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupPWA();
+                this.setLanguage(this.currentLanguage);
+                this.refreshAll();
+                console.log('🎨 InkManager Pro - Complete Version Initialized');
+            }
+
+            setLanguage(lang) {
+                this.currentLanguage = lang;
+                localStorage.setItem('inkmanager_language', lang);
+                
+                // Update language selector
+                document.getElementById('languageSelect').value = lang;
+                
+                // Update all translatable elements
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (this.translations[lang] && this.translations[lang][key]) {
+                        element.textContent = this.translations[lang][key];
+                    }
+                });
+                
+                // Update placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (this.translations[lang] && this.translations[lang][key]) {
+                        element.placeholder = this.translations[lang][key];
+                    }
+                });
+                
+                // Refresh the current page to update dynamic content
+                this.refreshSection(this.currentSection || 'dashboard');
+            }
+
+            setupPWA() {
+                // Register Service Worker
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then(registration => {
+                            console.log('✅ Service Worker registered:', registration);
+                        })
+                        .catch(error => {
+                            console.log('❌ Service Worker registration failed:', error);
+                        });
+                }
+
+                let deferredPrompt;
+                const installButton = document.getElementById('installButton');
+                const installPrompt = document.getElementById('installPrompt');
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    console.log('🎯 PWA Install Prompt triggered');
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    
+                    if (installButton) {
+                        installButton.style.display = 'inline-flex';
+                        installButton.classList.add('pulse');
+                    }
+                    
+                    // Show install prompt after 5 seconds
+                    setTimeout(() => {
+                        if (deferredPrompt && installPrompt) {
+                            installPrompt.classList.add('show');
+                        }
+                    }, 5000);
+                });
+
+                // Install button click
+                if (installButton) {
+                    installButton.addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            
+                            if (outcome === 'accepted') {
+                                console.log('✅ User accepted install');
+                                installButton.style.display = 'none';
+                                if (installPrompt) installPrompt.classList.remove('show');
+                                this.showNotification('🎉 App installed successfully!');
+                            }
+                            deferredPrompt = null;
+                        }
+                    });
+                }
+
+                // Install prompt buttons
+                const installConfirmBtn = document.getElementById('installConfirmBtn');
+                const installDismissBtn = document.getElementById('installDismissBtn');
+
+                if (installConfirmBtn) {
+                    installConfirmBtn.addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            if (outcome === 'accepted') {
+                                installPrompt.classList.remove('show');
+                                this.showNotification('🎉 App installed successfully!');
+                            }
+                            deferredPrompt = null;
+                        }
+                    });
+                }
+
+                if (installDismissBtn) {
+                    installDismissBtn.addEventListener('click', () => {
+                        installPrompt.classList.remove('show');
+                    });
+                }
+
+                // App installed event
+                window.addEventListener('appinstalled', (evt) => {
+                    console.log('🏠 PWA was installed');
+                    if (installButton) installButton.style.display = 'none';
+                    if (installPrompt) installPrompt.classList.remove('show');
+                });
+
+                // Check if running in standalone mode
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('📱 Running in standalone mode');
+                    if (installButton) installButton.style.display = 'none';
+                }
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.showSection(e.currentTarget.dataset.section);
+                    });
+                });
+
+                // Quick Actions
+                document.getElementById('quickAddClient').addEventListener('click', () => this.openClientModal());
+                document.getElementById('quickAddSession').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('quickAddInventory').addEventListener('click', () => this.openInventoryModal());
+
+                // Language Selector
+                document.getElementById('languageSelect').addEventListener('change', (e) => {
+                    this.setLanguage(e.target.value);
+                });
+
+                // Client Management
+                document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
+                document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
+                document.getElementById('closeClientModalBtn').addEventListener('click', () => this.closeClientModal());
+                document.getElementById('cancelClientBtn').addEventListener('click', () => this.closeClientModal());
+                document.getElementById('clientForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveClient();
+                });
+
+                // Session Management
+                document.getElementById('addSessionBtn').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('addCalendarSessionBtn').addEventListener('click', () => this.openSessionModal());
+                document.getElementById('closeSessionModalBtn').addEventListener('click', () => this.closeSessionModal());
+                document.getElementById('sessionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveSession();
+                });
+
+                // Materials Management
+                document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
+                document.getElementById('materialItem').addEventListener('change', (e) => {
+                    this.updateMaterialMaxQuantity(e.target.value);
+                });
+
+                // Inventory Management
+                document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
+                document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
+                document.getElementById('closeInventoryModalBtn').addEventListener('click', () => this.closeInventoryModal());
+                document.getElementById('cancelInventoryBtn').addEventListener('click', () => this.closeInventoryModal());
+                document.getElementById('inventoryForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveInventoryItem();
+                });
+
+                // Calendar Controls
+                document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
+                document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
+
+                // Search Functionality
+                document.getElementById('clientSearch').addEventListener('input', (e) => this.searchClients(e.target.value));
+                document.getElementById('inventorySearch').addEventListener('input', (e) => this.searchInventory(e.target.value));
+
+                // Set default session time to next hour
+                const nextHour = new Date();
+                nextHour.setHours(nextHour.getHours() + 1);
+                nextHour.setMinutes(0);
+                document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+            }
+
+            // Navigation and Section Management
+            showSection(sectionId) {
+                this.currentSection = sectionId;
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                
+                document.getElementById(sectionId).classList.add('active');
+                document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+                
+                this.refreshSection(sectionId);
+            }
+
+            refreshSection(sectionId) {
+                switch(sectionId) {
+                    case 'dashboard': this.refreshDashboard(); break;
+                    case 'clients': this.refreshClients(); break;
+                    case 'sessions': this.refreshSessions(); break;
+                    case 'inventory': this.refreshInventory(); break;
+                    case 'calendar': this.refreshCalendar(); break;
+                    case 'reports': this.refreshReports(); break;
+                }
+            }
+
+            refreshAll() {
+                this.refreshDashboard();
+                this.refreshClients();
+                this.refreshSessions();
+                this.refreshInventory();
+                this.refreshCalendar();
+                this.refreshReports();
+            }
+
+            // Materials Management
+            updateMaterialMaxQuantity(itemId) {
+                const materialQty = document.getElementById('materialQty');
+                if (!itemId) {
+                    materialQty.max = '';
+                    return;
+                }
+
+                const item = this.inventory.find(i => i.id === itemId);
+                if (item) {
+                    materialQty.max = item.qty;
+                    materialQty.placeholder = `Max: ${item.qty}`;
+                }
+            }
+
+            addMaterialToSession() {
+                const itemId = document.getElementById('materialItem').value;
+                const quantity = parseInt(document.getElementById('materialQty').value) || 1;
+
+                if (!itemId) {
+                    this.showNotification('Please select an item');
+                    return;
+                }
+
+                const item = this.inventory.find(i => i.id === itemId);
+                if (!item) {
+                    this.showNotification('Item not found');
+                    return;
+                }
+
+                if (quantity > item.qty) {
+                    this.showNotification(`Only ${item.qty} available in stock`);
+                    return;
+                }
+
+                const existingIndex = this.currentSessionMaterials.findIndex(m => m.itemId === itemId);
+                if (existingIndex > -1) {
+                    this.currentSessionMaterials[existingIndex].quantity += quantity;
+                } else {
+                    this.currentSessionMaterials.push({
+                        itemId: itemId,
+                        itemName: item.name,
+                        quantity: quantity,
+                        type: item.type
+                    });
+                }
+
+                this.refreshMaterialsList();
+                
+                document.getElementById('materialItem').value = '';
+                document.getElementById('materialQty').value = '1';
+                document.getElementById('materialQty').max = '';
+                document.getElementById('materialQty').placeholder = 'Qty';
+
+                this.showNotification(`✅ ${item.name} added to materials`);
+            }
+
+            removeMaterial(index) {
+                this.currentSessionMaterials.splice(index, 1);
+                this.refreshMaterialsList();
+            }
+
+            refreshMaterialsList() {
+                const container = document.getElementById('materialsList');
+                
+                if (this.currentSessionMaterials.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No materials added yet</div>';
+                    return;
+                }
+
+                container.innerHTML = this.currentSessionMaterials.map((material, index) => `
+                    <div class="material-item">
+                        <div>${material.itemName}</div>
+                        <div>Qty: ${material.quantity}</div>
+                        <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            deductMaterialsFromInventory() {
+                this.currentSessionMaterials.forEach(material => {
+                    const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                    if (itemIndex > -1) {
+                        this.inventory[itemIndex].qty -= material.quantity;
+                        if (this.inventory[itemIndex].qty < 0) {
+                            this.inventory[itemIndex].qty = 0;
+                        }
+                    }
+                });
+                this.saveData();
+            }
+
+            // Client Management
+            openClientModal(clientId = null) {
+                document.getElementById('clientForm').reset();
+                
+                if (clientId) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client) {
+                        document.getElementById('clientName').value = client.name;
+                        document.getElementById('clientPhone').value = client.phone || '';
+                        document.getElementById('clientEmail').value = client.email || '';
+                        document.getElementById('clientBirthDate').value = client.birthDate || '';
+                        document.getElementById('clientSkinType').value = client.skinType || '';
+                        document.getElementById('clientEmergencyContact').value = client.emergencyContact || '';
+                        document.getElementById('clientNotes').value = client.notes || '';
+                        
+                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Client';
+                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Update Client';
+                        this.editingClientId = clientId;
+                    }
+                } else {
+                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
+                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
+                    this.editingClientId = null;
+                }
+                
+                document.getElementById('clientModal').style.display = 'block';
+                setTimeout(() => document.getElementById('clientName').focus(), 300);
+            }
+
+            closeClientModal() {
+                document.getElementById('clientModal').style.display = 'none';
+                this.editingClientId = null;
+            }
+
+            saveClient() {
+                const name = document.getElementById('clientName').value.trim();
+                const phone = document.getElementById('clientPhone').value.trim();
+                const email = document.getElementById('clientEmail').value.trim();
+                const birthDate = document.getElementById('clientBirthDate').value;
+                const skinType = document.getElementById('clientSkinType').value;
+                const emergencyContact = document.getElementById('clientEmergencyContact').value.trim();
+                const notes = document.getElementById('clientNotes').value.trim();
+
+                if (!name) {
+                    this.showNotification('Please enter client name');
+                    document.getElementById('clientName').focus();
+                    return;
+                }
+
+                if (this.editingClientId) {
+                    const clientIndex = this.clients.findIndex(c => c.id === this.editingClientId);
+                    if (clientIndex !== -1) {
+                        this.clients[clientIndex] = {
+                            ...this.clients[clientIndex],
+                            name: name,
+                            phone: phone,
+                            email: email,
+                            birthDate: birthDate,
+                            skinType: skinType,
+                            emergencyContact: emergencyContact,
+                            notes: notes,
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.safeSaveData();
+                        this.closeClientModal();
+                        this.refreshClients();
+                        this.refreshDashboard();
+                        this.showNotification('✅ Client updated successfully!');
+                    }
+                } else {
+                    const client = {
+                        id: 'client-' + Date.now(),
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        birthDate: birthDate,
+                        skinType: skinType,
+                        emergencyContact: emergencyContact,
+                        notes: notes,
+                        createdAt: new Date().toISOString(),
+                        lastVisit: null,
+                        totalSessions: 0,
+                        totalSpent: 0
+                    };
+                    
+                    this.clients.push(client);
+                    this.safeSaveData();
+                    this.closeClientModal();
+                    this.refreshClients();
+                    this.refreshDashboard();
+                    this.showNotification('✅ Client profile created successfully!');
+                }
+            }
+
+            refreshClients() {
+                const container = document.getElementById('clientsList');
+                
+                if (this.clients.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3 data-i18n="no_clients_yet">No Clients Yet</h3>
+                            <p data-i18n="build_client_database">Start building your professional client database</p>
+                            <button class="btn btn-primary" id="addFirstClient">
+                                <i class="fas fa-plus"></i> <span data-i18n="add_first_client">Add Your First Client</span>
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
+                    return;
+                }
+
+                container.innerHTML = this.clients.map(client => {
+                    const clientSessions = this.sessions.filter(s => s.clientId === client.id);
+                    const totalSpent = clientSessions.reduce((sum, session) => sum + (session.price || 0), 0);
+                    const lastSession = clientSessions.length > 0 ? 
+                        new Date(Math.max(...clientSessions.map(s => new Date(s.dateTime)))) : null;
+                    
+                    return `
+                        <div class="client-item">
+                            <div class="item-content" onclick="app.showSection('clients')">
+                                <div class="item-title">
+                                    <i class="fas fa-user"></i> ${client.name}
+                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Regular</span>' : ''}
+                                </div>
+                                <div class="item-meta">
+                                    ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
+                                    ${client.email ? `<div><i class="fas fa-envelope"></i> ${client.email}</div>` : ''}
+                                    ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
+                                    ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
+                                    ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
+                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} sessions | <i class="fas fa-euro-sign"></i> €${totalSpent}</div>
+                                    ${lastSession ? `<div><i class="fas fa-clock"></i> Last visit: ${lastSession.toLocaleDateString()}</div>` : ''}
+                                    ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
+                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openClientModal('${client.id}')" title="Edit Client">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteClient('${client.id}')" title="Delete Client">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            searchClients(query) {
+                const container = document.getElementById('clientsList');
+                const filteredClients = this.clients.filter(client => 
+                    client.name.toLowerCase().includes(query.toLowerCase()) ||
+                    (client.phone && client.phone.includes(query)) ||
+                    (client.email && client.email.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                if (filteredClients.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No clients found matching your search</div>';
+                    return;
+                }
+
+                container.innerHTML = filteredClients.map(client => `
+                    <div class="client-item" onclick="app.openClientModal('${client.id}')">
+                        <div class="item-content">
+                            <div class="item-title">${client.name}</div>
+                            <div class="item-meta">
+                                ${client.phone ? `<i class="fas fa-phone"></i> ${client.phone}<br>` : ''}
+                                ${client.email ? `<i class="fas fa-envelope"></i> ${client.email}` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            deleteClient(clientId) {
+                if (confirm('Are you sure you want to delete this client and all their sessions?')) {
+                    this.clients = this.clients.filter(c => c.id !== clientId);
+                    this.sessions = this.sessions.filter(s => s.clientId !== clientId);
+                    this.safeSaveData();
+                    this.refreshAll();
+                    this.showNotification('🗑️ Client and associated sessions deleted');
+                }
+            }
+
+            // Session Management
+            openSessionModal(sessionId = null, selectedDate = null) {
+                if (this.clients.length === 0) {
+                    this.showNotification('Please add clients first!');
+                    this.showSection('clients');
+                    return;
+                }
+
+                this.currentSessionMaterials = [];
+                
+                const clientSelect = document.getElementById('sessionClient');
+                clientSelect.innerHTML = '<option value="">Select a client...</option>';
+                this.clients.forEach(client => {
+                    clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+                });
+
+                const materialSelect = document.getElementById('materialItem');
+                materialSelect.innerHTML = '<option value="">Select item...</option>';
+                this.inventory.forEach(item => {
+                    if (item.qty > 0) {
+                        materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
+                    }
+                });
+
+                if (sessionId) {
+                    const session = this.sessions.find(s => s.id === sessionId);
+                    if (session) {
+                        document.getElementById('sessionClient').value = session.clientId;
+                        document.getElementById('sessionTitle').value = session.title;
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(new Date(session.dateTime));
+                        document.getElementById('sessionDuration').value = session.duration || 2;
+                        document.getElementById('sessionPrice').value = session.price || '';
+                        document.getElementById('sessionNotes').value = session.notes || '';
+                        
+                        if (session.materialsUsed && session.materialsUsed.length > 0) {
+                            this.currentSessionMaterials = [...session.materialsUsed];
+                            this.refreshMaterialsList();
+                        }
+                        
+                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
+                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
+                        this.editingSessionId = sessionId;
+                    }
+                } else {
+                    document.getElementById('sessionForm').reset();
+                    
+                    if (selectedDate) {
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(selectedDate);
+                    } else {
+                        const nextHour = new Date();
+                        nextHour.setHours(nextHour.getHours() + 1);
+                        nextHour.setMinutes(0);
+                        document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+                    }
+                    
+                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
+                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
+                    this.editingSessionId = null;
+                }
+
+                document.getElementById('sessionModal').style.display = 'block';
+            }
+
+            closeSessionModal() {
+                document.getElementById('sessionModal').style.display = 'none';
+                this.editingSessionId = null;
+                this.currentSessionMaterials = [];
+                this.refreshMaterialsList();
+            }
+
+            saveSession() {
+                const clientId = document.getElementById('sessionClient').value;
+                const title = document.getElementById('sessionTitle').value.trim();
+                const dateTime = document.getElementById('sessionDateTime').value;
+                const duration = parseFloat(document.getElementById('sessionDuration').value) || 2;
+                const price = parseFloat(document.getElementById('sessionPrice').value) || 0;
+                const notes = document.getElementById('sessionNotes').value.trim();
+
+                if (!clientId || !title || !dateTime) {
+                    this.showNotification('Please fill in all required fields');
+                    return;
+                }
+
+                if (this.editingSessionId) {
+                    const sessionIndex = this.sessions.findIndex(s => s.id === this.editingSessionId);
+                    if (sessionIndex !== -1) {
+                        const oldMaterials = [...this.sessions[sessionIndex].materialsUsed];
+                        
+                        oldMaterials.forEach(material => {
+                            const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                            if (itemIndex > -1) {
+                                this.inventory[itemIndex].qty += material.quantity;
+                            }
+                        });
+                        
+                        this.sessions[sessionIndex] = {
+                            ...this.sessions[sessionIndex],
+                            clientId: clientId,
+                            title: title,
+                            dateTime: dateTime,
+                            duration: duration,
+                            price: price,
+                            notes: notes,
+                            materialsUsed: [...this.currentSessionMaterials],
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.deductMaterialsFromInventory();
+                        
+                        this.safeSaveData();
+                        this.closeSessionModal();
+                        this.refreshAll();
+                        this.showNotification('✅ Session updated successfully!');
+                    }
+                } else {
+                    const session = {
+                        id: 'session-' + Date.now(),
+                        clientId: clientId,
+                        title: title,
+                        dateTime: dateTime,
+                        duration: duration,
+                        price: price,
+                        notes: notes,
+                        materialsUsed: [...this.currentSessionMaterials],
+                        createdAt: new Date().toISOString(),
+                        status: 'scheduled'
+                    };
+
+                    this.sessions.push(session);
+                    this.deductMaterialsFromInventory();
+                    this.safeSaveData();
+                    this.closeSessionModal();
+                    this.refreshAll();
+                    this.showNotification('✅ Session scheduled successfully!');
+                }
+            }
+
+            refreshSessions() {
+                const container = document.getElementById('sessionsList');
+                const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+
+                if (allSessions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-plus"></i>
+                            <h3 data-i18n="no_sessions_scheduled">No Sessions Scheduled</h3>
+                            <p data-i18n="schedule_first_session">Schedule your first professional tattoo session</p>
+                            <button class="btn btn-primary" id="addFirstSession">
+                                <i class="fas fa-plus"></i> <span data-i18n="create_first_session">Create First Session</span>
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
+                    return;
+                }
+
+                container.innerHTML = allSessions.map(session => {
+                    const sessionDate = new Date(session.dateTime);
+                    const isPast = sessionDate < new Date();
+                    const isToday = sessionDate.toDateString() === new Date().toDateString();
+                    const statusClass = isPast ? 'completed' : (isToday ? 'urgent' : 'upcoming');
+                    const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
+                    const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
+                    
+                    const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
+                        ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        : '';
+                    
+                    return `
+                        <div class="session-item">
+                            <div class="item-content" onclick="app.showSection('sessions')">
+                                <div class="item-title">${session.title}</div>
+                                <div class="item-meta">
+                                    <strong>Client:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>When:</strong> ${sessionDate.toLocaleString()}<br>
+                                    <strong>Duration:</strong> ${session.duration} hours<br>
+                                    <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
+                                    ${session.price ? `<strong>Price:</strong> €${session.price}` : ''}
+                                    ${materialsText}
+                                    ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
+                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>Last updated: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openSessionModal('${session.id}')" title="Edit Session">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')" title="Delete Session">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            deleteSession(sessionId) {
+                if (confirm('Are you sure you want to delete this session?')) {
+                    const session = this.sessions.find(s => s.id === sessionId);
+                    if (session && session.materialsUsed) {
+                        session.materialsUsed.forEach(material => {
+                            const itemIndex = this.inventory.findIndex(i => i.id === material.itemId);
+                            if (itemIndex > -1) {
+                                this.inventory[itemIndex].qty += material.quantity;
+                            }
+                        });
+                    }
+                    
+                    this.sessions = this.sessions.filter(s => s.id !== sessionId);
+                    this.safeSaveData();
+                    this.refreshAll();
+                    this.showNotification('🗑️ Session deleted (materials restored to inventory)');
+                }
+            }
+
+            // Inventory Management
+            openInventoryModal(itemId = null) {
+                document.getElementById('inventoryForm').reset();
+                
+                if (itemId) {
+                    const item = this.inventory.find(i => i.id === itemId);
+                    if (item) {
+                        document.getElementById('itemName').value = item.name;
+                        document.getElementById('itemType').value = item.type;
+                        document.getElementById('itemQty').value = item.qty;
+                        document.getElementById('itemAlert').value = item.alert || 5;
+                        document.getElementById('itemPrice').value = item.price || '';
+                        document.getElementById('itemNotes').value = item.notes || '';
+                        
+                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Inventory Item';
+                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Update Item';
+                        this.editingItemId = itemId;
+                    }
+                } else {
+                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
+                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
+                    this.editingItemId = null;
+                }
+                
+                document.getElementById('inventoryModal').style.display = 'block';
+                setTimeout(() => document.getElementById('itemName').focus(), 300);
+            }
+
+            closeInventoryModal() {
+                document.getElementById('inventoryModal').style.display = 'none';
+                this.editingItemId = null;
+            }
+
+            saveInventoryItem() {
+                const name = document.getElementById('itemName').value.trim();
+                const type = document.getElementById('itemType').value;
+                const qty = parseInt(document.getElementById('itemQty').value) || 0;
+                const alert = parseInt(document.getElementById('itemAlert').value) || 5;
+                const price = parseFloat(document.getElementById('itemPrice').value) || 0;
+                const notes = document.getElementById('itemNotes').value.trim();
+
+                if (!name || !type) {
+                    this.showNotification('Please fill all required fields');
+                    return;
+                }
+
+                if (this.editingItemId) {
+                    const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
+                    if (itemIndex !== -1) {
+                        this.inventory[itemIndex] = {
+                            ...this.inventory[itemIndex],
+                            name: name,
+                            type: type,
+                            qty: qty,
+                            alert: alert,
+                            price: price,
+                            notes: notes,
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        this.safeSaveData();
+                        this.closeInventoryModal();
+                        this.refreshInventory();
+                        this.refreshDashboard();
+                        this.showNotification('✅ Item updated successfully!');
+                    }
+                } else {
+                    const item = {
+                        id: 'item-' + Date.now(),
+                        name: name,
+                        type: type,
+                        qty: qty,
+                        alert: alert,
+                        price: price,
+                        notes: notes,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    this.inventory.push(item);
+                    this.safeSaveData();
+                    this.closeInventoryModal();
+                    this.refreshInventory();
+                    this.refreshDashboard();
+                    this.showNotification('✅ Inventory item added!');
+                }
+            }
+
+            refreshInventory() {
+                const container = document.getElementById('inventoryList');
+                const alertsContainer = document.getElementById('inventoryAlerts');
+                
+                if (this.inventory.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
+                            <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
+                            <button class="btn btn-primary" id="addFirstItem">
+                                <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
+                    return;
+                }
+
+                container.innerHTML = this.inventory.map(item => {
+                    const isLowStock = item.qty <= item.alert;
+                    const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
+                    const typeIcons = {
+                        'needle': '🪡',
+                        'ink': '🎨',
+                        'machine': '⚡',
+                        'supply': '📦',
+                        'aftercare': '🧴',
+                        'safety': '🧤'
+                    };
+                    const icon = typeIcons[item.type] || '📋';
+                    
+                    return `
+                        <div class="inventory-item">
+                            <div class="item-content" onclick="app.showSection('inventory')">
+                                <div class="item-title">
+                                    ${icon} ${item.name}
+                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Low Stock</span>' : ''}
+                                </div>
+                                <div class="item-meta">
+                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ Alert at: ${item.alert}</div>
+                                    <div>🏷️ ${item.type} ${item.price ? `| 💰 €${item.price} per unit` : ''}</div>
+                                    ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
+                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openInventoryModal('${item.id}')" title="Edit Item">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteInventoryItem('${item.id}')" title="Delete Item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                if (lowStock.length > 0) {
+                    alertsContainer.innerHTML = `
+                        <div class="card" style="border-left: 5px solid var(--warning); background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-exclamation-triangle"></i> Low Stock Alerts
+                                    </h4>
+                                    <p style="margin: 0; color: rgba(255,255,255,0.8);">
+                                        ${lowStock.length} item${lowStock.length > 1 ? 's' : ''} need${lowStock.length > 1 ? '' : 's'} restocking
+                                    </p>
+                                </div>
+                                <button class="btn btn-warning" onclick="app.showSection('inventory')">
+                                    <i class="fas fa-boxes"></i> Manage Inventory
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    alertsContainer.innerHTML = '';
+                }
+            }
+
+            searchInventory(query) {
+                const container = document.getElementById('inventoryList');
+                const filteredItems = this.inventory.filter(item => 
+                    item.name.toLowerCase().includes(query.toLowerCase()) ||
+                    item.type.toLowerCase().includes(query.toLowerCase()) ||
+                    (item.notes && item.notes.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                if (filteredItems.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No items found matching your search</div>';
+                    return;
+                }
+
+                container.innerHTML = filteredItems.map(item => `
+                    <div class="inventory-item" onclick="app.openInventoryModal('${item.id}')">
+                        <div class="item-content">
+                            <div class="item-title">${item.name}</div>
+                            <div class="item-meta">
+                                📦 ${item.qty} in stock<br>
+                                🏷️ ${item.type}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            deleteInventoryItem(itemId) {
+                if (confirm('Are you sure you want to delete this inventory item? This action cannot be undone.')) {
+                    this.inventory = this.inventory.filter(i => i.id !== itemId);
+                    this.safeSaveData();
+                    this.refreshInventory();
+                    this.refreshDashboard();
+                    this.showNotification('🗑️ Item deleted');
+                }
+            }
+
+            // Dashboard
+            refreshDashboard() {
+                document.getElementById('totalClients').textContent = this.clients.length;
+                
+                const upcomingSessions = this.sessions.filter(s => new Date(s.dateTime) > new Date());
+                document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
+
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+                const monthlyRevenue = this.sessions
+                    .filter(s => {
+                        const sessionDate = new Date(s.dateTime);
+                        return sessionDate.getMonth() === currentMonth && 
+                               sessionDate.getFullYear() === currentYear;
+                    })
+                    .reduce((sum, session) => sum + (session.price || 0), 0);
+                document.getElementById('monthlyRevenue').textContent = `€${monthlyRevenue}`;
+
+                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                document.getElementById('lowStockItems').textContent = lowStock.length;
+
+                const today = new Date().toDateString();
+                const todaysSessions = this.sessions.filter(s => 
+                    new Date(s.dateTime).toDateString() === today
+                ).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+                
+                const todayContainer = document.getElementById('todaysSessions');
+                
+                if (todaysSessions.length === 0) {
+                    todayContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3 data-i18n="no_sessions_today">No Sessions Today</h3>
+                            <p data-i18n="schedule_clear">Your schedule is clear for today</p>
+                            <button class="btn btn-primary" onclick="app.showSection('sessions')">
+                                <i class="fas fa-plus"></i> <span data-i18n="schedule_session">Schedule a Session</span>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    todayContainer.innerHTML = `
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="color: var(--primary); margin-bottom: 12px;">
+                                <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
+                            </h4>
+                        </div>
+                        ${todaysSessions.map(session => {
+                            const sessionTime = new Date(session.dateTime);
+                            const now = new Date();
+                            const timeDiff = sessionTime - now;
+                            const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60));
+                            const isUrgent = hoursUntil <= 2 && hoursUntil >= 0;
+                            const isCompleted = sessionTime < now;
+                            
+                            let statusClass = '';
+                            let statusIcon = '🕒';
+                            let statusText = `In ${hoursUntil}h`;
+                            
+                            if (isUrgent) {
+                                statusClass = 'urgent';
+                                statusIcon = '⚠️';
+                                statusText = 'Starting soon!';
+                            } else if (isCompleted) {
+                                statusClass = 'completed';
+                                statusIcon = '✅';
+                                statusText = 'Completed';
+                            } else if (hoursUntil < 0) {
+                                statusClass = 'completed';
+                                statusIcon = '✅';
+                                statusText = 'Completed';
+                            }
+                            
+                            return `
+                                <div class="todays-session-item ${statusClass}" onclick="app.showSection('sessions')">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; font-size: 1.1em; color: var(--light); margin-bottom: 6px;">
+                                                ${session.title}
+                                            </div>
+                                            <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.4;">
+                                                <div>👤 ${this.getClientName(session.clientId)}</div>
+                                                <div>🕐 ${sessionTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                                <div>${session.price ? `💰 €${session.price}` : ''}</div>
+                                                <div style="color: ${isUrgent ? 'var(--warning)' : 'var(--success)'}; font-weight: 600; margin-top: 4px;">
+                                                    ${statusIcon} ${statusText}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: 10px;">
+                                            <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    `;
+                }
+
+                const insightsContainer = document.getElementById('dashboardInsights');
+                if (this.sessions.length > 0) {
+                    const totalRevenue = this.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
+                    const avgSessionPrice = totalRevenue / this.sessions.length;
+                    const returningClients = this.clients.filter(client => 
+                        this.sessions.filter(s => s.clientId === client.id).length > 1
+                    ).length;
+                    
+                    insightsContainer.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                            <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
+                            </div>
+                            <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">€${Math.round(avgSessionPrice)}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
+                            </div>
+                            <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Calendar
+            refreshCalendar() {
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                
+                document.getElementById('calendarMonth').textContent = 
+                    `${monthNames[this.currentMonth]} ${this.currentYear}`;
+
+                const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startingDay = firstDay.getDay();
+
+                const calendarGrid = document.getElementById('calendarGrid');
+                calendarGrid.innerHTML = '';
+
+                const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                dayNames.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day header';
+                    dayElement.textContent = day;
+                    calendarGrid.appendChild(dayElement);
+                });
+
+                for (let i = 0; i < startingDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day';
+                    calendarGrid.appendChild(emptyDay);
+                }
+
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    
+                    const currentDate = new Date(this.currentYear, this.currentMonth, day);
+                    const isToday = currentDate.toDateString() === today.toDateString();
+                    
+                    if (isToday) {
+                        dayElement.classList.add('today');
+                    }
+
+                    const daySessions = this.getSessionsForDate(currentDate);
+                    if (daySessions.length > 0) {
+                        dayElement.classList.add('has-event');
+                    }
+
+                    dayElement.innerHTML = `
+                        <div class="day-number">${day}</div>
+                        ${daySessions.slice(0, 2).map(session => `
+                            <div class="event" title="${session.title} - ${this.getClientName(session.clientId)}" onclick="event.stopPropagation(); app.showSection('sessions')">
+                                ${session.title}
+                            </div>
+                        `).join('')}
+                        ${daySessions.length > 2 ? `<div class="event">+${daySessions.length - 2} more</div>` : ''}
+                    `;
+
+                    dayElement.addEventListener('click', () => {
+                        this.openSessionModal(null, currentDate);
+                    });
+
+                    calendarGrid.appendChild(dayElement);
+                }
+            }
+
+            getSessionsForDate(date) {
+                return this.sessions.filter(session => {
+                    const sessionDate = new Date(session.dateTime);
+                    return sessionDate.getDate() === date.getDate() &&
+                           sessionDate.getMonth() === date.getMonth() &&
+                           sessionDate.getFullYear() === date.getFullYear();
+                });
+            }
+
+            changeMonth(direction) {
+                this.currentMonth += direction;
+                if (this.currentMonth < 0) {
+                    this.currentMonth = 11;
+                    this.currentYear--;
+                } else if (this.currentMonth > 11) {
+                    this.currentMonth = 0;
+                    this.currentYear++;
+                }
+                this.refreshCalendar();
+            }
+
+            // Reports
+            refreshReports() {
+                const totalSessions = this.sessions.length;
+                const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
+                const avgSessionPrice = totalSessions > 0 ? totalRevenue / totalSessions : 0;
+                
+                const clientsWithMultipleSessions = this.clients.filter(client => 
+                    this.sessions.filter(s => s.clientId === client.id).length > 1
+                ).length;
+                const clientRetention = this.clients.length > 0 ? 
+                    Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
+
+                document.getElementById('totalSessions').textContent = totalSessions;
+                document.getElementById('totalRevenue').textContent = `€${Math.round(totalRevenue)}`;
+                document.getElementById('avgSessionPrice').textContent = `€${Math.round(avgSessionPrice)}`;
+                document.getElementById('clientRetention').textContent = `${clientRetention}%`;
+            }
+
+            // Utility Methods
+            exportData(type) {
+                let data, filename;
+                
+                switch(type) {
+                    case 'all':
+                        data = {
+                            clients: this.clients,
+                            sessions: this.sessions,
+                            inventory: this.inventory,
+                            exportDate: new Date().toISOString(),
+                            version: 'InkManager Pro Complete Version',
+                            statistics: {
+                                totalClients: this.clients.length,
+                                totalSessions: this.sessions.length,
+                                totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
+                                totalInventory: this.inventory.length
+                            }
+                        };
+                        filename = 'inkmanager-pro-complete-backup.json';
+                        break;
+                    case 'clients':
+                        data = this.clients;
+                        filename = 'inkmanager-pro-clients.json';
+                        break;
+                    case 'sessions':
+                        data = this.sessions;
+                        filename = 'inkmanager-pro-sessions.json';
+                        break;
+                    case 'inventory':
+                        data = this.inventory;
+                        filename = 'inkmanager-pro-inventory.json';
+                        break;
+                }
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('💾 Data exported successfully!');
+            }
+
+            formatDateTime(date) {
+                return date.toISOString().slice(0, 16);
+            }
+
+            getClientName(clientId) {
+                const client = this.clients.find(c => c.id === clientId);
+                return client ? client.name : 'Unknown Client';
+            }
+
+            showNotification(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 4000);
+            }
+
+            safeSaveData() {
+                try {
+                    this.saveData();
+                } catch (error) {
+                    console.error('Save error:', error);
+                    this.showNotification('⚠️ Save failed - storage might be full');
+                }
+            }
+
+            saveData() {
+                localStorage.setItem('inkmanager_clients', JSON.stringify(this.clients));
+                localStorage.setItem('inkmanager_sessions', JSON.stringify(this.sessions));
+                localStorage.setItem('inkmanager_inventory', JSON.stringify(this.inventory));
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            window.app = new InkManagerPro();
+            
+            setTimeout(() => {
+                window.app.refreshAll();
+            }, 100);
+        });
+
+        console.log('🚀 InkManager Pro Complete Version - Ready!');
+    </script>
+</body>
+</html>
 
