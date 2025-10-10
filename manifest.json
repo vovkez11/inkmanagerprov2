@@ -2,12 +2,12 @@
   "name": "InkManager Pro",
   "short_name": "InkManager",
   "description": "Professional Tattoo Studio Management System",
-  "start_url": "/",
+  "start_url": "/inkmanagerprov2/",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#00bcd4",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/inkmanagerprov2/,
   "lang": "en",
   "icons": [
     {
