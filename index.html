@@ -993,6 +993,154 @@
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
+    /* ===== MOBILE OPTIMIZATIONS ===== */
+/* Add this at the end of your existing CSS */
+
+/* Mobile-First Responsive Improvements */
+@media (max-width: 768px) {
+    /* Better touch targets */
+    .nav-link {
+        padding: 1.2rem 1rem;
+        min-height: 60px;
+    }
+    
+    .btn {
+        padding: 16px 20px;
+        min-height: 54px;
+        font-size: 1.1em;
+    }
+    
+    .action-btn {
+        min-height: 50px;
+        min-width: 50px;
+        padding: 12px;
+    }
+    
+    /* Better form controls */
+    .form-control {
+        font-size: 18px; /* Prevents zoom on iOS */
+        padding: 18px;
+        min-height: 60px;
+    }
+    
+    select.form-control {
+        font-size: 18px;
+        padding: 18px 45px 18px 18px;
+    }
+    
+    /* Better card spacing */
+    .card {
+        padding: 20px 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* Better stats grid */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 20px 15px;
+    }
+    
+    .stat-value {
+        font-size: 2em;
+    }
+    
+    /* Better calendar for mobile */
+    .calendar-day {
+        min-height: 60px;
+        padding: 6px 2px;
+    }
+    
+    .day-number {
+        font-size: 0.9em;
+    }
+    
+    .event {
+        font-size: 0.6em;
+        padding: 2px 3px;
+        margin: 1px 0;
+    }
+    
+    /* Better modal for mobile */
+    .modal-content {
+        width: 95%;
+        padding: 20px 15px;
+        margin: 10px;
+    }
+    
+    /* Better header */
+    .app-header {
+        padding: 20px 15px;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+    }
+    
+    .tagline {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small devices */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .client-item, .session-item, .inventory-item {
+        padding: 15px 12px;
+    }
+    
+    .item-title {
+        font-size: 1.1em;
+    }
+    
+    .calendar-grid {
+        font-size: 0.9em;
+    }
+    
+    .calendar-day {
+        min-height: 50px;
+    }
+    
+    /* Better button stacking */
+    .card-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Better scrolling for mobile */
+.app-container {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Improve tap highlights */
+.nav-link, .btn, .action-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Better focus states for touch */
+.btn:focus, .nav-link:focus, .form-control:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 </style>
 </head>
 <body>
@@ -3357,6 +3505,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
