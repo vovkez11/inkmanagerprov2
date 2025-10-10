@@ -3345,7 +3345,18 @@
 
         console.log('🚀 InkManager Pro Complete Version - Ready!');
     </script>
+    <script>
+// Force service worker update for existing users
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistration().then(registration => {
+    if (registration) {
+      registration.update();
+    }
+  });
+}
+</script>
 </body>
 </html>
+
 
 
