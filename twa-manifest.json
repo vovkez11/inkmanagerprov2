@@ -1,38 +1,44 @@
 {
-  "packageId": "com.inkmanager.pro",
+  "packageId": "com.yourcompany.inkmanager",
   "host": "vovkez11.github.io",
   "name": "InkManager Pro",
-  "launchUrl": "/inkmanagerprov2/",
+  "launcherName": "InkManager",
   "display": "standalone",
-  "themeColor": "#00bcd4",
-  "navigationColor": "#000000",
-  "backgroundColor": "#0d1117",
-  "enableNotifications": false,
+  "themeColor": "#00BCD4",
+  "navigationColor": "#00BCD4",
+  "navigationColorDark": "#008BA3",
+  "navigationDividerColor": "#00BCD4",
+  "navigationDividerColorDark": "#008BA3",
+  "backgroundColor": "#0D1117",
+  "enableNotifications": true,
   "startUrl": "/inkmanagerprov2/",
   "iconUrl": "https://vovkez11.github.io/inkmanagerprov2/icon.png",
-  "maskableIconUrl": "https://vovkez11.github.io/inkmanagerprov2/icon.png",
-  "monochromeIconUrl": "https://vovkez11.github.io/inkmanagerprov2/icon.png",
+  "maskableIconUrl": "https://vovkez11.github.io/inkmanagerprov2/icon-maskable.png",
+  "monochromeIconUrl": "https://vovkez11.github.io/inkmanagerprov2/icon-monochrome.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
     "alias": "android"
   },
-  "appVersionName": "2",
-  "appVersionCode": 2,
-  "shortcuts": [],
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "minimumVersionCode": 1,
+  "orientation": "default",
+  "fingerprints": [
+    {
+      "value": "AC:2A:6B:45:5F:10:73:4D:21:AF:02:0E:BE:EA:DB:A8:B6:B3:78:8D:DB:93:C5:F4:58:60:36:32:38:21:B3:81"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainBordersOnRotation": false,
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://vovkez11.github.io/inkmanagerprov2/manifest.json",
-  "fallbackType": "webview",
+  "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
     "enabled": false
   },
-  "enableSiteSettingsShortcut": false,
+  "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
-  "isMetaQuest": false,
-  "orientation": "portrait",
-  "fingerprints": [],
-  "additionalTrustedOrigins": [],
-  "retainedBundles": [],
-  "appVersion": "2"
+  "appVersion": "1.0.0"
 }
