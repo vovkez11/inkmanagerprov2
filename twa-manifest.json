@@ -1,5 +1,5 @@
 {
-  "packageId": "com.yourcompany.inkmanager",
+  "packageId": "com.inkmanager.pro",
   "host": "vovkez11.github.io",
   "name": "InkManager Pro",
   "launcherName": "InkManager",
@@ -23,13 +23,15 @@
   "appVersionName": "1.0.0",
   "appVersionCode": 1,
   "minimumVersionCode": 1,
-  "orientation": "default",
+  "orientation": "portrait",
   "fingerprints": [
     {
       "value": "AC:2A:6B:45:5F:10:73:4D:21:AF:02:0E:BE:EA:DB:A8:B6:B3:78:8D:DB:93:C5:F4:58:60:36:32:38:21:B3:81"
     }
   ],
-  "additionalTrustedOrigins": [],
+  "additionalTrustedOrigins": [
+    "https://vovkez11.github.io"
+  ],
   "retainBordersOnRotation": false,
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://vovkez11.github.io/inkmanagerprov2/manifest.json",
