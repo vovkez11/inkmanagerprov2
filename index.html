@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InkManager Pro - Professional Tattoo Studio Management</title>
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+    
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     
@@ -993,154 +991,6 @@
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
-    /* ===== MOBILE OPTIMIZATIONS ===== */
-/* Add this at the end of your existing CSS */
-
-/* Mobile-First Responsive Improvements */
-@media (max-width: 768px) {
-    /* Better touch targets */
-    .nav-link {
-        padding: 1.2rem 1rem;
-        min-height: 60px;
-    }
-    
-    .btn {
-        padding: 16px 20px;
-        min-height: 54px;
-        font-size: 1.1em;
-    }
-    
-    .action-btn {
-        min-height: 50px;
-        min-width: 50px;
-        padding: 12px;
-    }
-    
-    /* Better form controls */
-    .form-control {
-        font-size: 18px; /* Prevents zoom on iOS */
-        padding: 18px;
-        min-height: 60px;
-    }
-    
-    select.form-control {
-        font-size: 18px;
-        padding: 18px 45px 18px 18px;
-    }
-    
-    /* Better card spacing */
-    .card {
-        padding: 20px 15px;
-        margin-bottom: 15px;
-    }
-    
-    /* Better stats grid */
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-    
-    .stat-card {
-        padding: 20px 15px;
-    }
-    
-    .stat-value {
-        font-size: 2em;
-    }
-    
-    /* Better calendar for mobile */
-    .calendar-day {
-        min-height: 60px;
-        padding: 6px 2px;
-    }
-    
-    .day-number {
-        font-size: 0.9em;
-    }
-    
-    .event {
-        font-size: 0.6em;
-        padding: 2px 3px;
-        margin: 1px 0;
-    }
-    
-    /* Better modal for mobile */
-    .modal-content {
-        width: 95%;
-        padding: 20px 15px;
-        margin: 10px;
-    }
-    
-    /* Better header */
-    .app-header {
-        padding: 20px 15px;
-    }
-    
-    .logo {
-        font-size: 1.8rem;
-    }
-    
-    .tagline {
-        font-size: 1em;
-    }
-}
-
-@media (max-width: 480px) {
-    /* Extra small devices */
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .client-item, .session-item, .inventory-item {
-        padding: 15px 12px;
-    }
-    
-    .item-title {
-        font-size: 1.1em;
-    }
-    
-    .calendar-grid {
-        font-size: 0.9em;
-    }
-    
-    .calendar-day {
-        min-height: 50px;
-    }
-    
-    /* Better button stacking */
-    .card-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-    
-    .card-header .btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Prevent text size adjustment on orientation change */
-html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-}
-
-/* Better scrolling for mobile */
-.app-container {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Improve tap highlights */
-.nav-link, .btn, .action-btn {
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Better focus states for touch */
-.btn:focus, .nav-link:focus, .form-control:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
 </style>
 </head>
 <body>
@@ -1229,7 +1079,7 @@ html {
                         <div class="stat-label" data-i18n="upcoming_sessions">Upcoming Sessions</div>
                     </div>
                     <div class="stat-card" onclick="app.showSection('reports')">
-                        <div class="stat-value" id="monthlyRevenue">€0</div>
+                        <div class="stat-value" id="monthlyRevenue">$0</div>
                         <div class="stat-label" data-i18n="monthly_revenue">Monthly Revenue</div>
                     </div>
                     <div class="stat-card" onclick="app.showSection('inventory')">
@@ -1400,11 +1250,11 @@ html {
                         <div class="stat-label" data-i18n="total_sessions">Total Sessions</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="totalRevenue">€0</div>
+                        <div class="stat-value" id="totalRevenue">$0</div>
                         <div class="stat-label" data-i18n="total_revenue">Total Revenue</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="avgSessionPrice">€0</div>
+                        <div class="stat-value" id="avgSessionPrice">$0</div>
                         <div class="stat-label" data-i18n="avg_session_price">Avg Session Price</div>
                     </div>
                     <div class="stat-card">
@@ -1557,7 +1407,7 @@ html {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="price">Price (€)</label>
+                        <label class="form-label" data-i18n="price">Price</label>
                         <input type="number" class="form-control" id="sessionPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
@@ -1650,7 +1500,7 @@ html {
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="price_per_unit">Price per Unit (€)</label>
+                        <label class="form-label" data-i18n="price_per_unit">Price per Unit</label>
                         <input type="number" class="form-control" id="itemPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
@@ -1676,7 +1526,7 @@ html {
     </div>
 
     <script>
-        // INKMANAGER PRO - COMPLETE WORKING VERSION WITH MULTI-LANGUAGE SUPPORT
+        // INKMANAGER PRO - COMPLETE REWRITTEN VERSION WITH PERFECT MULTI-LANGUAGE & CURRENCY SUPPORT
         class InkManagerPro {
             constructor() {
                 this.clients = JSON.parse(localStorage.getItem('inkmanager_clients')) || [];
@@ -1690,7 +1540,15 @@ html {
                 this.currentSessionMaterials = [];
                 this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
                 
-                // Translation resources
+                // Currency configuration
+                this.currencyConfig = {
+                    'en': { symbol: '$', code: 'USD', locale: 'en-US' },
+                    'es': { symbol: '€', code: 'EUR', locale: 'es-ES' },
+                    'ru': { symbol: '₽', code: 'RUB', locale: 'ru-RU' },
+                    'he': { symbol: '₪', code: 'ILS', locale: 'he-IL' }
+                };
+                
+                // Complete translation resources
                 this.translations = {
                     en: {
                         // Navigation
@@ -1727,10 +1585,13 @@ html {
                         // Clients
                         "client_management": "Client Management",
                         "new_client": "New Client",
-                        "search_clients": "🔍 Search clients by name, phone, or email...",
+                        "search_clients": "Search clients by name, phone, or email...",
                         "no_clients_yet": "No Clients Yet",
                         "build_client_database": "Start building your professional client database",
                         "add_first_client": "Add Your First Client",
+                        "edit_client": "Edit Client",
+                        "update_client": "Update Client",
+                        "regular_client": "Regular",
                         
                         // Sessions
                         "session_management": "Session Management",
@@ -1738,14 +1599,23 @@ html {
                         "no_sessions_scheduled": "No Sessions Scheduled",
                         "schedule_first_session": "Schedule your first professional tattoo session",
                         "create_first_session": "Create First Session",
+                        "edit_session": "Edit Session",
+                        "update_session": "Update Session",
+                        "session_completed": "Completed",
+                        "session_today": "Today",
+                        "session_upcoming": "Upcoming",
+                        "starting_soon": "Starting soon!",
                         
                         // Inventory
                         "inventory_management": "Inventory Management",
                         "new_item": "New Item",
-                        "search_inventory": "🔍 Search inventory items...",
+                        "search_inventory": "Search inventory items...",
                         "no_inventory_items": "No Inventory Items",
                         "track_supplies": "Track your needles, ink, and professional supplies",
                         "add_first_item": "Add First Item",
+                        "edit_inventory_item": "Edit Inventory Item",
+                        "update_item": "Update Item",
+                        "low_stock": "Low Stock",
                         
                         // Calendar
                         "studio_calendar": "Studio Calendar",
@@ -1800,7 +1670,7 @@ html {
                         "session_title_placeholder": "e.g., Sleeve Outline, Cover-up, New Tattoo...",
                         "date_time": "Date & Time",
                         "duration_hours": "Duration (hours)",
-                        "price": "Price (€)",
+                        "price": "Price",
                         "materials_used": "Materials Used",
                         "item": "Item",
                         "select_item": "Select item...",
@@ -1809,6 +1679,7 @@ html {
                         "session_notes": "Session Notes",
                         "session_notes_placeholder": "Design details, placement, special requests, aftercare instructions...",
                         "save_session": "Save Session",
+                        "materials": "Materials",
                         
                         // Inventory Modal
                         "new_inventory_item": "New Inventory Item",
@@ -1824,10 +1695,15 @@ html {
                         "safety": "Safety Equipment",
                         "current_quantity": "Current Quantity",
                         "low_stock_alert": "Low Stock Alert",
-                        "price_per_unit": "Price per Unit (€)",
+                        "price_per_unit": "Price per Unit",
                         "supplier_notes": "Supplier & Notes",
                         "supplier_notes_placeholder": "Supplier information, color codes, expiration dates...",
-                        "save_item": "Save Item"
+                        "save_item": "Save Item",
+                        
+                        // Additional UI elements
+                        "last_visit": "Last visit",
+                        "total_sessions": "Total sessions",
+                        "last_updated": "Updated"
                     },
                     es: {
                         // Navigation
@@ -1864,10 +1740,13 @@ html {
                         // Clients
                         "client_management": "Gestión de Clientes",
                         "new_client": "Nuevo Cliente",
-                        "search_clients": "🔍 Buscar clientes por nombre, teléfono o email...",
+                        "search_clients": "Buscar clientes por nombre, teléfono o email...",
                         "no_clients_yet": "Aún No Hay Clientes",
                         "build_client_database": "Comienza a construir tu base de datos profesional de clientes",
                         "add_first_client": "Agregar Tu Primer Cliente",
+                        "edit_client": "Editar Cliente",
+                        "update_client": "Actualizar Cliente",
+                        "regular_client": "Regular",
                         
                         // Sessions
                         "session_management": "Gestión de Sesiones",
@@ -1875,14 +1754,23 @@ html {
                         "no_sessions_scheduled": "No Hay Sesiones Programadas",
                         "schedule_first_session": "Programa tu primera sesión profesional de tatuaje",
                         "create_first_session": "Crear Primera Sesión",
+                        "edit_session": "Editar Sesión",
+                        "update_session": "Actualizar Sesión",
+                        "session_completed": "Completada",
+                        "session_today": "Hoy",
+                        "session_upcoming": "Próxima",
+                        "starting_soon": "¡Comenzando pronto!",
                         
                         // Inventory
                         "inventory_management": "Gestión de Inventario",
                         "new_item": "Nuevo Artículo",
-                        "search_inventory": "🔍 Buscar artículos de inventario...",
+                        "search_inventory": "Buscar artículos de inventario...",
                         "no_inventory_items": "No Hay Artículos en Inventario",
                         "track_supplies": "Rastrea tus agujas, tinta y suministros profesionales",
                         "add_first_item": "Agregar Primer Artículo",
+                        "edit_inventory_item": "Editar Artículo de Inventario",
+                        "update_item": "Actualizar Artículo",
+                        "low_stock": "Stock Bajo",
                         
                         // Calendar
                         "studio_calendar": "Calendario del Estudio",
@@ -1937,7 +1825,7 @@ html {
                         "session_title_placeholder": "ej., Contorno de Manga, Cover-up, Tatuaje Nuevo...",
                         "date_time": "Fecha y Hora",
                         "duration_hours": "Duración (horas)",
-                        "price": "Precio (€)",
+                        "price": "Precio",
                         "materials_used": "Materiales Utilizados",
                         "item": "Artículo",
                         "select_item": "Seleccionar artículo...",
@@ -1946,6 +1834,7 @@ html {
                         "session_notes": "Notas de la Sesión",
                         "session_notes_placeholder": "Detalles del diseño, ubicación, solicitudes especiales, instrucciones de cuidado posterior...",
                         "save_session": "Guardar Sesión",
+                        "materials": "Materiales",
                         
                         // Inventory Modal
                         "new_inventory_item": "Nuevo Artículo de Inventario",
@@ -1961,10 +1850,15 @@ html {
                         "safety": "Equipo de Seguridad",
                         "current_quantity": "Cantidad Actual",
                         "low_stock_alert": "Alerta de Stock Bajo",
-                        "price_per_unit": "Precio por Unidad (€)",
+                        "price_per_unit": "Precio por Unidad",
                         "supplier_notes": "Proveedor y Notas",
                         "supplier_notes_placeholder": "Información del proveedor, códigos de color, fechas de vencimiento...",
-                        "save_item": "Guardar Artículo"
+                        "save_item": "Guardar Artículo",
+                        
+                        // Additional UI elements
+                        "last_visit": "Última visita",
+                        "total_sessions": "Total de sesiones",
+                        "last_updated": "Actualizado"
                     },
                     ru: {
                         // Navigation
@@ -2001,10 +1895,13 @@ html {
                         // Clients
                         "client_management": "Управление клиентами",
                         "new_client": "Новый клиент",
-                        "search_clients": "🔍 Поиск клиентов по имени, телефону или email...",
+                        "search_clients": "Поиск клиентов по имени, телефону или email...",
                         "no_clients_yet": "Пока нет клиентов",
                         "build_client_database": "Начните создавать свою профессиональную базу клиентов",
                         "add_first_client": "Добавить первого клиента",
+                        "edit_client": "Редактировать клиента",
+                        "update_client": "Обновить клиента",
+                        "regular_client": "Постоянный",
                         
                         // Sessions
                         "session_management": "Управление сеансами",
@@ -2012,14 +1909,23 @@ html {
                         "no_sessions_scheduled": "Нет запланированных сеансов",
                         "schedule_first_session": "Запланируйте свой первый профессиональный тату-сеанс",
                         "create_first_session": "Создать первый сеанс",
+                        "edit_session": "Редактировать сеанс",
+                        "update_session": "Обновить сеанс",
+                        "session_completed": "Завершен",
+                        "session_today": "Сегодня",
+                        "session_upcoming": "Предстоящий",
+                        "starting_soon": "Скоро начинается!",
                         
                         // Inventory
                         "inventory_management": "Управление инвентарем",
                         "new_item": "Новый предмет",
-                        "search_inventory": "🔍 Поиск предметов инвентаря...",
+                        "search_inventory": "Поиск предметов инвентаря...",
                         "no_inventory_items": "Нет предметов в инвентаре",
                         "track_supplies": "Отслеживайте свои иглы, чернила и профессиональные принадлежности",
                         "add_first_item": "Добавить первый предмет",
+                        "edit_inventory_item": "Редактировать предмет инвентаря",
+                        "update_item": "Обновить предмет",
+                        "low_stock": "Низкий запас",
                         
                         // Calendar
                         "studio_calendar": "Календарь студии",
@@ -2074,7 +1980,7 @@ html {
                         "session_title_placeholder": "напр., Контур рукава, Перекрытие, Новый тату...",
                         "date_time": "Дата и время",
                         "duration_hours": "Продолжительность (часы)",
-                        "price": "Цена (€)",
+                        "price": "Цена",
                         "materials_used": "Использованные материалы",
                         "item": "Предмет",
                         "select_item": "Выберите предмет...",
@@ -2083,6 +1989,7 @@ html {
                         "session_notes": "Заметки к сеансу",
                         "session_notes_placeholder": "Детали дизайна, расположение, особые пожелания, инструкции по уходу...",
                         "save_session": "Сохранить сеанс",
+                        "materials": "Материалы",
                         
                         // Inventory Modal
                         "new_inventory_item": "Новый предмет инвентаря",
@@ -2098,10 +2005,15 @@ html {
                         "safety": "Средства безопасности",
                         "current_quantity": "Текущее количество",
                         "low_stock_alert": "Оповещение о низком запасе",
-                        "price_per_unit": "Цена за единицу (€)",
+                        "price_per_unit": "Цена за единицу",
                         "supplier_notes": "Поставщик и заметки",
                         "supplier_notes_placeholder": "Информация о поставщике, коды цветов, сроки годности...",
-                        "save_item": "Сохранить предмет"
+                        "save_item": "Сохранить предмет",
+                        
+                        // Additional UI elements
+                        "last_visit": "Последний визит",
+                        "total_sessions": "Всего сеансов",
+                        "last_updated": "Обновлено"
                     },
                     he: {
                         // Navigation
@@ -2138,10 +2050,13 @@ html {
                         // Clients
                         "client_management": "ניהול לקוחות",
                         "new_client": "לקוח חדש",
-                        "search_clients": "🔍 חפש לקוחות לפי שם, טלפון או אימייל...",
+                        "search_clients": "חפש לקוחות לפי שם, טלפון או אימייל...",
                         "no_clients_yet": "אין עדיין לקוחות",
                         "build_client_database": "התחל לבנות את מסד הנתונים המקצועי שלך של לקוחות",
                         "add_first_client": "הוסף את הלקוח הראשון שלך",
+                        "edit_client": "ערוך לקוח",
+                        "update_client": "עדכן לקוח",
+                        "regular_client": "קבוע",
                         
                         // Sessions
                         "session_management": "ניהול פגישות",
@@ -2149,14 +2064,23 @@ html {
                         "no_sessions_scheduled": "אין פגישות מתוזמנות",
                         "schedule_first_session": "תזמן את פגישת הקעקוע המקצועית הראשונה שלך",
                         "create_first_session": "צור פגישה ראשונה",
+                        "edit_session": "ערוך פגישה",
+                        "update_session": "עדכן פגישה",
+                        "session_completed": "הושלם",
+                        "session_today": "היום",
+                        "session_upcoming": "קרוב",
+                        "starting_soon": "מתחיל בקרוב!",
                         
                         // Inventory
                         "inventory_management": "ניהול מלאי",
                         "new_item": "פריט חדש",
-                        "search_inventory": "🔍 חפש פריטי מלאי...",
+                        "search_inventory": "חפש פריטי מלאי...",
                         "no_inventory_items": "אין פריטים במלאי",
                         "track_supplies": "עקוב אחר המחטים, הדיו והאספקה המקצועית שלך",
                         "add_first_item": "הוסף פריט ראשון",
+                        "edit_inventory_item": "ערוך פריט מלאי",
+                        "update_item": "עדכן פריט",
+                        "low_stock": "מלאי נמוך",
                         
                         // Calendar
                         "studio_calendar": "לוח שנה של הסטודיו",
@@ -2211,7 +2135,7 @@ html {
                         "session_title_placeholder": "לדוגמה, מתאר שרוול, כיסוי, קעקוע חדש...",
                         "date_time": "תאריך ושעה",
                         "duration_hours": "משך (שעות)",
-                        "price": "מחיר (€)",
+                        "price": "מחיר",
                         "materials_used": "חומרים בשימוש",
                         "item": "פריט",
                         "select_item": "בחר פריט...",
@@ -2220,6 +2144,7 @@ html {
                         "session_notes": "הערות לפגישה",
                         "session_notes_placeholder": "פרטי עיצוב, מיקום, בקשות מיוחדות, הוראות טיפול לאחר...",
                         "save_session": "שמור פגישה",
+                        "materials": "חומרים",
                         
                         // Inventory Modal
                         "new_inventory_item": "פריט מלאי חדש",
@@ -2235,10 +2160,15 @@ html {
                         "safety": "ציוד בטיחות",
                         "current_quantity": "כמות נוכחית",
                         "low_stock_alert": "התראת מלאי נמוך",
-                        "price_per_unit": "מחיר ליחידה (€)",
+                        "price_per_unit": "מחיר ליחידה",
                         "supplier_notes": "ספק והערות",
                         "supplier_notes_placeholder": "מידע על הספק, קודי צבע, תאריכי תפוגה...",
-                        "save_item": "שמור פריט"
+                        "save_item": "שמור פריט",
+                        
+                        // Additional UI elements
+                        "last_visit": "ביקור אחרון",
+                        "total_sessions": "סך הפגישות",
+                        "last_updated": "עודכן"
                     }
                 };
                 
@@ -2250,17 +2180,35 @@ html {
                 this.setupPWA();
                 this.setLanguage(this.currentLanguage);
                 this.refreshAll();
-                console.log('🎨 InkManager Pro - Complete Version Initialized');
+                console.log('🎨 InkManager Pro - Complete Rewritten Version Initialized');
+            }
+
+            formatCurrency(amount) {
+                const config = this.currencyConfig[this.currentLanguage] || this.currencyConfig['en'];
+                if (!amount) amount = 0;
+                
+                try {
+                    return new Intl.NumberFormat(config.locale, {
+                        style: 'currency',
+                        currency: config.code,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2
+                    }).format(amount);
+                } catch (error) {
+                    // Fallback formatting
+                    return `${config.symbol}${amount.toLocaleString(config.locale, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2
+                    })}`;
+                }
             }
 
             setLanguage(lang) {
                 this.currentLanguage = lang;
                 localStorage.setItem('inkmanager_language', lang);
                 
-                // Update language selector
                 document.getElementById('languageSelect').value = lang;
                 
-                // Update all translatable elements
                 document.querySelectorAll('[data-i18n]').forEach(element => {
                     const key = element.getAttribute('data-i18n');
                     if (this.translations[lang] && this.translations[lang][key]) {
@@ -2268,7 +2216,6 @@ html {
                     }
                 });
                 
-                // Update placeholders
                 document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
                     const key = element.getAttribute('data-i18n-placeholder');
                     if (this.translations[lang] && this.translations[lang][key]) {
@@ -2276,12 +2223,10 @@ html {
                     }
                 });
                 
-                // Refresh the current page to update dynamic content
-                this.refreshSection(this.currentSection || 'dashboard');
+                this.refreshAll();
             }
 
             setupPWA() {
-                // Register Service Worker
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('./sw.js')
                         .then(registration => {
@@ -2306,7 +2251,6 @@ html {
                         installButton.classList.add('pulse');
                     }
                     
-                    // Show install prompt after 5 seconds
                     setTimeout(() => {
                         if (deferredPrompt && installPrompt) {
                             installPrompt.classList.add('show');
@@ -2314,7 +2258,6 @@ html {
                     }, 5000);
                 });
 
-                // Install button click
                 if (installButton) {
                     installButton.addEventListener('click', async () => {
                         if (deferredPrompt) {
@@ -2332,7 +2275,6 @@ html {
                     });
                 }
 
-                // Install prompt buttons
                 const installConfirmBtn = document.getElementById('installConfirmBtn');
                 const installDismissBtn = document.getElementById('installDismissBtn');
 
@@ -2356,14 +2298,12 @@ html {
                     });
                 }
 
-                // App installed event
                 window.addEventListener('appinstalled', (evt) => {
                     console.log('🏠 PWA was installed');
                     if (installButton) installButton.style.display = 'none';
                     if (installPrompt) installPrompt.classList.remove('show');
                 });
 
-                // Check if running in standalone mode
                 if (window.matchMedia('(display-mode: standalone)').matches) {
                     console.log('📱 Running in standalone mode');
                     if (installButton) installButton.style.display = 'none';
@@ -2371,7 +2311,6 @@ html {
             }
 
             setupEventListeners() {
-                // Navigation
                 document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -2379,17 +2318,14 @@ html {
                     });
                 });
 
-                // Quick Actions
                 document.getElementById('quickAddClient').addEventListener('click', () => this.openClientModal());
                 document.getElementById('quickAddSession').addEventListener('click', () => this.openSessionModal());
                 document.getElementById('quickAddInventory').addEventListener('click', () => this.openInventoryModal());
 
-                // Language Selector
                 document.getElementById('languageSelect').addEventListener('change', (e) => {
                     this.setLanguage(e.target.value);
                 });
 
-                // Client Management
                 document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
                 document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
                 document.getElementById('closeClientModalBtn').addEventListener('click', () => this.closeClientModal());
@@ -2399,7 +2335,6 @@ html {
                     this.saveClient();
                 });
 
-                // Session Management
                 document.getElementById('addSessionBtn').addEventListener('click', () => this.openSessionModal());
                 document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
                 document.getElementById('addCalendarSessionBtn').addEventListener('click', () => this.openSessionModal());
@@ -2409,13 +2344,11 @@ html {
                     this.saveSession();
                 });
 
-                // Materials Management
                 document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
                 document.getElementById('materialItem').addEventListener('change', (e) => {
                     this.updateMaterialMaxQuantity(e.target.value);
                 });
 
-                // Inventory Management
                 document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
                 document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
                 document.getElementById('closeInventoryModalBtn').addEventListener('click', () => this.closeInventoryModal());
@@ -2425,22 +2358,18 @@ html {
                     this.saveInventoryItem();
                 });
 
-                // Calendar Controls
                 document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
                 document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
 
-                // Search Functionality
                 document.getElementById('clientSearch').addEventListener('input', (e) => this.searchClients(e.target.value));
                 document.getElementById('inventorySearch').addEventListener('input', (e) => this.searchInventory(e.target.value));
 
-                // Set default session time to next hour
                 const nextHour = new Date();
                 nextHour.setHours(nextHour.getHours() + 1);
                 nextHour.setMinutes(0);
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
             }
 
-            // Navigation and Section Management
             showSection(sectionId) {
                 this.currentSection = sectionId;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -2472,7 +2401,6 @@ html {
                 this.refreshReports();
             }
 
-            // Materials Management
             updateMaterialMaxQuantity(itemId) {
                 const materialQty = document.getElementById('materialQty');
                 if (!itemId) {
@@ -2483,7 +2411,7 @@ html {
                 const item = this.inventory.find(i => i.id === itemId);
                 if (item) {
                     materialQty.max = item.qty;
-                    materialQty.placeholder = `Max: ${item.qty}`;
+                    materialQty.placeholder = this.translate('max_available', { count: item.qty }) || `Max: ${item.qty}`;
                 }
             }
 
@@ -2524,7 +2452,7 @@ html {
                 document.getElementById('materialItem').value = '';
                 document.getElementById('materialQty').value = '1';
                 document.getElementById('materialQty').max = '';
-                document.getElementById('materialQty').placeholder = 'Qty';
+                document.getElementById('materialQty').placeholder = this.translate('quantity') || 'Qty';
 
                 this.showNotification(`✅ ${item.name} added to materials`);
             }
@@ -2545,7 +2473,7 @@ html {
                 container.innerHTML = this.currentSessionMaterials.map((material, index) => `
                     <div class="material-item">
                         <div>${material.itemName}</div>
-                        <div>Qty: ${material.quantity}</div>
+                        <div>${this.translate('quantity') || 'Qty'}: ${material.quantity}</div>
                         <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
                             <i class="fas fa-times"></i>
                         </button>
@@ -2566,7 +2494,6 @@ html {
                 this.saveData();
             }
 
-            // Client Management
             openClientModal(clientId = null) {
                 document.getElementById('clientForm').reset();
                 
@@ -2581,13 +2508,13 @@ html {
                         document.getElementById('clientEmergencyContact').value = client.emergencyContact || '';
                         document.getElementById('clientNotes').value = client.notes || '';
                         
-                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Client';
-                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Update Client';
+                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> ' + (this.translate('edit_client') || 'Edit Client');
+                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_client') || 'Update Client');
                         this.editingClientId = clientId;
                     }
                 } else {
-                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
-                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
+                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> ' + (this.translate('create_new_client') || 'Create New Client');
+                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_client') || 'Save Client');
                     this.editingClientId = null;
                 }
                 
@@ -2690,7 +2617,7 @@ html {
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
                                     <i class="fas fa-user"></i> ${client.name}
-                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Regular</span>' : ''}
+                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
                                     ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
@@ -2698,10 +2625,10 @@ html {
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
                                     ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
                                     ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} sessions | <i class="fas fa-euro-sign"></i> €${totalSpent}</div>
-                                    ${lastSession ? `<div><i class="fas fa-clock"></i> Last visit: ${lastSession.toLocaleDateString()}</div>` : ''}
+                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(totalSpent)}</div>
+                                    ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
                                     ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
-                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
+                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -2753,7 +2680,6 @@ html {
                 }
             }
 
-            // Session Management
             openSessionModal(sessionId = null, selectedDate = null) {
                 if (this.clients.length === 0) {
                     this.showNotification('Please add clients first!');
@@ -2764,13 +2690,13 @@ html {
                 this.currentSessionMaterials = [];
                 
                 const clientSelect = document.getElementById('sessionClient');
-                clientSelect.innerHTML = '<option value="">Select a client...</option>';
+                clientSelect.innerHTML = '<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>';
                 this.clients.forEach(client => {
                     clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
                 });
 
                 const materialSelect = document.getElementById('materialItem');
-                materialSelect.innerHTML = '<option value="">Select item...</option>';
+                materialSelect.innerHTML = '<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>';
                 this.inventory.forEach(item => {
                     if (item.qty > 0) {
                         materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
@@ -2792,8 +2718,8 @@ html {
                             this.refreshMaterialsList();
                         }
                         
-                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
-                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
+                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> ' + (this.translate('edit_session') || 'Edit Session');
+                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_session') || 'Update Session');
                         this.editingSessionId = sessionId;
                     }
                 } else {
@@ -2808,8 +2734,8 @@ html {
                         document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
                     }
                     
-                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
-                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
+                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> ' + (this.translate('schedule_session') || 'Schedule Session');
+                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_session') || 'Save Session');
                     this.editingSessionId = null;
                 }
 
@@ -2914,11 +2840,11 @@ html {
                     const isPast = sessionDate < new Date();
                     const isToday = sessionDate.toDateString() === new Date().toDateString();
                     const statusClass = isPast ? 'completed' : (isToday ? 'urgent' : 'upcoming');
-                    const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
+                    const statusText = isPast ? this.translate('session_completed') : (isToday ? this.translate('session_today') : this.translate('session_upcoming'));
                     const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
                     
                     const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
-                        ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        ? `<br><strong>${this.translate('materials') || 'Materials'}:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
                         : '';
                     
                     return `
@@ -2926,14 +2852,14 @@ html {
                             <div class="item-content" onclick="app.showSection('sessions')">
                                 <div class="item-title">${session.title}</div>
                                 <div class="item-meta">
-                                    <strong>Client:</strong> ${this.getClientName(session.clientId)}<br>
-                                    <strong>When:</strong> ${sessionDate.toLocaleString()}<br>
-                                    <strong>Duration:</strong> ${session.duration} hours<br>
-                                    <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
-                                    ${session.price ? `<strong>Price:</strong> €${session.price}` : ''}
+                                    <strong>${this.translate('client') || 'Client'}:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>${this.translate('date_time') || 'When'}:</strong> ${sessionDate.toLocaleString()}<br>
+                                    <strong>${this.translate('duration_hours') || 'Duration'}:</strong> ${session.duration} hours<br>
+                                    <strong>${this.translate('status') || 'Status'}:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
+                                    ${session.price ? `<strong>${this.translate('price') || 'Price'}:</strong> ${this.formatCurrency(session.price)}` : ''}
                                     ${materialsText}
-                                    ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
-                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>Last updated: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
+                                    ${session.notes ? `<br><strong>${this.translate('session_notes') || 'Notes'}:</strong> ${session.notes}` : ''}
+                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>${this.translate('last_updated') || 'Last updated'}: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -2968,7 +2894,6 @@ html {
                 }
             }
 
-            // Inventory Management
             openInventoryModal(itemId = null) {
                 document.getElementById('inventoryForm').reset();
                 
@@ -2982,13 +2907,13 @@ html {
                         document.getElementById('itemPrice').value = item.price || '';
                         document.getElementById('itemNotes').value = item.notes || '';
                         
-                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Inventory Item';
-                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Update Item';
+                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> ' + (this.translate('edit_inventory_item') || 'Edit Inventory Item');
+                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_item') || 'Update Item');
                         this.editingItemId = itemId;
                     }
                 } else {
-                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
-                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
+                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> ' + (this.translate('new_inventory_item') || 'New Inventory Item');
+                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_item') || 'Save Item');
                     this.editingItemId = null;
                 }
                 
@@ -3092,13 +3017,13 @@ html {
                             <div class="item-content" onclick="app.showSection('inventory')">
                                 <div class="item-title">
                                     ${icon} ${item.name}
-                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Low Stock</span>' : ''}
+                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('low_stock') || 'Low Stock') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
-                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ Alert at: ${item.alert}</div>
-                                    <div>🏷️ ${item.type} ${item.price ? `| 💰 €${item.price} per unit` : ''}</div>
+                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ ${this.translate('low_stock_alert') || 'Alert at'}: ${item.alert}</div>
+                                    <div>🏷️ ${item.type} ${item.price ? `| ${this.formatCurrency(item.price)} ${this.translate('price_per_unit') || 'per unit'}` : ''}</div>
                                     ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
-                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
+                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -3120,14 +3045,14 @@ html {
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
                                     <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-                                        <i class="fas fa-exclamation-triangle"></i> Low Stock Alerts
+                                        <i class="fas fa-exclamation-triangle"></i> ${this.translate('low_stock_alerts') || 'Low Stock Alerts'}
                                     </h4>
                                     <p style="margin: 0; color: rgba(255,255,255,0.8);">
-                                        ${lowStock.length} item${lowStock.length > 1 ? 's' : ''} need${lowStock.length > 1 ? '' : 's'} restocking
+                                        ${lowStock.length} ${this.translate('items_need_restocking') || 'item(s) need restocking'}
                                     </p>
                                 </div>
                                 <button class="btn btn-warning" onclick="app.showSection('inventory')">
-                                    <i class="fas fa-boxes"></i> Manage Inventory
+                                    <i class="fas fa-boxes"></i> ${this.translate('manage_inventory') || 'Manage Inventory'}
                                 </button>
                             </div>
                         </div>
@@ -3173,7 +3098,6 @@ html {
                 }
             }
 
-            // Dashboard
             refreshDashboard() {
                 document.getElementById('totalClients').textContent = this.clients.length;
                 
@@ -3189,7 +3113,7 @@ html {
                                sessionDate.getFullYear() === currentYear;
                     })
                     .reduce((sum, session) => sum + (session.price || 0), 0);
-                document.getElementById('monthlyRevenue').textContent = `€${monthlyRevenue}`;
+                document.getElementById('monthlyRevenue').textContent = this.formatCurrency(monthlyRevenue);
 
                 const lowStock = this.inventory.filter(item => item.qty <= item.alert);
                 document.getElementById('lowStockItems').textContent = lowStock.length;
@@ -3216,7 +3140,7 @@ html {
                     todayContainer.innerHTML = `
                         <div style="margin-bottom: 15px;">
                             <h4 style="color: var(--primary); margin-bottom: 12px;">
-                                <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
+                                <i class="fas fa-list"></i> ${todaysSessions.length} ${this.translate('session') || 'Session'}${todaysSessions.length > 1 ? 's' : ''} ${this.translate('today') || 'Today'}
                             </h4>
                         </div>
                         ${todaysSessions.map(session => {
@@ -3229,20 +3153,20 @@ html {
                             
                             let statusClass = '';
                             let statusIcon = '🕒';
-                            let statusText = `In ${hoursUntil}h`;
+                            let statusText = `${this.translate('in') || 'In'} ${hoursUntil}h`;
                             
                             if (isUrgent) {
                                 statusClass = 'urgent';
                                 statusIcon = '⚠️';
-                                statusText = 'Starting soon!';
+                                statusText = this.translate('starting_soon') || 'Starting soon!';
                             } else if (isCompleted) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
-                                statusText = 'Completed';
+                                statusText = this.translate('session_completed') || 'Completed';
                             } else if (hoursUntil < 0) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
-                                statusText = 'Completed';
+                                statusText = this.translate('session_completed') || 'Completed';
                             }
                             
                             return `
@@ -3255,7 +3179,7 @@ html {
                                             <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.4;">
                                                 <div>👤 ${this.getClientName(session.clientId)}</div>
                                                 <div>🕐 ${sessionTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                                                <div>${session.price ? `💰 €${session.price}` : ''}</div>
+                                                <div>${session.price ? `💰 ${this.formatCurrency(session.price)}` : ''}</div>
                                                 <div style="color: ${isUrgent ? 'var(--warning)' : 'var(--success)'}; font-weight: 600; margin-top: 4px;">
                                                     ${statusIcon} ${statusText}
                                                 </div>
@@ -3285,22 +3209,21 @@ html {
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
                             <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
                                 <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
-                                <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
+                                <div style="color: rgba(255,255,255,0.8);">${this.translate('total_sessions') || 'Total Sessions'}</div>
                             </div>
                             <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
-                                <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">€${Math.round(avgSessionPrice)}</div>
-                                <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
+                                <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">${this.formatCurrency(avgSessionPrice)}</div>
+                                <div style="color: rgba(255,255,255,0.8);">${this.translate('avg_session_price') || 'Avg Session Price'}</div>
                             </div>
                             <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
                                 <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
-                                <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
+                                <div style="color: rgba(255,255,255,0.8);">${this.translate('returning_clients') || 'Returning Clients'}</div>
                             </div>
                         </div>
                     `;
                 }
             }
 
-            // Calendar
             refreshCalendar() {
                 const monthNames = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"];
@@ -3386,7 +3309,6 @@ html {
                 this.refreshCalendar();
             }
 
-            // Reports
             refreshReports() {
                 const totalSessions = this.sessions.length;
                 const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
@@ -3399,12 +3321,11 @@ html {
                     Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
 
                 document.getElementById('totalSessions').textContent = totalSessions;
-                document.getElementById('totalRevenue').textContent = `€${Math.round(totalRevenue)}`;
-                document.getElementById('avgSessionPrice').textContent = `€${Math.round(avgSessionPrice)}`;
+                document.getElementById('totalRevenue').textContent = this.formatCurrency(totalRevenue);
+                document.getElementById('avgSessionPrice').textContent = this.formatCurrency(avgSessionPrice);
                 document.getElementById('clientRetention').textContent = `${clientRetention}%`;
             }
 
-            // Utility Methods
             exportData(type) {
                 let data, filename;
                 
@@ -3459,6 +3380,16 @@ html {
                 return client ? client.name : 'Unknown Client';
             }
 
+            translate(key, params = {}) {
+                let translation = this.translations[this.currentLanguage]?.[key] || this.translations['en'][key] || key;
+                
+                if (params.count !== undefined) {
+                    translation = translation.replace('{count}', params.count);
+                }
+                
+                return translation;
+            }
+
             showNotification(message) {
                 const toast = document.getElementById('toast');
                 toast.textContent = message;
@@ -3482,7 +3413,6 @@ html {
             }
         }
 
-        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             window.app = new InkManagerPro();
             
@@ -3491,22 +3421,7 @@ html {
             }, 100);
         });
 
-        console.log('🚀 InkManager Pro Complete Version - Ready!');
+        console.log('🚀 InkManager Pro Complete Rewritten Version - Ready!');
     </script>
-    <script>
-// Force service worker update for existing users
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistration().then(registration => {
-    if (registration) {
-      registration.update();
-    }
-  });
-}
-</script>
 </body>
 </html>
-
-
-
-
-
