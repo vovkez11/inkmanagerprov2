@@ -2,15 +2,20 @@
   "name": "InkManager Pro v2.0",
   "short_name": "InkManager",
   "description": "Tattoo Studio Management System",
-  "start_url": "/",
+  "start_url": "/inkmanagerprov2/",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#00bcd4",
   "orientation": "portrait",
-  "scope": "/",
+  "scope": "/inkmanagerprov2/",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "https://vovkez11.github.io/inkmanagerprov2/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://vovkez11.github.io/inkmanagerprov2/icon.png", 
       "sizes": "512x512",
       "type": "image/png"
     }
