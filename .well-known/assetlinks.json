@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app", 
-    "package_name": "com.yourcompany.inkmanager",
+    "package_name": "com.inkmanager.pro",
     "sha256_cert_fingerprints": [
       "AC:2A:6B:45:5F:10:73:4D:21:AF:02:0E:BE:EA:DB:A8:B6:B3:78:8D:DB:93:C5:F4:58:60:36:32:38:21:B3:81"
     ]
