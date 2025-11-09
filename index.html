@@ -880,10 +880,118 @@
         opacity: 0.8;
     }
 
+    /* Inventory Tabs */
+    .inventory-tabs {
+        margin: 20px 0;
+    }
+
+    .tab-buttons {
+        display: flex;
+        background: rgba(0,0,0,0.3);
+        border-radius: var(--border-radius);
+        padding: 4px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        color: rgba(255,255,255,0.7);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 120px;
+    }
+
+    .tab-btn:hover {
+        background: rgba(255,255,255,0.05);
+        color: var(--light);
+    }
+
+    .tab-btn.active {
+        background: var(--primary);
+        color: var(--darker);
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Mobile Menu Button */
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: var(--darker);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2em;
+        z-index: 1100;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .mobile-menu-btn:hover {
+        transform: scale(1.1);
+    }
+
     /* Responsive Design */
+    @media (max-width: 1024px) {
+        #sidebar {
+            width: 240px;
+        }
+        
+        .app-container {
+            max-width: calc(100% - 240px);
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .tab-btn {
+            min-width: 100px;
+            padding: 10px 12px;
+            font-size: 0.9em;
+        }
+    }
+
     @media (max-width: 768px) {
         #sidebar {
             width: 70px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            position: fixed;
+            z-index: 1000;
+        }
+
+        #sidebar.mobile-open {
+            transform: translateX(0);
         }
 
         .logo, .nav-link span, .nav-section-title {
@@ -897,10 +1005,11 @@
 
         .nav-link i {
             margin-right: 0;
+            font-size: 1.5em;
         }
 
         .app-container {
-            max-width: calc(100% - 70px);
+            max-width: 100%;
             padding: 15px;
         }
         
@@ -947,6 +1056,21 @@
             grid-template-columns: 1fr;
             gap: 15px;
         }
+        
+        .mobile-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-buttons {
+            flex-direction: column;
+        }
+        
+        .tab-btn {
+            min-width: auto;
+            justify-content: flex-start;
+        }
     }
 
     @media (max-width: 480px) {
@@ -975,6 +1099,17 @@
         .form-control {
             padding: 14px;
         }
+        
+        .card-header {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 
     /* Loading Animation */
@@ -991,143 +1126,14 @@
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
-        /* Loading Animation */
-    .loading {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255,255,255,.3);
-        border-radius: 50%;
-        border-top-color: var(--primary);
-        animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* === ADD INVENTORY TABS CSS RIGHT HERE === */
-    /* Inventory Tabs */
-    .inventory-tabs {
-        margin-top: 20px;
-    }
-
-    .tab-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid rgba(0, 188, 212, 0.3);
-    }
-
-    .tab-button {
-        background: rgba(255, 255, 255, 0.05);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        color: var(--light);
-        padding: 12px 18px;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: var(--transition);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.9em;
-        min-height: 44px;
-    }
-
-    .tab-button:hover {
-        background: rgba(0, 188, 212, 0.1);
-        border-color: var(--primary);
-        transform: translateY(-2px);
-    }
-
-    .tab-button.active {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        border-color: var(--primary);
-        color: var(--darker);
-        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
-    }
-
-    .tab-content {
-        display: none;
-        animation: fadeInUp 0.4s ease;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    .category-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    /* Empty states for categories */
-    .category-empty {
-        text-align: center;
-        padding: 40px 20px;
-        color: rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: var(--border-radius);
-        border: 2px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .category-empty i {
-        font-size: 3em;
-        margin-bottom: 15px;
-        opacity: 0.4;
-    }
-
-    .category-empty h4 {
-        font-size: 1.2em;
-        margin-bottom: 8px;
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .category-empty p {
-        font-size: 0.9em;
-        margin-bottom: 20px;
-        opacity: 0.8;
-    }
-
-    /* Responsive tabs */
-    @media (max-width: 768px) {
-        .tab-buttons {
-            gap: 6px;
-        }
-        
-        .tab-button {
-            padding: 10px 12px;
-            font-size: 0.8em;
-            min-height: 40px;
-        }
-        
-        .tab-button span {
-            display: none;
-        }
-        
-        .tab-button i {
-            margin-right: 0;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .tab-buttons {
-            justify-content: center;
-        }
-        
-        .tab-button {
-            flex: 1;
-            min-width: 60px;
-            justify-content: center;
-        }
-    }
 </style>
 </head>
 <body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
         <div class="logo">InkManager Pro</div>
@@ -1309,7 +1315,7 @@
             </div>
         </section>
 
-        <!-- Inventory Section -->
+        <!-- Inventory Section with Tabs -->
         <section id="inventory" class="section">
             <div class="card">
                 <div class="card-header">
@@ -1326,14 +1332,77 @@
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
-                <div id="inventoryList">
-                    <div class="empty-state">
-                        <i class="fas fa-box-open"></i>
-                        <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
-                        <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
-                        <button class="btn btn-primary" id="addFirstItem">
-                            <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
+                <!-- Inventory Tabs -->
+                <div class="inventory-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="all-items">
+                            <i class="fas fa-boxes"></i> <span>All Items</span>
                         </button>
+                        <button class="tab-btn" data-tab="needles">
+                            <i class="fas fa-syringe"></i> <span>Needles</span>
+                        </button>
+                        <button class="tab-btn" data-tab="inks">
+                            <i class="fas fa-fill-drip"></i> <span>Inks</span>
+                        </button>
+                        <button class="tab-btn" data-tab="supplies">
+                            <i class="fas fa-tools"></i> <span>Supplies</span>
+                        </button>
+                        <button class="tab-btn" data-tab="low-stock">
+                            <i class="fas fa-exclamation-triangle"></i> <span>Low Stock</span>
+                        </button>
+                    </div>
+
+                    <div class="tab-content active" id="all-items">
+                        <div id="inventoryList">
+                            <div class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
+                                <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
+                                <button class="btn btn-primary" id="addFirstItem">
+                                    <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="needles">
+                        <div id="needlesList">
+                            <div class="empty-state">
+                                <i class="fas fa-syringe"></i>
+                                <h3>No Needles in Inventory</h3>
+                                <p>Add needles to your inventory to see them here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="inks">
+                        <div id="inksList">
+                            <div class="empty-state">
+                                <i class="fas fa-fill-drip"></i>
+                                <h3>No Inks in Inventory</h3>
+                                <p>Add tattoo inks to your inventory to see them here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="supplies">
+                        <div id="suppliesList">
+                            <div class="empty-state">
+                                <i class="fas fa-tools"></i>
+                                <h3>No Supplies in Inventory</h3>
+                                <p>Add supplies to your inventory to see them here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="low-stock">
+                        <div id="lowStockList">
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>No Low Stock Items</h3>
+                                <p>All your inventory items are well stocked</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2445,6 +2514,33 @@
             }
 
             setupEventListeners() {
+                // Mobile menu toggle
+                document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.classList.toggle('mobile-open');
+                });
+
+                // Close sidebar when clicking outside on mobile
+                document.addEventListener('click', (e) => {
+                    const sidebar = document.getElementById('sidebar');
+                    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    
+                    if (window.innerWidth <= 768 && 
+                        !sidebar.contains(e.target) && 
+                        !mobileMenuBtn.contains(e.target) &&
+                        sidebar.classList.contains('mobile-open')) {
+                        sidebar.classList.remove('mobile-open');
+                    }
+                });
+
+                // Tab functionality
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tabId = btn.getAttribute('data-tab');
+                        this.switchInventoryTab(tabId);
+                    });
+                });
+
                 document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -2504,7 +2600,132 @@
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
             }
 
+            switchInventoryTab(tabId) {
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+
+                // Update active tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+
+                // Refresh the specific tab content
+                this.refreshInventoryTab(tabId);
+            }
+
+            refreshInventoryTab(tabId) {
+                let filteredItems = [];
+
+                switch(tabId) {
+                    case 'all-items':
+                        filteredItems = this.inventory;
+                        break;
+                    case 'needles':
+                        filteredItems = this.inventory.filter(item => item.type === 'needle');
+                        break;
+                    case 'inks':
+                        filteredItems = this.inventory.filter(item => item.type === 'ink');
+                        break;
+                    case 'supplies':
+                        filteredItems = this.inventory.filter(item => 
+                            ['supply', 'aftercare', 'safety', 'machine'].includes(item.type)
+                        );
+                        break;
+                    case 'low-stock':
+                        filteredItems = this.inventory.filter(item => item.qty <= item.alert);
+                        break;
+                }
+
+                const container = document.getElementById(tabId === 'all-items' ? 'inventoryList' : `${tabId}List`);
+                
+                if (filteredItems.length === 0) {
+                    let emptyMessage = '';
+                    let emptyIcon = 'fas fa-box-open';
+                    
+                    switch(tabId) {
+                        case 'needles':
+                            emptyMessage = 'No Needles in Inventory';
+                            emptyIcon = 'fas fa-syringe';
+                            break;
+                        case 'inks':
+                            emptyMessage = 'No Inks in Inventory';
+                            emptyIcon = 'fas fa-fill-drip';
+                            break;
+                        case 'supplies':
+                            emptyMessage = 'No Supplies in Inventory';
+                            emptyIcon = 'fas fa-tools';
+                            break;
+                        case 'low-stock':
+                            emptyMessage = 'No Low Stock Items';
+                            emptyIcon = 'fas fa-exclamation-triangle';
+                            break;
+                        default:
+                            emptyMessage = 'No Inventory Items';
+                    }
+                    
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="${emptyIcon}"></i>
+                            <h3>${emptyMessage}</h3>
+                            <p>Add items to your inventory to see them here</p>
+                            <button class="btn btn-primary" onclick="app.openInventoryModal()">
+                                <i class="fas fa-plus"></i> Add New Item
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filteredItems.map(item => {
+                    const isLowStock = item.qty <= item.alert;
+                    const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
+                    const typeIcons = {
+                        'needle': '🪡',
+                        'ink': '🎨',
+                        'machine': '⚡',
+                        'supply': '📦',
+                        'aftercare': '🧴',
+                        'safety': '🧤'
+                    };
+                    const icon = typeIcons[item.type] || '📋';
+                    
+                    return `
+                        <div class="inventory-item">
+                            <div class="item-content" onclick="app.showSection('inventory')">
+                                <div class="item-title">
+                                    ${icon} ${item.name}
+                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Low Stock</span>' : ''}
+                                </div>
+                                <div class="item-meta">
+                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ Alert at: ${item.alert}</div>
+                                    <div>🏷️ ${item.type} ${item.price ? `| ${this.formatCurrency(item.price)} per unit` : ''}</div>
+                                    ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
+                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openInventoryModal('${item.id}')" title="Edit Item">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteInventoryItem('${item.id}')" title="Delete Item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
             showSection(sectionId) {
+                // Close mobile sidebar when navigating
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('mobile-open');
+                }
+
                 this.currentSection = sectionId;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
@@ -2545,7 +2766,7 @@
                 const item = this.inventory.find(i => i.id === itemId);
                 if (item) {
                     materialQty.max = item.qty;
-                    materialQty.placeholder = this.translate('max_available', { count: item.qty }) || `Max: ${item.qty}`;
+                    materialQty.placeholder = `Max: ${item.qty}`;
                 }
             }
 
@@ -2586,7 +2807,7 @@
                 document.getElementById('materialItem').value = '';
                 document.getElementById('materialQty').value = '1';
                 document.getElementById('materialQty').max = '';
-                document.getElementById('materialQty').placeholder = this.translate('quantity') || 'Qty';
+                document.getElementById('materialQty').placeholder = 'Qty';
 
                 this.showNotification(`✅ ${item.name} added to materials`);
             }
@@ -2607,7 +2828,7 @@
                 container.innerHTML = this.currentSessionMaterials.map((material, index) => `
                     <div class="material-item">
                         <div>${material.itemName}</div>
-                        <div>${this.translate('quantity') || 'Qty'}: ${material.quantity}</div>
+                        <div>Qty: ${material.quantity}</div>
                         <button type="button" class="remove-material" onclick="app.removeMaterial(${index})">
                             <i class="fas fa-times"></i>
                         </button>
@@ -2642,13 +2863,13 @@
                         document.getElementById('clientEmergencyContact').value = client.emergencyContact || '';
                         document.getElementById('clientNotes').value = client.notes || '';
                         
-                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> ' + (this.translate('edit_client') || 'Edit Client');
-                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_client') || 'Update Client');
+                        document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Client';
+                        document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Update Client';
                         this.editingClientId = clientId;
                     }
                 } else {
-                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> ' + (this.translate('create_new_client') || 'Create New Client');
-                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_client') || 'Save Client');
+                    document.getElementById('clientModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Create New Client';
+                    document.getElementById('saveClientBtn').innerHTML = '<i class="fas fa-save"></i> Save Client';
                     this.editingClientId = null;
                 }
                 
@@ -2751,7 +2972,7 @@
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
                                     <i class="fas fa-user"></i> ${client.name}
-                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
+                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">Regular</span>' : ''}
                                 </div>
                                 <div class="item-meta">
                                     ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
@@ -2759,10 +2980,10 @@
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
                                     ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
                                     ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(totalSpent)}</div>
-                                    ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
+                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} sessions | ${this.formatCurrency(totalSpent)}</div>
+                                    ${lastSession ? `<div><i class="fas fa-clock"></i> Last visit: ${lastSession.toLocaleDateString()}</div>` : ''}
                                     ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
-                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
+                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">Updated: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -2824,13 +3045,13 @@
                 this.currentSessionMaterials = [];
                 
                 const clientSelect = document.getElementById('sessionClient');
-                clientSelect.innerHTML = '<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>';
+                clientSelect.innerHTML = '<option value="">Select a client...</option>';
                 this.clients.forEach(client => {
                     clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
                 });
 
                 const materialSelect = document.getElementById('materialItem');
-                materialSelect.innerHTML = '<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>';
+                materialSelect.innerHTML = '<option value="">Select item...</option>';
                 this.inventory.forEach(item => {
                     if (item.qty > 0) {
                         materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
@@ -2852,8 +3073,8 @@
                             this.refreshMaterialsList();
                         }
                         
-                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> ' + (this.translate('edit_session') || 'Edit Session');
-                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_session') || 'Update Session');
+                        document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-edit"></i> Edit Session';
+                        document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Update Session';
                         this.editingSessionId = sessionId;
                     }
                 } else {
@@ -2868,8 +3089,8 @@
                         document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
                     }
                     
-                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> ' + (this.translate('schedule_session') || 'Schedule Session');
-                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_session') || 'Save Session');
+                    document.querySelector('#sessionModal .card-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Schedule Session';
+                    document.querySelector('#sessionModal button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Save Session';
                     this.editingSessionId = null;
                 }
 
@@ -2974,11 +3195,11 @@
                     const isPast = sessionDate < new Date();
                     const isToday = sessionDate.toDateString() === new Date().toDateString();
                     const statusClass = isPast ? 'completed' : (isToday ? 'urgent' : 'upcoming');
-                    const statusText = isPast ? this.translate('session_completed') : (isToday ? this.translate('session_today') : this.translate('session_upcoming'));
+                    const statusText = isPast ? 'Completed' : (isToday ? 'Today' : 'Upcoming');
                     const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
                     
                     const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
-                        ? `<br><strong>${this.translate('materials') || 'Materials'}:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        ? `<br><strong>Materials:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
                         : '';
                     
                     return `
@@ -2986,14 +3207,14 @@
                             <div class="item-content" onclick="app.showSection('sessions')">
                                 <div class="item-title">${session.title}</div>
                                 <div class="item-meta">
-                                    <strong>${this.translate('client') || 'Client'}:</strong> ${this.getClientName(session.clientId)}<br>
-                                    <strong>${this.translate('date_time') || 'When'}:</strong> ${sessionDate.toLocaleString()}<br>
-                                    <strong>${this.translate('duration_hours') || 'Duration'}:</strong> ${session.duration} hours<br>
-                                    <strong>${this.translate('status') || 'Status'}:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
-                                    ${session.price ? `<strong>${this.translate('price') || 'Price'}:</strong> ${this.formatCurrency(session.price)}` : ''}
+                                    <strong>Client:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>When:</strong> ${sessionDate.toLocaleString()}<br>
+                                    <strong>Duration:</strong> ${session.duration} hours<br>
+                                    <strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
+                                    ${session.price ? `<strong>Price:</strong> ${this.formatCurrency(session.price)}` : ''}
                                     ${materialsText}
-                                    ${session.notes ? `<br><strong>${this.translate('session_notes') || 'Notes'}:</strong> ${session.notes}` : ''}
-                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>${this.translate('last_updated') || 'Last updated'}: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
+                                    ${session.notes ? `<br><strong>Notes:</strong> ${session.notes}` : ''}
+                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>Last updated: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -3041,13 +3262,13 @@
                         document.getElementById('itemPrice').value = item.price || '';
                         document.getElementById('itemNotes').value = item.notes || '';
                         
-                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> ' + (this.translate('edit_inventory_item') || 'Edit Inventory Item');
-                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('update_item') || 'Update Item');
+                        document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Inventory Item';
+                        document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Update Item';
                         this.editingItemId = itemId;
                     }
                 } else {
-                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> ' + (this.translate('new_inventory_item') || 'New Inventory Item');
-                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> ' + (this.translate('save_item') || 'Save Item');
+                    document.getElementById('inventoryModalTitle').innerHTML = '<i class="fas fa-box"></i> New Inventory Item';
+                    document.getElementById('saveInventoryBtn').innerHTML = '<i class="fas fa-save"></i> Save Item';
                     this.editingItemId = null;
                 }
                 
@@ -3115,63 +3336,14 @@
             }
 
             refreshInventory() {
-                const container = document.getElementById('inventoryList');
+                // Refresh all inventory tabs
+                this.refreshInventoryTab('all-items');
+                this.refreshInventoryTab('needles');
+                this.refreshInventoryTab('inks');
+                this.refreshInventoryTab('supplies');
+                this.refreshInventoryTab('low-stock');
+
                 const alertsContainer = document.getElementById('inventoryAlerts');
-                
-                if (this.inventory.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-box-open"></i>
-                            <h3 data-i18n="no_inventory_items">No Inventory Items</h3>
-                            <p data-i18n="track_supplies">Track your needles, ink, and professional supplies</p>
-                            <button class="btn btn-primary" id="addFirstItem">
-                                <i class="fas fa-plus"></i> <span data-i18n="add_first_item">Add First Item</span>
-                            </button>
-                        </div>
-                    `;
-                    document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
-                    return;
-                }
-
-                container.innerHTML = this.inventory.map(item => {
-                    const isLowStock = item.qty <= item.alert;
-                    const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
-                    const typeIcons = {
-                        'needle': '🪡',
-                        'ink': '🎨',
-                        'machine': '⚡',
-                        'supply': '📦',
-                        'aftercare': '🧴',
-                        'safety': '🧤'
-                    };
-                    const icon = typeIcons[item.type] || '📋';
-                    
-                    return `
-                        <div class="inventory-item">
-                            <div class="item-content" onclick="app.showSection('inventory')">
-                                <div class="item-title">
-                                    ${icon} ${item.name}
-                                    ${isLowStock ? '<span style="background: var(--warning); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('low_stock') || 'Low Stock') + '</span>' : ''}
-                                </div>
-                                <div class="item-meta">
-                                    <div ${stockStyle}>📦 ${item.qty} in stock | ⚠️ ${this.translate('low_stock_alert') || 'Alert at'}: ${item.alert}</div>
-                                    <div>🏷️ ${item.type} ${item.price ? `| ${this.formatCurrency(item.price)} ${this.translate('price_per_unit') || 'per unit'}` : ''}</div>
-                                    ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
-                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
-                                </div>
-                            </div>
-                            <div class="item-actions">
-                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openInventoryModal('${item.id}')" title="Edit Item">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteInventoryItem('${item.id}')" title="Delete Item">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
                 const lowStock = this.inventory.filter(item => item.qty <= item.alert);
                 if (lowStock.length > 0) {
                     alertsContainer.innerHTML = `
@@ -3179,14 +3351,14 @@
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
                                     <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-                                        <i class="fas fa-exclamation-triangle"></i> ${this.translate('low_stock_alerts') || 'Low Stock Alerts'}
+                                        <i class="fas fa-exclamation-triangle"></i> Low Stock Alerts
                                     </h4>
                                     <p style="margin: 0; color: rgba(255,255,255,0.8);">
-                                        ${lowStock.length} ${this.translate('items_need_restocking') || 'item(s) need restocking'}
+                                        ${lowStock.length} item(s) need restocking
                                     </p>
                                 </div>
-                                <button class="btn btn-warning" onclick="app.showSection('inventory')">
-                                    <i class="fas fa-boxes"></i> ${this.translate('manage_inventory') || 'Manage Inventory'}
+                                <button class="btn btn-warning" onclick="app.switchInventoryTab('low-stock')">
+                                    <i class="fas fa-boxes"></i> View Low Stock
                                 </button>
                             </div>
                         </div>
@@ -3274,7 +3446,7 @@
                     todayContainer.innerHTML = `
                         <div style="margin-bottom: 15px;">
                             <h4 style="color: var(--primary); margin-bottom: 12px;">
-                                <i class="fas fa-list"></i> ${todaysSessions.length} ${this.translate('session') || 'Session'}${todaysSessions.length > 1 ? 's' : ''} ${this.translate('today') || 'Today'}
+                                <i class="fas fa-list"></i> ${todaysSessions.length} Session${todaysSessions.length > 1 ? 's' : ''} Today
                             </h4>
                         </div>
                         ${todaysSessions.map(session => {
@@ -3287,20 +3459,20 @@
                             
                             let statusClass = '';
                             let statusIcon = '🕒';
-                            let statusText = `${this.translate('in') || 'In'} ${hoursUntil}h`;
+                            let statusText = `In ${hoursUntil}h`;
                             
                             if (isUrgent) {
                                 statusClass = 'urgent';
                                 statusIcon = '⚠️';
-                                statusText = this.translate('starting_soon') || 'Starting soon!';
+                                statusText = 'Starting soon!';
                             } else if (isCompleted) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
-                                statusText = this.translate('session_completed') || 'Completed';
+                                statusText = 'Completed';
                             } else if (hoursUntil < 0) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
-                                statusText = this.translate('session_completed') || 'Completed';
+                                statusText = 'Completed';
                             }
                             
                             return `
@@ -3343,15 +3515,15 @@
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
                             <div style="background: rgba(0,188,212,0.1); padding: 18px; border-radius: 12px; text-align: center;">
                                 <div style="font-size: 1.6em; color: var(--primary); font-weight: bold;">${this.sessions.length}</div>
-                                <div style="color: rgba(255,255,255,0.8);">${this.translate('total_sessions') || 'Total Sessions'}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Total Sessions</div>
                             </div>
                             <div style="background: rgba(76,175,80,0.1); padding: 18px; border-radius: 12px; text-align: center;">
                                 <div style="font-size: 1.6em; color: var(--success); font-weight: bold;">${this.formatCurrency(avgSessionPrice)}</div>
-                                <div style="color: rgba(255,255,255,0.8);">${this.translate('avg_session_price') || 'Avg Session Price'}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Avg Session Price</div>
                             </div>
                             <div style="background: rgba(255,64,129,0.1); padding: 18px; border-radius: 12px; text-align: center;">
                                 <div style="font-size: 1.6em; color: var(--secondary); font-weight: bold;">${returningClients}</div>
-                                <div style="color: rgba(255,255,255,0.8);">${this.translate('returning_clients') || 'Returning Clients'}</div>
+                                <div style="color: rgba(255,255,255,0.8);">Returning Clients</div>
                             </div>
                         </div>
                     `;
@@ -3559,4 +3731,3 @@
     </script>
 </body>
 </html>
-
