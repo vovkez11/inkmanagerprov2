@@ -1048,7 +1048,11 @@ body.sidebar-collapsed .app-container {
             max-height: 70px;
         }
 
-        .logo, .nav-section-title {
+        .logo {
+            display: none !important;
+        }
+
+        .nav-section-title {
             display: none !important;
         }
 
@@ -1057,6 +1061,13 @@ body.sidebar-collapsed .app-container {
             flex-direction: row;
             gap: 0;
             margin: 0;
+        }
+
+        /* Ensure quick action buttons are visible on mobile */
+        #quickAddClient,
+        #quickAddSession,
+        #quickAddInventory {
+            display: flex !important;
         }
 
         .nav-link {
@@ -3100,13 +3111,26 @@ body.sidebar-collapsed .app-container {
                 this.showSection(initialSection, { updateHistory: false, force: true });
                 history.replaceState({ section: initialSection }, '', `#${initialSection}`);
 
+                // Prevent back button from closing app - navigate to dashboard instead
                 window.addEventListener('popstate', (event) => {
                     const stateSection = event.state?.section;
                     const hashSection = (window.location.hash || '').replace('#', '');
+                    
+                    // If user is on dashboard and presses back, stay on dashboard
+                    if (this.currentSection === 'dashboard' && !stateSection && !hashSection) {
+                        event.preventDefault();
+                        history.pushState({ section: 'dashboard' }, '', '#dashboard');
+                        return;
+                    }
+                    
+                    // Navigate to the target section, default to dashboard if invalid
                     const target = sectionIds.includes(stateSection) ? stateSection :
-                        (sectionIds.includes(hashSection) ? hashSection : sectionIds[0]);
+                        (sectionIds.includes(hashSection) ? hashSection : 'dashboard');
                     this.showSection(target, { updateHistory: false, force: true });
                 });
+
+                // Add extra history entry to prevent immediate app close
+                history.pushState({ section: initialSection }, '', `#${initialSection}`);
             }
 
             setInventoryFilter(filter) {
