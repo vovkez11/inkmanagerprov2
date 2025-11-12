@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>InkManager Pro - Professional Tattoo Studio Management</title>
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
@@ -270,7 +270,7 @@ body.sidebar-collapsed .app-container {
         background: rgba(0,188,212,0.15);
         color: var(--primary-light);
         border-color: rgba(0,188,212,0.4);
-        transform: translateY(-2px);
+        transform: none;
     }
 
     /* Mobile menu button - visible on all screen sizes */
@@ -326,7 +326,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .install-btn:hover {
-        transform: translateY(-3px) scale(1.05);
+        transform: none;
         box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
     }
 
@@ -409,7 +409,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .card:hover {
-        transform: translateY(-5px);
+        transform: none;
         box-shadow: 0 15px 40px rgba(0,0,0,0.5);
     }
 
@@ -437,7 +437,7 @@ body.sidebar-collapsed .app-container {
 
     .card-title:hover {
         background: rgba(0, 188, 212, 0.1);
-        transform: translateX(5px);
+        transform: none;
     }
 
     /* Buttons */
@@ -480,7 +480,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .btn-primary:hover {
-        transform: translateY(-3px) scale(1.05);
+        transform: none;
         box-shadow: 0 10px 30px rgba(0, 188, 212, 0.4);
     }
 
@@ -508,7 +508,7 @@ body.sidebar-collapsed .app-container {
     .btn-outline:hover {
         background: var(--primary);
         color: var(--darker);
-        transform: translateY(-2px);
+        transform: none;
     }
 
     .btn:active {
@@ -573,7 +573,7 @@ body.sidebar-collapsed .app-container {
         outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.15);
-        transform: translateY(-2px);
+        transform: none;
     }
 
     /* Materials Used Section */
@@ -632,7 +632,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .remove-material:hover {
-        transform: scale(1.1);
+        transform: none;
     }
 
     /* Stats Grid */
@@ -690,7 +690,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .stat-card:hover {
-        transform: translateY(-8px) scale(1.03);
+        transform: none;
         box-shadow: var(--shadow);
         border-left-color: var(--secondary);
     }
@@ -731,7 +731,7 @@ body.sidebar-collapsed .app-container {
 
     .client-item:hover, .session-item:hover, .inventory-item:hover {
         background: linear-gradient(135deg, rgba(0,188,212,0.15) 0%, rgba(255,64,129,0.1) 100%);
-        transform: translateX(10px) scale(1.02);
+        transform: none;
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
 
@@ -784,7 +784,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .action-btn:hover {
-        transform: scale(1.1);
+        transform: none;
     }
 
     /* Calendar */
@@ -820,7 +820,7 @@ body.sidebar-collapsed .app-container {
 
     .calendar-day:hover {
         background: linear-gradient(135deg, rgba(0,188,212,0.2) 0%, rgba(255,64,129,0.1) 100%);
-        transform: scale(1.05);
+        transform: none;
         z-index: 2;
     }
 
@@ -880,7 +880,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .event:hover {
-        transform: scale(1.05);
+        transform: none;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
@@ -1006,7 +1006,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .todays-session-item:hover {
-        transform: translateX(10px);
+        transform: none;
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
 
@@ -1073,6 +1073,12 @@ body.sidebar-collapsed .app-container {
 
     /* Responsive Design */
     @media (max-width: 768px) {
+        
+        /* Disable all animations and transforms on mobile for stability */
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
 
         .app-header-top {
             flex-direction: column;
@@ -1351,6 +1357,11 @@ body.sidebar-collapsed .app-container {
         .card:hover::before,
         .btn:hover::before {
             transform: scaleX(0);
+        }
+
+        /* Disable all transform animations on mobile */
+        * {
+            transform: none !important;
         }
 
         /* Prevent text selection on buttons */
