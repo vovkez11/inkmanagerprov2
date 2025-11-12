@@ -1,5 +1,12 @@
-// OFFLINE-FIRST Service Worker for APK
-const CACHE_NAME = 'inkmanager-pro-offline-v1';
+/**
+ * InkManager Pro - Service Worker
+ * Provides offline functionality and caching for PWA
+ */
+
+const CACHE_NAME = 'inkmanager-pro-v2.0';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.0';
+
+// Resources to cache on install
 const urlsToCache = [
   './',
   './index.html',
@@ -7,42 +14,133 @@ const urlsToCache = [
   './privacy-policy.html',
   './manifest.json',
   './icon.png',
-  './sw.js'
+  './icon-maskable.png',
+  './icon-monochrome.png',
+  './assets/app.js'
 ];
 
+/**
+ * Install event - cache core resources
+ */
 self.addEventListener('install', event => {
-  console.log('📦 Installing service worker for offline use');
+  console.log('📦 [SW] Installing service worker...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('✅ Caching app shell');
+        console.log('✅ [SW] Caching app shell');
         return cache.addAll(urlsToCache);
       })
-      .then(() => self.skipWaiting())
+      .then(() => {
+        console.log('✅ [SW] Service worker installed');
+        return self.skipWaiting();
+      })
+      .catch(err => {
+        console.error('❌ [SW] Installation failed:', err);
+      })
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        if (response) {
-          return response;
-        }
-        
-        // For navigation requests, always return index.html
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-        
-        return fetch(event.request).catch(() => {
-          // If fetch fails and it's a document request, return offline page
-          if (event.request.destination === 'document') {
-            return caches.match('./index.html');
+/**
+ * Activate event - clean up old caches
+ */
+self.addEventListener('activate', event => {
+  console.log('🔄 [SW] Activating service worker...');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE) {
+            console.log('🗑️ [SW] Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
           }
-          return new Response('Offline - content not available');
-        });
+        })
+      );
+    }).then(() => {
+      console.log('✅ [SW] Service worker activated');
+      return self.clients.claim();
+    })
+  );
+});
+
+/**
+ * Fetch event - serve cached content when offline
+ * Strategy: Network first, falling back to cache
+ */
+self.addEventListener('fetch', event => {
+  const { request } = event;
+  
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+  
+  // For navigation requests (HTML pages)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // Clone and cache the response
+          const responseClone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => {
+            cache.put(request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // If network fails, try cache
+          return caches.match(request).then(response => {
+            return response || caches.match('./index.html');
+          });
+        })
+    );
+    return;
+  }
+  
+  // For other requests (CSS, JS, images, etc.)
+  event.respondWith(
+    caches.match(request)
+      .then(cachedResponse => {
+        if (cachedResponse) {
+          // Return cached version
+          return cachedResponse;
+        }
+        
+        // Fetch from network
+        return fetch(request)
+          .then(response => {
+            // Don't cache non-OK responses
+            if (!response || response.status !== 200 || response.type === 'error') {
+              return response;
+            }
+            
+            // Clone and cache the response for runtime cache
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+            
+            return response;
+          })
+          .catch(() => {
+            // Network failed, no cache available
+            console.log('❌ [SW] Failed to fetch:', request.url);
+            return new Response('Offline - content not available', {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: new Headers({
+                'Content-Type': 'text/plain'
+              })
+            });
+          });
       })
   );
+});
+
+/**
+ * Message event - handle messages from the app
+ */
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
