@@ -1726,6 +1726,12 @@ body.sidebar-collapsed .app-container {
                 this.currentSessionMaterials = [];
                 this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
                 
+                // Cache DOM elements to avoid repeated queries
+                this.domCache = {};
+                
+                // Debounced save to reduce localStorage writes
+                this.saveTimeout = null;
+                
                 // Currency configuration
                 this.currencyConfig = {
                     'en': { symbol: '$', code: 'USD', locale: 'en-US' },
@@ -2424,6 +2430,19 @@ body.sidebar-collapsed .app-container {
                 this.applySidebarState();
             }
 
+            // Debounce utility for search inputs - prevents excessive re-renders
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
             formatCurrency(amount) {
                 const config = this.currencyConfig[this.currentLanguage] || this.currencyConfig['en'];
                 if (!amount) amount = 0;
@@ -2450,14 +2469,21 @@ body.sidebar-collapsed .app-container {
                 
                 document.getElementById('languageSelect').value = lang;
                 
-                document.querySelectorAll('[data-i18n]').forEach(element => {
+                // Cache translation elements on first access
+                if (!this.domCache.i18nElements) {
+                    this.domCache.i18nElements = document.querySelectorAll('[data-i18n]');
+                    this.domCache.i18nPlaceholders = document.querySelectorAll('[data-i18n-placeholder]');
+                }
+                
+                // Update translations from cache
+                this.domCache.i18nElements.forEach(element => {
                     const key = element.getAttribute('data-i18n');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.textContent = this.translations[lang][key];
                     }
                 });
                 
-                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                this.domCache.i18nPlaceholders.forEach(element => {
                     const key = element.getAttribute('data-i18n-placeholder');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.placeholder = this.translations[lang][key];
@@ -2976,17 +3002,24 @@ body.sidebar-collapsed .app-container {
 
                 this.currentSection = sectionId;
 
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                // Cache section and nav-link elements on first access
+                if (!this.domCache.sections) {
+                    this.domCache.sections = document.querySelectorAll('.section');
+                    this.domCache.navLinks = document.querySelectorAll('.nav-link');
+                }
+
+                this.domCache.sections.forEach(s => s.classList.remove('active'));
                 sectionEl.classList.add('active');
 
-                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                this.domCache.navLinks.forEach(b => b.classList.remove('active'));
                 const navLink = document.querySelector(`[data-section="${sectionId}"]`);
                 if (navLink) {
                     navLink.classList.add('active');
                     navLink.setAttribute('aria-current', 'page');
                 }
-                document.querySelectorAll('.nav-link[aria-current="page"]').forEach(link => {
-                    if (link !== navLink) {
+                // Only update aria-current attributes where needed
+                this.domCache.navLinks.forEach(link => {
+                    if (link !== navLink && link.getAttribute('aria-current') === 'page') {
                         link.removeAttribute('aria-current');
                     }
                 });
@@ -3237,18 +3270,34 @@ body.sidebar-collapsed .app-container {
                     return;
                 }
 
+                // Pre-compute session statistics for all clients - O(n) instead of O(n*m)
+                const clientStats = {};
+                this.sessions.forEach(session => {
+                    if (!clientStats[session.clientId]) {
+                        clientStats[session.clientId] = {
+                            count: 0,
+                            totalSpent: 0,
+                            lastSessionDate: 0
+                        };
+                    }
+                    clientStats[session.clientId].count++;
+                    clientStats[session.clientId].totalSpent += (session.price || 0);
+                    const sessionDate = new Date(session.dateTime).getTime();
+                    if (sessionDate > clientStats[session.clientId].lastSessionDate) {
+                        clientStats[session.clientId].lastSessionDate = sessionDate;
+                    }
+                });
+
                 container.innerHTML = this.clients.map(client => {
-                    const clientSessions = this.sessions.filter(s => s.clientId === client.id);
-                    const totalSpent = clientSessions.reduce((sum, session) => sum + (session.price || 0), 0);
-                    const lastSession = clientSessions.length > 0 ? 
-                        new Date(Math.max(...clientSessions.map(s => new Date(s.dateTime)))) : null;
+                    const stats = clientStats[client.id] || { count: 0, totalSpent: 0, lastSessionDate: 0 };
+                    const lastSession = stats.lastSessionDate > 0 ? new Date(stats.lastSessionDate) : null;
                     
                     return `
                         <div class="client-item">
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
                                     <i class="fas fa-user"></i> ${client.name}
-                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
+                                    ${stats.count > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
                                     ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
@@ -3256,7 +3305,7 @@ body.sidebar-collapsed .app-container {
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
                                     ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
                                     ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(totalSpent)}</div>
+                                    <div><i class="fas fa-calendar"></i> ${stats.count} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(stats.totalSpent)}</div>
                                     ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
                                     ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
                                     ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
@@ -3321,18 +3370,20 @@ body.sidebar-collapsed .app-container {
                 this.currentSessionMaterials = [];
                 
                 const clientSelect = document.getElementById('sessionClient');
-                clientSelect.innerHTML = '<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>';
+                const clientOptions = ['<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>'];
                 this.clients.forEach(client => {
-                    clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+                    clientOptions.push(`<option value="${client.id}">${client.name}</option>`);
                 });
+                clientSelect.innerHTML = clientOptions.join('');
 
                 const materialSelect = document.getElementById('materialItem');
-                materialSelect.innerHTML = '<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>';
+                const materialOptions = ['<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>'];
                 this.inventory.forEach(item => {
                     if (item.qty > 0) {
-                        materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
+                        materialOptions.push(`<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`);
                     }
                 });
+                materialSelect.innerHTML = materialOptions.join('');
 
                 if (sessionId) {
                     const session = this.sessions.find(s => s.id === sessionId);
@@ -4042,12 +4093,28 @@ body.sidebar-collapsed .app-container {
                 setTimeout(() => toast.classList.remove('show'), 4000);
             }
 
-            safeSaveData() {
-                try {
-                    this.saveData();
-                } catch (error) {
-                    console.error('Save error:', error);
-                    this.showNotification('⚠️ Save failed - storage might be full');
+            safeSaveData(immediate = false) {
+                if (immediate) {
+                    // Immediate save (for critical operations)
+                    try {
+                        this.saveData();
+                    } catch (error) {
+                        console.error('Save error:', error);
+                        this.showNotification('⚠️ Save failed - storage might be full');
+                    }
+                } else {
+                    // Debounced save (for frequent updates)
+                    if (this.saveTimeout) {
+                        clearTimeout(this.saveTimeout);
+                    }
+                    this.saveTimeout = setTimeout(() => {
+                        try {
+                            this.saveData();
+                        } catch (error) {
+                            console.error('Save error:', error);
+                            this.showNotification('⚠️ Save failed - storage might be full');
+                        }
+                    }, 300); // Wait 300ms before saving
                 }
             }
 
