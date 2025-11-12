@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>InkManager Pro - Professional Tattoo Studio Management</title>
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
@@ -37,6 +37,8 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
     }
 
     body {
@@ -50,19 +52,25 @@
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         overflow-x: hidden;
         display: flex;
-        position: relative;
+        position: fixed;
         width: 100%;
         max-width: 100vw;
+        height: 100vh;
+        height: -webkit-fill-available;
     }
 
     html {
         height: -webkit-fill-available;
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
     }
 
     /* Smooth scrolling for mobile */
     html {
         scroll-behavior: smooth;
         -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+        overscroll-behavior: none; /* Prevent pull-to-refresh bounce */
     }
 
     /* Better touch device support */
@@ -1429,7 +1437,7 @@ body.sidebar-collapsed .app-container {
         /* Improve tap responsiveness on touch devices */
         button, a, .btn, .nav-link, .stat-card, .client-item, 
         .session-item, .inventory-item, .calendar-day {
-            -webkit-tap-highlight-color: rgba(0, 188, 212, 0.2);
+            -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
 
@@ -1633,16 +1641,21 @@ body.sidebar-collapsed .app-container {
         transform: translateX(-50%) translateY(-100%);
         background: var(--primary);
         color: var(--darker);
-        padding: 12px 24px;
-        border-radius: 0 0 12px 12px;
+        padding: 4px 12px;
+        border-radius: 0 0 8px 8px;
         font-weight: 600;
+        font-size: 0.7rem;
         z-index: 999;
         transition: transform 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
+        box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+        display: none;
     }
 
     .pull-to-refresh.active {
         transform: translateX(-50%) translateY(0);
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
 
     /* Swipe Gesture Indicator */
