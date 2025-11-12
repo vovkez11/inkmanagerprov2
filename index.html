@@ -1151,8 +1151,14 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            max-width: 100%;
-            width: 100%;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Override desktop sidebar-collapsed state on mobile */
+        body.sidebar-collapsed .app-container {
+            max-width: 100% !important;
+            width: 100% !important;
         }
 
         .logo, .nav-link span, .nav-section-title {
@@ -1349,6 +1355,14 @@ body.sidebar-collapsed .app-container {
     @media (max-width: 480px) {
         .app-container {
             padding: 10px;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Override desktop sidebar-collapsed state on mobile */
+        body.sidebar-collapsed .app-container {
+            max-width: 100% !important;
+            width: 100% !important;
         }
 
         .stats-grid {
@@ -1451,6 +1465,14 @@ body.sidebar-collapsed .app-container {
 
         .app-container {
             padding-bottom: 70px;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Override desktop sidebar-collapsed state on mobile landscape */
+        body.sidebar-collapsed .app-container {
+            max-width: 100% !important;
+            width: 100% !important;
         }
     }
 
