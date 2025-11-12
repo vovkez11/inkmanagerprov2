@@ -105,24 +105,35 @@ let isMobileMenuOpen = false;
  * Toggle mobile sidebar menu
  */
 function toggleMobileMenu() {
-    isMobileMenuOpen = !isMobileMenuOpen;
     const sidebar = document.getElementById('sidebar');
     const body = document.body;
     
-    if (sidebar) {
-        if (isMobileMenuOpen) {
-            body.classList.add('mobile-open');
-            sidebar.style.display = 'flex';
-        } else {
-            body.classList.remove('mobile-open');
-            // On mobile, hide sidebar when menu is closed
-            if (window.innerWidth <= 768) {
-                setTimeout(() => {
-                    if (!isMobileMenuOpen) {
-                        sidebar.style.display = '';
-                    }
-                }, 300);
-            }
+    if (!sidebar) return;
+    
+    isMobileMenuOpen = !isMobileMenuOpen;
+    
+    if (isMobileMenuOpen) {
+        // Open menu
+        body.classList.add('mobile-open');
+        sidebar.style.display = 'flex';
+        
+        // Force reflow to trigger animation
+        sidebar.offsetHeight;
+        
+        // Prevent body scroll when menu is open
+        body.style.overflow = 'hidden';
+    } else {
+        // Close menu
+        body.classList.remove('mobile-open');
+        body.style.overflow = '';
+        
+        // Hide sidebar after transition completes
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                if (!isMobileMenuOpen) {
+                    sidebar.style.display = '';
+                }
+            }, 300);
         }
     }
 }
@@ -136,8 +147,19 @@ function handleSidebarToggle() {
     
     // On desktop, toggle collapse state
     if (window.innerWidth > 768) {
-        body.classList.toggle('sidebar-collapsed');
-        localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed'));
+        const isCollapsed = body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
+        
+        // Force a reflow to ensure transition happens
+        if (sidebar) {
+            sidebar.offsetHeight;
+        }
+        
+        // Update app container
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+            appContainer.offsetHeight;
+        }
     } else {
         // On mobile, toggle mobile menu
         toggleMobileMenu();
@@ -295,18 +317,34 @@ function initApp() {
     
     // Handle window resize to reset mobile menu state
     let resizeTimer;
+    let lastWidth = window.innerWidth;
+    
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (window.innerWidth > 768) {
-                // Reset mobile menu state on desktop
-                isMobileMenuOpen = false;
-                document.body.classList.remove('mobile-open');
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    sidebar.style.display = '';
+            const currentWidth = window.innerWidth;
+            
+            // Only reset if crossing the mobile/desktop breakpoint
+            if ((lastWidth <= 768 && currentWidth > 768) || (lastWidth > 768 && currentWidth <= 768)) {
+                if (currentWidth > 768) {
+                    // Reset mobile menu state on desktop
+                    isMobileMenuOpen = false;
+                    document.body.classList.remove('mobile-open');
+                    document.body.style.overflow = '';
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.style.display = '';
+                    }
+                } else {
+                    // Reset desktop sidebar state on mobile
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.style.display = '';
+                    }
                 }
             }
+            
+            lastWidth = currentWidth;
         }, 250);
     });
     
