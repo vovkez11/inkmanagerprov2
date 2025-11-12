@@ -273,6 +273,11 @@ body.sidebar-collapsed .app-container {
         transform: translateY(-2px);
     }
 
+    /* Mobile menu button - visible on all screen sizes */
+    #sidebarToggle {
+        display: inline-flex;
+    }
+
     .app-header::before {
         content: '';
         position: absolute;
@@ -1016,8 +1021,7 @@ body.sidebar-collapsed .app-container {
         opacity: 0.8;
     }
 
-    /* Responsive Design */
-    /* Enhanced Mobile Responsiveness - Tablet and Mobile */
+    /* Mobile Menu Styles */
     @media (max-width: 768px) {
         body {
             flex-direction: column;
@@ -1025,103 +1029,50 @@ body.sidebar-collapsed .app-container {
 
         #sidebar {
             position: fixed;
-            bottom: 0;
+            left: -280px;
+            width: 280px;
+            transition: left 0.3s ease;
+            z-index: 1001;
+        }
+
+        body.mobile-open #sidebar {
+            left: 0;
+            box-shadow: 2px 0 40px rgba(0,0,0,0.8);
+        }
+
+        body.mobile-open::before {
+            content: '';
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            width: 100%;
-            height: auto;
-            max-height: 70px;
-            flex-direction: row;
-            justify-content: space-around;
-            padding: 0.5rem 0;
-            border-right: none;
-            border-top: 1px solid #30363d;
-            overflow-x: auto;
-            overflow-y: hidden;
-            z-index: 1001;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.6);
-        }
-
-        body.sidebar-collapsed #sidebar {
-            width: 100%;
-            height: auto;
-            max-height: 70px;
-        }
-
-        .logo {
-            display: none !important;
-        }
-
-        .nav-section-title {
-            display: none !important;
-        }
-
-        .nav-section {
-            display: flex;
-            flex-direction: row;
-            gap: 0;
-            margin: 0;
-        }
-
-        /* Ensure quick action buttons are visible on mobile */
-        #quickAddClient,
-        #quickAddSession,
-        #quickAddInventory {
-            display: flex !important;
-        }
-
-        .nav-link {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 0.5rem 0.75rem;
-            min-width: 60px;
-            font-size: 0.7rem;
-            border-left: none;
-            border-bottom: 3px solid transparent;
-            margin: 0;
-            white-space: nowrap;
-        }
-
-        .nav-link.active {
-            border-left: none;
-            border-bottom-color: var(--primary);
-            background: transparent;
-        }
-
-        .nav-link:hover {
-            background: rgba(0, 188, 212, 0.1);
-            border-left: none;
-        }
-
-        .nav-link i {
-            margin-right: 0;
-            margin-bottom: 4px;
-            font-size: 1.2rem;
-        }
-
-        .nav-link span {
-            display: block;
-            font-size: 0.65rem;
-            text-align: center;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
         }
 
         .app-container {
             max-width: 100%;
             width: 100%;
-            padding: 12px;
-            padding-bottom: 85px; /* Space for bottom navigation */
-            overflow-y: auto;
         }
 
-        .app-header {
-            padding: 15px 12px;
-            margin-bottom: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
+        .logo, .nav-link span, .nav-section-title {
+            display: flex !important;
         }
+
+        .nav-link {
+            justify-content: flex-start;
+            padding: 1rem 2rem;
+        }
+
+        .nav-link i {
+            margin-right: 15px;
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
 
         .app-header-top {
             flex-direction: column;
@@ -4569,5 +4520,27 @@ body.sidebar-collapsed .app-container {
 
         console.log('🚀 InkManager Pro Complete Rewritten Version - Ready!');
     </script>
+
+    <!-- App JavaScript for PWA, Mobile Menu, and UI Interactions -->
+    <script src="./assets/app.js"></script>
+
+    <!-- Toast Notification Element -->
+    <div id="toast" class="toast"></div>
+
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt">
+        <div>
+            <strong>📱 Install InkManager Pro</strong>
+            <p style="margin: 5px 0 0; font-size: 0.9em;">Get quick access and work offline</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="this.closest('.install-prompt').classList.remove('show')">
+                Later
+            </button>
+            <button class="btn btn-success" onclick="handleInstallClick()">
+                <i class="fas fa-download"></i> Install
+            </button>
+        </div>
+    </div>
 </body>
 </html>
