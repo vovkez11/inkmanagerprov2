@@ -45,9 +45,22 @@
         color: var(--light);
         line-height: 1.7;
         min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100); /* Mobile viewport fix */
         padding: 0;
         overflow-x: hidden;
         display: flex;
+        position: relative;
+    }
+
+    /* Smooth scrolling for mobile */
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+    }
+
+    /* Better touch device support */
+    body.touch-device * {
+        cursor: pointer;
     }
 
     /* Sidebar Navigation */
@@ -640,6 +653,7 @@ body.sidebar-collapsed .app-container {
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        user-select: none;
     }
 
     .stat-card::before {
@@ -654,14 +668,35 @@ body.sidebar-collapsed .app-container {
         transition: var(--transition);
     }
 
+    .stat-card::after {
+        content: '→';
+        position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 1.2em;
+        color: var(--primary);
+        opacity: 0;
+        transition: var(--transition);
+        font-weight: bold;
+    }
+
     .stat-card:hover::before {
         opacity: 1;
+    }
+
+    .stat-card:hover::after {
+        opacity: 0.7;
+        transform: translateX(3px);
     }
 
     .stat-card:hover {
         transform: translateY(-8px) scale(1.03);
         box-shadow: var(--shadow);
         border-left-color: var(--secondary);
+    }
+
+    .stat-card:active {
+        transform: translateY(-4px) scale(1.01);
     }
 
     .stat-value {
@@ -988,6 +1023,10 @@ body.sidebar-collapsed .app-container {
 
     /* Mobile Menu Styles */
     @media (max-width: 768px) {
+        body {
+            flex-direction: column;
+        }
+
         #sidebar {
             position: fixed;
             left: -280px;
@@ -1037,96 +1076,293 @@ body.sidebar-collapsed .app-container {
 
         .app-header-top {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .header-left {
+            justify-content: space-between;
+            width: 100%;
         }
 
         .header-actions {
             width: 100%;
             justify-content: space-between;
+            flex-wrap: nowrap;
         }
 
         .header-actions .language-selector {
-            width: 100%;
+            flex: 1;
+            max-width: 180px;
+        }
+
+        .header-actions .language-selector {
+            background: rgba(0, 188, 212, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
         }
 
         .header-actions .language-selector label {
-            text-align: left;
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .header-actions .language-selector select {
             width: 100%;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary);
+            background: var(--dark);
         }
-        
+
+        .icon-btn {
+            padding: 12px;
+            min-width: 48px;
+            min-height: 48px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            min-height: 48px;
+            font-size: 0.95rem;
+        }
+
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
-        
+
+        .stat-card {
+            padding: 18px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+        }
+
         .calendar-grid {
             grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
         }
-        
+
+        .calendar-day {
+            min-height: 65px;
+            padding: 6px 4px;
+        }
+
         .client-item, .session-item, .inventory-item {
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            padding: 15px;
         }
-        
+
         .item-actions {
             opacity: 1;
             width: 100%;
             justify-content: flex-end;
+            gap: 10px;
         }
-        
+
+        .action-btn {
+            min-width: 48px;
+            min-height: 48px;
+            padding: 12px;
+        }
+
         .modal-content {
-            width: 95%;
-            padding: 25px 20px;
+            width: 96%;
+            padding: 20px 16px;
+            max-height: 85vh;
         }
-        
+
+        .modal {
+            padding: 5px;
+        }
+
         .install-prompt {
             flex-direction: column;
             text-align: center;
-            padding: 20px;
-        }
-
-        .app-header {
-            padding: 20px 15px;
+            padding: 16px;
+            font-size: 0.9rem;
         }
 
         .card {
-            padding: 20px;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            padding: 6px 12px;
         }
 
         .materials-grid {
             grid-template-columns: 1fr;
-            gap: 15px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .card {
-            padding: 18px 15px;
-        }
-
-        .calendar-day {
-            min-height: 60px;
-            padding: 6px 3px;
-        }
-
-        .day-number {
-            font-size: 0.9em;
-        }
-
-        .event {
-            font-size: 0.6em;
-            padding: 3px 4px;
+            gap: 12px;
         }
 
         .form-control {
-            padding: 14px;
+            padding: 14px 12px;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .form-label {
+            font-size: 0.95em;
+        }
+
+        /* Improve touch targets */
+        button, a, input, select, textarea {
+            min-height: 44px;
+        }
+
+        /* Better spacing for readability */
+        .tagline {
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+    }
+
+    /* Extra Small Phones */
+    @media (max-width: 480px) {
+        .app-container {
+            padding: 10px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            padding: 16px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+        }
+
+        .card {
+            padding: 14px 12px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+        }
+
+        .calendar-day {
+            min-height: 55px;
+            padding: 4px 2px;
+        }
+
+        .day-number {
+            font-size: 0.85em;
+        }
+
+        .event {
+            font-size: 0.55em;
+            padding: 2px 3px;
+        }
+
+        .form-control {
+            padding: 13px 10px;
+        }
+
+        .btn {
+            padding: 11px 16px;
+            font-size: 0.9rem;
+        }
+
+        .modal-content {
+            width: 98%;
+            padding: 16px 12px;
+        }
+
+        .nav-link {
+            min-width: 50px;
+            padding: 0.4rem 0.5rem;
+        }
+
+        .nav-link span {
+            font-size: 0.6rem;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            flex-wrap: wrap;
+        }
+
+        .header-actions .language-selector {
+            max-width: 100%;
+            width: 100%;
+            flex: 1 1 100%;
+        }
+
+        .header-actions .language-selector select {
+            font-size: 1rem;
+            padding: 12px;
+        }
+
+        /* Stack action buttons on very small screens */
+        .item-actions {
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Landscape orientation optimizations */
+    @media (max-width: 768px) and (orientation: landscape) {
+        #sidebar {
+            max-height: 60px;
+            padding: 0.3rem 0;
+        }
+
+        .nav-link {
+            padding: 0.3rem 0.6rem;
+        }
+
+        .nav-link span {
+            font-size: 0.6rem;
+        }
+
+        .app-container {
+            padding-bottom: 70px;
+        }
+    }
+
+    /* Mobile Touch Optimizations */
+    @media (hover: none) and (pointer: coarse) {
+        /* Improve tap responsiveness on touch devices */
+        button, a, .btn, .nav-link, .stat-card, .client-item, 
+        .session-item, .inventory-item, .calendar-day {
+            -webkit-tap-highlight-color: rgba(0, 188, 212, 0.2);
+            touch-action: manipulation;
+        }
+
+        /* Larger touch targets */
+        .btn, button {
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        /* Remove hover effects on touch devices */
+        .card:hover::before,
+        .btn:hover::before {
+            transform: scaleX(0);
+        }
+
+        /* Prevent text selection on buttons */
+        button, .btn, .nav-link {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Better scroll behavior */
+        .app-container {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
     }
 
@@ -1206,12 +1442,12 @@ body.sidebar-collapsed .app-container {
                 </div>
                 <div class="header-actions">
                     <div class="language-selector">
-                        <label for="languageSelect" data-i18n="language">Language</label>
-                        <select id="languageSelect">
-                            <option value="en">English</option>
-                            <option value="es">Español</option>
-                            <option value="ru">Русский</option>
-                            <option value="he">עברית</option>
+                        <label for="languageSelect" data-i18n="language"><i class="fas fa-globe"></i> Language</label>
+                        <select id="languageSelect" aria-label="Select language">
+                            <option value="en">🇬🇧 English</option>
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="ru">🇷🇺 Русский</option>
+                            <option value="he">🇮🇱 עברית</option>
                         </select>
                     </div>
                     <button class="install-btn" id="installButton">
@@ -1235,19 +1471,19 @@ body.sidebar-collapsed .app-container {
                 </div>
                 
                 <div class="stats-grid">
-                    <div class="stat-card" onclick="app.showSection('clients')">
+                    <div class="stat-card" onclick="app.showSection('clients')" title="Click to view all clients">
                         <div class="stat-value" id="totalClients">0</div>
                         <div class="stat-label" data-i18n="total_clients">Total Clients</div>
                     </div>
-                    <div class="stat-card" onclick="app.showSection('sessions')">
+                    <div class="stat-card" onclick="app.showSection('sessions')" title="Click to view all sessions">
                         <div class="stat-value" id="upcomingSessions">0</div>
                         <div class="stat-label" data-i18n="upcoming_sessions">Upcoming Sessions</div>
                     </div>
-                    <div class="stat-card" onclick="app.showSection('reports')">
+                    <div class="stat-card" onclick="app.showSection('reports')" title="Click to view reports & analytics">
                         <div class="stat-value" id="monthlyRevenue">$0</div>
                         <div class="stat-label" data-i18n="monthly_revenue">Monthly Revenue</div>
                     </div>
-                    <div class="stat-card" onclick="app.showSection('inventory')">
+                    <div class="stat-card" onclick="app.showSection('inventory')" title="Click to view inventory">
                         <div class="stat-value" id="lowStockItems">0</div>
                         <div class="stat-label" data-i18n="low_stock_items">Low Stock Items</div>
                     </div>
@@ -1755,6 +1991,16 @@ body.sidebar-collapsed .app-container {
                 this.editingSessionId = null;
                 this.currentSessionMaterials = [];
                 this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
+                
+                // Cache DOM elements to avoid repeated queries
+                this.domCache = {};
+                
+                // Debounced save to reduce localStorage writes
+                this.saveTimeout = null;
+                
+                // Cache for sorted inventory to avoid re-sorting unchanged data
+                this.sortedInventoryCache = null;
+                this.sortedInventoryCacheKey = null;
                 
                 // Currency configuration
                 this.currencyConfig = {
@@ -2414,6 +2660,7 @@ body.sidebar-collapsed .app-container {
             init() {
                 this.setupEventListeners();
                 this.setupPWA();
+                this.setupMobileEnhancements();
                 this.setupHistory();
                 this.setLanguage(this.currentLanguage);
                 this.applySidebarState();
@@ -2421,6 +2668,77 @@ body.sidebar-collapsed .app-container {
                 this.syncInventorySortUI();
                 this.updateBulkActionsUI();
                 console.log('🎨 InkManager Pro - Complete Rewritten Version Initialized');
+            }
+
+            setupMobileEnhancements() {
+                // Detect if running as PWA
+                const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                              window.navigator.standalone === true;
+
+                if (isPWA) {
+                    console.log('📱 Running as PWA - Mobile optimizations enabled');
+                }
+
+                // Add viewport height fix for mobile browsers
+                const setViewportHeight = () => {
+                    const vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', `${vh}px`);
+                };
+                setViewportHeight();
+                window.addEventListener('resize', setViewportHeight);
+                window.addEventListener('orientationchange', setViewportHeight);
+
+                // Pull to refresh for mobile
+                let touchStartY = 0;
+                let touchEndY = 0;
+                const appContainer = document.querySelector('.app-container');
+                
+                if (appContainer && isPWA) {
+                    appContainer.addEventListener('touchstart', (e) => {
+                        touchStartY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    appContainer.addEventListener('touchmove', (e) => {
+                        touchEndY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    appContainer.addEventListener('touchend', () => {
+                        if (appContainer.scrollTop === 0 && touchEndY > touchStartY + 80) {
+                            this.showNotification('🔄 Refreshing data...');
+                            this.refreshAll();
+                        }
+                    }, { passive: true });
+                }
+
+                // Prevent overscroll bounce on iOS when at top/bottom
+                document.body.addEventListener('touchmove', (e) => {
+                    if (e.target === document.body) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
+                // Add mobile-specific keyboard handling
+                document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
+                    // Auto-scroll to input when focused on mobile
+                    input.addEventListener('focus', () => {
+                        if (window.innerWidth <= 768) {
+                            setTimeout(() => {
+                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 300);
+                        }
+                    });
+                });
+
+                // Better touch feedback
+                if ('ontouchstart' in window) {
+                    document.body.classList.add('touch-device');
+                }
+
+                // Optimize performance for mobile
+                if (window.innerWidth <= 768) {
+                    // Reduce animation complexity on mobile
+                    document.documentElement.style.setProperty('--transition', 'all 0.2s ease');
+                }
             }
 
             debounce(fn, delay) {
@@ -2454,6 +2772,19 @@ body.sidebar-collapsed .app-container {
                 this.applySidebarState();
             }
 
+            // Debounce utility for search inputs - prevents excessive re-renders
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
             formatCurrency(amount) {
                 const config = this.currencyConfig[this.currentLanguage] || this.currencyConfig['en'];
                 if (!amount) amount = 0;
@@ -2480,14 +2811,21 @@ body.sidebar-collapsed .app-container {
                 
                 document.getElementById('languageSelect').value = lang;
                 
-                document.querySelectorAll('[data-i18n]').forEach(element => {
+                // Cache translation elements on first access
+                if (!this.domCache.i18nElements) {
+                    this.domCache.i18nElements = document.querySelectorAll('[data-i18n]');
+                    this.domCache.i18nPlaceholders = document.querySelectorAll('[data-i18n-placeholder]');
+                }
+                
+                // Update translations from cache
+                this.domCache.i18nElements.forEach(element => {
                     const key = element.getAttribute('data-i18n');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.textContent = this.translations[lang][key];
                     }
                 });
                 
-                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                this.domCache.i18nPlaceholders.forEach(element => {
                     const key = element.getAttribute('data-i18n-placeholder');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.placeholder = this.translations[lang][key];
@@ -2724,13 +3062,26 @@ body.sidebar-collapsed .app-container {
                 this.showSection(initialSection, { updateHistory: false, force: true });
                 history.replaceState({ section: initialSection }, '', `#${initialSection}`);
 
+                // Prevent back button from closing app - navigate to dashboard instead
                 window.addEventListener('popstate', (event) => {
                     const stateSection = event.state?.section;
                     const hashSection = (window.location.hash || '').replace('#', '');
+                    
+                    // If user is on dashboard and presses back, stay on dashboard
+                    if (this.currentSection === 'dashboard' && !stateSection && !hashSection) {
+                        event.preventDefault();
+                        history.pushState({ section: 'dashboard' }, '', '#dashboard');
+                        return;
+                    }
+                    
+                    // Navigate to the target section, default to dashboard if invalid
                     const target = sectionIds.includes(stateSection) ? stateSection :
-                        (sectionIds.includes(hashSection) ? hashSection : sectionIds[0]);
+                        (sectionIds.includes(hashSection) ? hashSection : 'dashboard');
                     this.showSection(target, { updateHistory: false, force: true });
                 });
+
+                // Add extra history entry to prevent immediate app close
+                history.pushState({ section: initialSection }, '', `#${initialSection}`);
             }
 
             setInventoryFilter(filter) {
@@ -2783,14 +3134,36 @@ body.sidebar-collapsed .app-container {
 
             sortInventory(items) {
                 const { key, dir } = this.inventorySort || { key: 'name', dir: 'asc' };
+                
+                // Create cache key based on items length, sort params, and filter
+                const cacheKey = `${items.length}-${key}-${dir}-${this.inventoryFilter}-${this.inventorySearchQuery}`;
+                
+                // Return cached result if data hasn't changed
+                if (this.sortedInventoryCache && this.sortedInventoryCacheKey === cacheKey) {
+                    return this.sortedInventoryCache;
+                }
+                
+                // Perform sort
                 const mult = dir === 'desc' ? -1 : 1;
-                return [...items].sort((a, b) => {
+                const sorted = [...items].sort((a, b) => {
                     const av = a[key] ?? '';
                     const bv = b[key] ?? '';
                     if (key === 'qty') return (Number(av) - Number(bv)) * mult;
                     if (key === 'updatedAt') return ((new Date(av || 0)) - (new Date(bv || 0))) * mult;
                     return String(av).localeCompare(String(bv)) * mult;
                 });
+                
+                // Cache the result
+                this.sortedInventoryCache = sorted;
+                this.sortedInventoryCacheKey = cacheKey;
+                
+                return sorted;
+            }
+            
+            // Invalidate inventory sort cache when data changes
+            invalidateInventoryCache() {
+                this.sortedInventoryCache = null;
+                this.sortedInventoryCacheKey = null;
             }
 
             adjustInventoryQty(itemId, delta) {
@@ -2800,6 +3173,7 @@ body.sidebar-collapsed .app-container {
                 if (nextQty === item.qty) return;
                 item.qty = nextQty;
                 item.updatedAt = Date.now();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2823,6 +3197,7 @@ body.sidebar-collapsed .app-container {
                 }
 
                 item.updatedAt = Date.now();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2876,6 +3251,7 @@ body.sidebar-collapsed .app-container {
                 const deletedItems = this.inventory.filter(item => ids.includes(item.id));
                 this.inventory = this.inventory.filter(item => !ids.includes(item.id));
                 this.selectedInventory.clear();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2922,6 +3298,7 @@ body.sidebar-collapsed .app-container {
                     }
                 });
 
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -3006,17 +3383,24 @@ body.sidebar-collapsed .app-container {
 
                 this.currentSection = sectionId;
 
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                // Cache section and nav-link elements on first access
+                if (!this.domCache.sections) {
+                    this.domCache.sections = document.querySelectorAll('.section');
+                    this.domCache.navLinks = document.querySelectorAll('.nav-link');
+                }
+
+                this.domCache.sections.forEach(s => s.classList.remove('active'));
                 sectionEl.classList.add('active');
 
-                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                this.domCache.navLinks.forEach(b => b.classList.remove('active'));
                 const navLink = document.querySelector(`[data-section="${sectionId}"]`);
                 if (navLink) {
                     navLink.classList.add('active');
                     navLink.setAttribute('aria-current', 'page');
                 }
-                document.querySelectorAll('.nav-link[aria-current="page"]').forEach(link => {
-                    if (link !== navLink) {
+                // Only update aria-current attributes where needed
+                this.domCache.navLinks.forEach(link => {
+                    if (link !== navLink && link.getAttribute('aria-current') === 'page') {
                         link.removeAttribute('aria-current');
                     }
                 });
@@ -3152,6 +3536,7 @@ body.sidebar-collapsed .app-container {
                         }
                     }
                 });
+                this.invalidateInventoryCache();
                 this.saveData();
             }
 
@@ -3267,18 +3652,34 @@ body.sidebar-collapsed .app-container {
                     return;
                 }
 
+                // Pre-compute session statistics for all clients - O(n) instead of O(n*m)
+                const clientStats = {};
+                this.sessions.forEach(session => {
+                    if (!clientStats[session.clientId]) {
+                        clientStats[session.clientId] = {
+                            count: 0,
+                            totalSpent: 0,
+                            lastSessionDate: 0
+                        };
+                    }
+                    clientStats[session.clientId].count++;
+                    clientStats[session.clientId].totalSpent += (session.price || 0);
+                    const sessionDate = new Date(session.dateTime).getTime();
+                    if (sessionDate > clientStats[session.clientId].lastSessionDate) {
+                        clientStats[session.clientId].lastSessionDate = sessionDate;
+                    }
+                });
+
                 container.innerHTML = this.clients.map(client => {
-                    const clientSessions = this.sessions.filter(s => s.clientId === client.id);
-                    const totalSpent = clientSessions.reduce((sum, session) => sum + (session.price || 0), 0);
-                    const lastSession = clientSessions.length > 0 ? 
-                        new Date(Math.max(...clientSessions.map(s => new Date(s.dateTime)))) : null;
+                    const stats = clientStats[client.id] || { count: 0, totalSpent: 0, lastSessionDate: 0 };
+                    const lastSession = stats.lastSessionDate > 0 ? new Date(stats.lastSessionDate) : null;
                     
                     return `
                         <div class="client-item">
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
                                     <i class="fas fa-user"></i> ${client.name}
-                                    ${clientSessions.length > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
+                                    ${stats.count > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
                                     ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
@@ -3286,7 +3687,7 @@ body.sidebar-collapsed .app-container {
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
                                     ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
                                     ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                                    <div><i class="fas fa-calendar"></i> ${clientSessions.length} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(totalSpent)}</div>
+                                    <div><i class="fas fa-calendar"></i> ${stats.count} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(stats.totalSpent)}</div>
                                     ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
                                     ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
                                     ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
@@ -3351,18 +3752,20 @@ body.sidebar-collapsed .app-container {
                 this.currentSessionMaterials = [];
                 
                 const clientSelect = document.getElementById('sessionClient');
-                clientSelect.innerHTML = '<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>';
+                const clientOptions = ['<option value="">' + (this.translate('select_client') || 'Select a client...') + '</option>'];
                 this.clients.forEach(client => {
-                    clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+                    clientOptions.push(`<option value="${client.id}">${client.name}</option>`);
                 });
+                clientSelect.innerHTML = clientOptions.join('');
 
                 const materialSelect = document.getElementById('materialItem');
-                materialSelect.innerHTML = '<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>';
+                const materialOptions = ['<option value="">' + (this.translate('select_item') || 'Select item...') + '</option>'];
                 this.inventory.forEach(item => {
                     if (item.qty > 0) {
-                        materialSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`;
+                        materialOptions.push(`<option value="${item.id}">${item.name} (${item.qty} in stock)</option>`);
                     }
                 });
+                materialSelect.innerHTML = materialOptions.join('');
 
                 if (sessionId) {
                     const session = this.sessions.find(s => s.id === sessionId);
@@ -3614,6 +4017,7 @@ body.sidebar-collapsed .app-container {
                             updatedAt: new Date().toISOString()
                         };
                         
+                        this.invalidateInventoryCache();
                         this.safeSaveData();
                         this.closeInventoryModal();
                         this.refreshInventory();
@@ -3633,6 +4037,7 @@ body.sidebar-collapsed .app-container {
                     };
                     
                     this.inventory.push(item);
+                    this.invalidateInventoryCache();
                     this.safeSaveData();
                     this.closeInventoryModal();
                     this.refreshInventory();
@@ -3765,6 +4170,7 @@ body.sidebar-collapsed .app-container {
                 const deleted = this.inventory.find(i => i.id === itemId);
                 this.selectedInventory.delete(itemId);
                 this.inventory = this.inventory.filter(i => i.id !== itemId);
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -4072,12 +4478,28 @@ body.sidebar-collapsed .app-container {
                 setTimeout(() => toast.classList.remove('show'), 4000);
             }
 
-            safeSaveData() {
-                try {
-                    this.saveData();
-                } catch (error) {
-                    console.error('Save error:', error);
-                    this.showNotification('⚠️ Save failed - storage might be full');
+            safeSaveData(immediate = false) {
+                if (immediate) {
+                    // Immediate save (for critical operations)
+                    try {
+                        this.saveData();
+                    } catch (error) {
+                        console.error('Save error:', error);
+                        this.showNotification('⚠️ Save failed - storage might be full');
+                    }
+                } else {
+                    // Debounced save (for frequent updates)
+                    if (this.saveTimeout) {
+                        clearTimeout(this.saveTimeout);
+                    }
+                    this.saveTimeout = setTimeout(() => {
+                        try {
+                            this.saveData();
+                        } catch (error) {
+                            console.error('Save error:', error);
+                            this.showNotification('⚠️ Save failed - storage might be full');
+                        }
+                    }, 300); // Wait 300ms before saving
                 }
             }
 
