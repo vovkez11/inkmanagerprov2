@@ -1106,6 +1106,10 @@ body.sidebar-collapsed .app-container {
         .app-header {
             padding: 15px 12px;
             margin-bottom: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
         }
 
         .app-header-top {
@@ -1130,10 +1134,24 @@ body.sidebar-collapsed .app-container {
             max-width: 180px;
         }
 
+        .header-actions .language-selector {
+            background: rgba(0, 188, 212, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+        }
+
+        .header-actions .language-selector label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
         .header-actions .language-selector select {
             width: 100%;
             padding: 10px 12px;
             font-size: 0.9rem;
+            border: 1px solid var(--primary);
+            background: var(--dark);
         }
 
         .icon-btn {
@@ -1317,6 +1335,13 @@ body.sidebar-collapsed .app-container {
 
         .header-actions .language-selector {
             max-width: 100%;
+            width: 100%;
+            flex: 1 1 100%;
+        }
+
+        .header-actions .language-selector select {
+            font-size: 1rem;
+            padding: 12px;
         }
 
         /* Stack action buttons on very small screens */
@@ -1455,12 +1480,12 @@ body.sidebar-collapsed .app-container {
                 </div>
                 <div class="header-actions">
                     <div class="language-selector">
-                        <label for="languageSelect" data-i18n="language">Language</label>
-                        <select id="languageSelect">
-                            <option value="en">English</option>
-                            <option value="es">Español</option>
-                            <option value="ru">Русский</option>
-                            <option value="he">עברית</option>
+                        <label for="languageSelect" data-i18n="language"><i class="fas fa-globe"></i> Language</label>
+                        <select id="languageSelect" aria-label="Select language">
+                            <option value="en">🇬🇧 English</option>
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="ru">🇷🇺 Русский</option>
+                            <option value="he">🇮🇱 עברית</option>
                         </select>
                     </div>
                     <button class="install-btn" id="installButton">
