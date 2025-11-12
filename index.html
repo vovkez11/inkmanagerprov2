@@ -45,9 +45,22 @@
         color: var(--light);
         line-height: 1.7;
         min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100); /* Mobile viewport fix */
         padding: 0;
         overflow-x: hidden;
         display: flex;
+        position: relative;
+    }
+
+    /* Smooth scrolling for mobile */
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+    }
+
+    /* Better touch device support */
+    body.touch-device * {
+        cursor: pointer;
     }
 
     /* Sidebar Navigation */
@@ -982,121 +995,365 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Responsive Design */
+    /* Enhanced Mobile Responsiveness - Tablet and Mobile */
     @media (max-width: 768px) {
-        #sidebar {
-            width: 70px;
+        body {
+            flex-direction: column;
         }
 
-        .logo, .nav-link span, .nav-section-title {
-            display: none;
+        #sidebar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: auto;
+            max-height: 70px;
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            border-right: none;
+            border-top: 1px solid #30363d;
+            overflow-x: auto;
+            overflow-y: hidden;
+            z-index: 1001;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.6);
+        }
+
+        body.sidebar-collapsed #sidebar {
+            width: 100%;
+            height: auto;
+            max-height: 70px;
+        }
+
+        .logo, .nav-section-title {
+            display: none !important;
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: row;
+            gap: 0;
+            margin: 0;
         }
 
         .nav-link {
+            flex-direction: column;
             justify-content: center;
-            padding: 1rem;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            min-width: 60px;
+            font-size: 0.7rem;
+            border-left: none;
+            border-bottom: 3px solid transparent;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .nav-link.active {
+            border-left: none;
+            border-bottom-color: var(--primary);
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 188, 212, 0.1);
+            border-left: none;
         }
 
         .nav-link i {
             margin-right: 0;
+            margin-bottom: 4px;
+            font-size: 1.2rem;
+        }
+
+        .nav-link span {
+            display: block;
+            font-size: 0.65rem;
+            text-align: center;
         }
 
         .app-container {
-            max-width: calc(100% - 70px);
-            padding: 15px;
+            max-width: 100%;
+            width: 100%;
+            padding: 12px;
+            padding-bottom: 85px; /* Space for bottom navigation */
+            overflow-y: auto;
+        }
+
+        .app-header {
+            padding: 15px 12px;
+            margin-bottom: 15px;
         }
 
         .app-header-top {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .header-left {
+            justify-content: space-between;
+            width: 100%;
         }
 
         .header-actions {
             width: 100%;
             justify-content: space-between;
+            flex-wrap: nowrap;
         }
 
         .header-actions .language-selector {
-            width: 100%;
-        }
-
-        .header-actions .language-selector label {
-            text-align: left;
+            flex: 1;
+            max-width: 180px;
         }
 
         .header-actions .language-selector select {
             width: 100%;
+            padding: 10px 12px;
+            font-size: 0.9rem;
         }
-        
+
+        .icon-btn {
+            padding: 12px;
+            min-width: 48px;
+            min-height: 48px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            min-height: 48px;
+            font-size: 0.95rem;
+        }
+
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
-        
+
+        .stat-card {
+            padding: 18px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+        }
+
         .calendar-grid {
             grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
         }
-        
+
+        .calendar-day {
+            min-height: 65px;
+            padding: 6px 4px;
+        }
+
         .client-item, .session-item, .inventory-item {
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            padding: 15px;
         }
-        
+
         .item-actions {
             opacity: 1;
             width: 100%;
             justify-content: flex-end;
+            gap: 10px;
         }
-        
+
+        .action-btn {
+            min-width: 48px;
+            min-height: 48px;
+            padding: 12px;
+        }
+
         .modal-content {
-            width: 95%;
-            padding: 25px 20px;
+            width: 96%;
+            padding: 20px 16px;
+            max-height: 85vh;
         }
-        
+
+        .modal {
+            padding: 5px;
+        }
+
         .install-prompt {
             flex-direction: column;
             text-align: center;
-            padding: 20px;
-        }
-
-        .app-header {
-            padding: 20px 15px;
+            padding: 16px;
+            font-size: 0.9rem;
         }
 
         .card {
-            padding: 20px;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            padding: 6px 12px;
         }
 
         .materials-grid {
             grid-template-columns: 1fr;
-            gap: 15px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .card {
-            padding: 18px 15px;
-        }
-
-        .calendar-day {
-            min-height: 60px;
-            padding: 6px 3px;
-        }
-
-        .day-number {
-            font-size: 0.9em;
-        }
-
-        .event {
-            font-size: 0.6em;
-            padding: 3px 4px;
+            gap: 12px;
         }
 
         .form-control {
-            padding: 14px;
+            padding: 14px 12px;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .form-label {
+            font-size: 0.95em;
+        }
+
+        /* Improve touch targets */
+        button, a, input, select, textarea {
+            min-height: 44px;
+        }
+
+        /* Better spacing for readability */
+        .tagline {
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+    }
+
+    /* Extra Small Phones */
+    @media (max-width: 480px) {
+        .app-container {
+            padding: 10px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            padding: 16px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+        }
+
+        .card {
+            padding: 14px 12px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+        }
+
+        .calendar-day {
+            min-height: 55px;
+            padding: 4px 2px;
+        }
+
+        .day-number {
+            font-size: 0.85em;
+        }
+
+        .event {
+            font-size: 0.55em;
+            padding: 2px 3px;
+        }
+
+        .form-control {
+            padding: 13px 10px;
+        }
+
+        .btn {
+            padding: 11px 16px;
+            font-size: 0.9rem;
+        }
+
+        .modal-content {
+            width: 98%;
+            padding: 16px 12px;
+        }
+
+        .nav-link {
+            min-width: 50px;
+            padding: 0.4rem 0.5rem;
+        }
+
+        .nav-link span {
+            font-size: 0.6rem;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            flex-wrap: wrap;
+        }
+
+        .header-actions .language-selector {
+            max-width: 100%;
+        }
+
+        /* Stack action buttons on very small screens */
+        .item-actions {
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Landscape orientation optimizations */
+    @media (max-width: 768px) and (orientation: landscape) {
+        #sidebar {
+            max-height: 60px;
+            padding: 0.3rem 0;
+        }
+
+        .nav-link {
+            padding: 0.3rem 0.6rem;
+        }
+
+        .nav-link span {
+            font-size: 0.6rem;
+        }
+
+        .app-container {
+            padding-bottom: 70px;
+        }
+    }
+
+    /* Mobile Touch Optimizations */
+    @media (hover: none) and (pointer: coarse) {
+        /* Improve tap responsiveness on touch devices */
+        button, a, .btn, .nav-link, .stat-card, .client-item, 
+        .session-item, .inventory-item, .calendar-day {
+            -webkit-tap-highlight-color: rgba(0, 188, 212, 0.2);
+            touch-action: manipulation;
+        }
+
+        /* Larger touch targets */
+        .btn, button {
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        /* Remove hover effects on touch devices */
+        .card:hover::before,
+        .btn:hover::before {
+            transform: scaleX(0);
+        }
+
+        /* Prevent text selection on buttons */
+        button, .btn, .nav-link {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Better scroll behavior */
+        .app-container {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
     }
 
@@ -2394,6 +2651,7 @@ body.sidebar-collapsed .app-container {
             init() {
                 this.setupEventListeners();
                 this.setupPWA();
+                this.setupMobileEnhancements();
                 this.setupHistory();
                 this.setLanguage(this.currentLanguage);
                 this.applySidebarState();
@@ -2401,6 +2659,77 @@ body.sidebar-collapsed .app-container {
                 this.syncInventorySortUI();
                 this.updateBulkActionsUI();
                 console.log('🎨 InkManager Pro - Complete Rewritten Version Initialized');
+            }
+
+            setupMobileEnhancements() {
+                // Detect if running as PWA
+                const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                              window.navigator.standalone === true;
+
+                if (isPWA) {
+                    console.log('📱 Running as PWA - Mobile optimizations enabled');
+                }
+
+                // Add viewport height fix for mobile browsers
+                const setViewportHeight = () => {
+                    const vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', `${vh}px`);
+                };
+                setViewportHeight();
+                window.addEventListener('resize', setViewportHeight);
+                window.addEventListener('orientationchange', setViewportHeight);
+
+                // Pull to refresh for mobile
+                let touchStartY = 0;
+                let touchEndY = 0;
+                const appContainer = document.querySelector('.app-container');
+                
+                if (appContainer && isPWA) {
+                    appContainer.addEventListener('touchstart', (e) => {
+                        touchStartY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    appContainer.addEventListener('touchmove', (e) => {
+                        touchEndY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    appContainer.addEventListener('touchend', () => {
+                        if (appContainer.scrollTop === 0 && touchEndY > touchStartY + 80) {
+                            this.showNotification('🔄 Refreshing data...');
+                            this.refreshAll();
+                        }
+                    }, { passive: true });
+                }
+
+                // Prevent overscroll bounce on iOS when at top/bottom
+                document.body.addEventListener('touchmove', (e) => {
+                    if (e.target === document.body) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
+                // Add mobile-specific keyboard handling
+                document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
+                    // Auto-scroll to input when focused on mobile
+                    input.addEventListener('focus', () => {
+                        if (window.innerWidth <= 768) {
+                            setTimeout(() => {
+                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 300);
+                        }
+                    });
+                });
+
+                // Better touch feedback
+                if ('ontouchstart' in window) {
+                    document.body.classList.add('touch-device');
+                }
+
+                // Optimize performance for mobile
+                if (window.innerWidth <= 768) {
+                    // Reduce animation complexity on mobile
+                    document.documentElement.style.setProperty('--transition', 'all 0.2s ease');
+                }
             }
 
             debounce(fn, delay) {
