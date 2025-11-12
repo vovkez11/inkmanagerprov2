@@ -1380,6 +1380,225 @@ body.sidebar-collapsed .app-container {
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
+
+    /* Light Theme Support */
+    body.theme-light {
+        background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+        color: #0d1117;
+    }
+
+    body.theme-light #sidebar {
+        background: linear-gradient(180deg, #e0e0e0 0%, #ffffff 100%);
+        border-right: 1px solid #cccccc;
+    }
+
+    body.theme-light .card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+        border: 1px solid #e0e0e0;
+        color: #0d1117;
+    }
+
+    body.theme-light .app-header {
+        background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+        border: 1px solid #e0e0e0;
+    }
+
+    body.theme-light .form-control,
+    body.theme-light select.form-control {
+        background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%) !important;
+        color: #0d1117 !important;
+        border: 2px solid #cccccc !important;
+    }
+
+    body.theme-light .nav-link {
+        color: #0d1117;
+    }
+
+    body.theme-light .nav-link:hover,
+    body.theme-light .nav-link.active {
+        color: var(--primary);
+    }
+
+    body.theme-light .stat-card,
+    body.theme-light .client-item,
+    body.theme-light .session-item,
+    body.theme-light .inventory-item {
+        background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+        color: #0d1117;
+    }
+
+    body.theme-light .item-title,
+    body.theme-light .stat-label,
+    body.theme-light .card-title {
+        color: #0d1117;
+    }
+
+    body.theme-light .item-meta {
+        color: rgba(13, 17, 23, 0.8);
+    }
+
+    body.theme-light .calendar-day {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+        border: 1px solid #e0e0e0;
+    }
+
+    body.theme-light .calendar-day.header {
+        background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+    }
+
+    body.theme-light .modal {
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    body.theme-light .modal-content {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+        color: #0d1117;
+    }
+
+    body.theme-light .logo,
+    body.theme-light .tagline {
+        color: var(--primary);
+    }
+
+    /* Mobile Bottom Navigation */
+    .mobile-bottom-nav {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, var(--dark-gray) 0%, var(--darker) 100%);
+        border-top: 1px solid #30363d;
+        padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+        z-index: 1000;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 768px) {
+        .mobile-bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .app-container {
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+    }
+
+    .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        color: var(--light);
+        text-decoration: none;
+        font-size: 0.75rem;
+        transition: var(--transition);
+        border-radius: 8px;
+        min-width: 60px;
+        cursor: pointer;
+    }
+
+    .mobile-nav-item i {
+        font-size: 1.4rem;
+    }
+
+    .mobile-nav-item.active {
+        color: var(--primary);
+        background: rgba(0, 188, 212, 0.15);
+    }
+
+    .mobile-nav-item:active {
+        transform: scale(0.95);
+    }
+
+    body.theme-light .mobile-bottom-nav {
+        background: linear-gradient(180deg, #e0e0e0 0%, #ffffff 100%);
+        border-top: 1px solid #cccccc;
+    }
+
+    body.theme-light .mobile-nav-item {
+        color: #0d1117;
+    }
+
+    body.theme-light .mobile-nav-item.active {
+        color: var(--primary);
+    }
+
+    /* Pull to Refresh Indicator */
+    .pull-to-refresh {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+        background: var(--primary);
+        color: var(--darker);
+        padding: 12px 24px;
+        border-radius: 0 0 12px 12px;
+        font-weight: 600;
+        z-index: 999;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
+    }
+
+    .pull-to-refresh.active {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* Swipe Gesture Indicator */
+    .swipe-indicator {
+        position: fixed;
+        top: 50%;
+        width: 40px;
+        height: 60px;
+        background: rgba(0, 188, 212, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        z-index: 998;
+    }
+
+    .swipe-indicator.left {
+        left: 10px;
+    }
+
+    .swipe-indicator.right {
+        right: 10px;
+    }
+
+    .swipe-indicator.active {
+        opacity: 1;
+    }
+
+    .swipe-indicator i {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    /* Enhanced Mobile Scrolling */
+    @media (max-width: 768px) {
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Improve tap targets on mobile */
+        input[type="checkbox"],
+        input[type="radio"] {
+            min-width: 20px;
+            min-height: 20px;
+        }
+
+        /* Better select styling for mobile */
+        select {
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+    }
 </style>
 </head>
 <body>
@@ -1409,6 +1628,9 @@ body.sidebar-collapsed .app-container {
             </a>
             <a class="nav-link" data-section="reports" href="#reports">
                 <i class="fas fa-chart-bar"></i> <span data-i18n="reports">Reports</span>
+            </a>
+            <a class="nav-link" data-section="settings" href="#settings">
+                <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
             </a>
         </div>
 
@@ -1724,6 +1946,151 @@ body.sidebar-collapsed .app-container {
                             <i class="fas fa-box"></i> <span data-i18n="export_inventory">Export Inventory</span>
                         </button>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
+                    </h2>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title"><i class="fas fa-palette"></i> <span data-i18n="appearance">Appearance</span></h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="theme">Theme</label>
+                        <select class="form-control" id="settingsTheme">
+                            <option value="dark" data-i18n="dark_theme">Dark (Default)</option>
+                            <option value="light" data-i18n="light_theme">Light</option>
+                            <option value="auto" data-i18n="auto_theme">Auto (System)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="language_preference">Language Preference</label>
+                        <select class="form-control" id="settingsLanguage">
+                            <option value="en">🇬🇧 English</option>
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="ru">🇷🇺 Русский</option>
+                            <option value="he">🇮🇱 עברית</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Business Settings -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title"><i class="fas fa-briefcase"></i> <span data-i18n="business_settings">Business Settings</span></h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="studio_name">Studio Name</label>
+                        <input type="text" class="form-control" id="settingsStudioName" placeholder="Your Studio Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="currency_symbol">Currency Symbol</label>
+                        <select class="form-control" id="settingsCurrency">
+                            <option value="USD">$ USD (US Dollar)</option>
+                            <option value="EUR">€ EUR (Euro)</option>
+                            <option value="GBP">£ GBP (British Pound)</option>
+                            <option value="RUB">₽ RUB (Russian Ruble)</option>
+                            <option value="ILS">₪ ILS (Israeli Shekel)</option>
+                            <option value="CAD">$ CAD (Canadian Dollar)</option>
+                            <option value="AUD">$ AUD (Australian Dollar)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="default_session_duration">Default Session Duration (hours)</label>
+                        <input type="number" class="form-control" id="settingsDefaultDuration" min="0.5" step="0.5" value="2">
+                    </div>
+                </div>
+
+                <!-- Inventory Settings -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title"><i class="fas fa-boxes"></i> <span data-i18n="inventory_settings">Inventory Settings</span></h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
+                        <input type="number" class="form-control" id="settingsLowStockThreshold" min="0" value="5">
+                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="settingsAutoDeduct" style="width: auto; min-height: auto;">
+                            <span data-i18n="auto_deduct_materials">Auto-deduct materials after sessions</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title"><i class="fas fa-bell"></i> <span data-i18n="notifications">Notifications</span></h3>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="settingsNotifications" style="width: auto; min-height: auto;" checked>
+                            <span data-i18n="enable_notifications">Enable notifications</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="session_reminder">Session Reminder (hours before)</label>
+                        <input type="number" class="form-control" id="settingsReminderTime" min="0" max="48" value="2">
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title"><i class="fas fa-database"></i> <span data-i18n="data_management">Data Management</span></h3>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="settingsAutoSave" style="width: auto; min-height: auto;" checked>
+                            <span data-i18n="auto_save">Auto-save changes</span>
+                        </label>
+                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="auto_save_help">Changes are saved automatically to your browser</small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-success" onclick="app.exportData('all')">
+                            <i class="fas fa-download"></i> <span data-i18n="backup_all_data">Backup All Data</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="app.importData()">
+                            <i class="fas fa-upload"></i> <span data-i18n="import_data">Import Data</span>
+                        </button>
+                        <button class="btn btn-danger" onclick="app.confirmClearData()">
+                            <i class="fas fa-trash-alt"></i> <span data-i18n="clear_all_data">Clear All Data</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,188,212,0.1); border-radius: 12px; border: 1px solid rgba(0,188,212,0.3);">
+                    <h3 class="card-title"><i class="fas fa-info-circle"></i> <span data-i18n="about">About</span></h3>
+                    <p style="margin: 10px 0; color: rgba(255,255,255,0.8);">
+                        <strong>InkManager Pro</strong> v2.0<br>
+                        <span data-i18n="about_description">Professional Tattoo Studio Management System</span>
+                    </p>
+                    <p style="margin: 10px 0; font-size: 0.9em; color: rgba(255,255,255,0.6);">
+                        <span data-i18n="made_with">Made with</span> ❤️ <span data-i18n="for_artists">for tattoo artists worldwide</span>
+                    </p>
+                </div>
+
+                <!-- Save Settings Button -->
+                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-outline" onclick="app.resetSettings()">
+                        <i class="fas fa-undo"></i> <span data-i18n="reset_defaults">Reset to Defaults</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="app.saveSettings()">
+                        <i class="fas fa-save"></i> <span data-i18n="save_settings">Save Settings</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -2170,7 +2537,43 @@ body.sidebar-collapsed .app-container {
                         // Additional UI elements
                         "last_visit": "Last visit",
                         "total_sessions": "Total sessions",
-                        "last_updated": "Updated"
+                        "last_updated": "Updated",
+                        
+                        // Settings
+                        "settings": "Settings",
+                        "appearance": "Appearance",
+                        "theme": "Theme",
+                        "dark_theme": "Dark (Default)",
+                        "light_theme": "Light",
+                        "auto_theme": "Auto (System)",
+                        "language_preference": "Language Preference",
+                        "business_settings": "Business Settings",
+                        "studio_name": "Studio Name",
+                        "currency_symbol": "Currency Symbol",
+                        "default_session_duration": "Default Session Duration (hours)",
+                        "inventory_settings": "Inventory Settings",
+                        "default_low_stock_alert": "Default Low Stock Alert Threshold",
+                        "low_stock_help": "You'll be notified when items reach this quantity",
+                        "auto_deduct_materials": "Auto-deduct materials after sessions",
+                        "notifications": "Notifications",
+                        "enable_notifications": "Enable notifications",
+                        "session_reminder": "Session Reminder (hours before)",
+                        "data_management": "Data Management",
+                        "auto_save": "Auto-save changes",
+                        "auto_save_help": "Changes are saved automatically to your browser",
+                        "backup_all_data": "Backup All Data",
+                        "import_data": "Import Data",
+                        "clear_all_data": "Clear All Data",
+                        "about": "About",
+                        "about_description": "Professional Tattoo Studio Management System",
+                        "made_with": "Made with",
+                        "for_artists": "for tattoo artists worldwide",
+                        "reset_defaults": "Reset to Defaults",
+                        "save_settings": "Save Settings",
+                        "settings_saved": "Settings saved successfully!",
+                        "settings_reset": "Settings reset to defaults",
+                        "confirm_clear_data": "Are you sure you want to clear all data? This cannot be undone!",
+                        "data_cleared": "All data has been cleared"
                     },
                     es: {
                         // Navigation
@@ -2662,6 +3065,7 @@ body.sidebar-collapsed .app-container {
                 this.setupPWA();
                 this.setupMobileEnhancements();
                 this.setupHistory();
+                this.loadSettings();
                 this.setLanguage(this.currentLanguage);
                 this.applySidebarState();
                 this.updateInventoryTabsUI();
@@ -2691,22 +3095,105 @@ body.sidebar-collapsed .app-container {
                 // Pull to refresh for mobile
                 let touchStartY = 0;
                 let touchEndY = 0;
+                let isPulling = false;
                 const appContainer = document.querySelector('.app-container');
+                const pullIndicator = document.getElementById('pullToRefresh');
                 
-                if (appContainer && isPWA) {
+                if (appContainer) {
                     appContainer.addEventListener('touchstart', (e) => {
                         touchStartY = e.touches[0].clientY;
+                        isPulling = false;
                     }, { passive: true });
 
                     appContainer.addEventListener('touchmove', (e) => {
                         touchEndY = e.touches[0].clientY;
+                        const pullDistance = touchEndY - touchStartY;
+                        
+                        // Show indicator if pulling down from top
+                        if (appContainer.scrollTop === 0 && pullDistance > 50) {
+                            isPulling = true;
+                            if (pullIndicator) {
+                                pullIndicator.classList.add('active');
+                            }
+                        }
                     }, { passive: true });
 
                     appContainer.addEventListener('touchend', () => {
-                        if (appContainer.scrollTop === 0 && touchEndY > touchStartY + 80) {
+                        if (pullIndicator) {
+                            pullIndicator.classList.remove('active');
+                        }
+                        
+                        if (appContainer.scrollTop === 0 && touchEndY > touchStartY + 80 && isPulling) {
                             this.showNotification('🔄 Refreshing data...');
                             this.refreshAll();
                         }
+                        isPulling = false;
+                    }, { passive: true });
+                }
+
+                // Swipe gestures for navigation (mobile only)
+                if (window.innerWidth <= 768) {
+                    let touchStartX = 0;
+                    let touchStartTime = 0;
+                    const swipeLeftIndicator = document.getElementById('swipeLeft');
+                    const swipeRightIndicator = document.getElementById('swipeRight');
+                    const sections = ['dashboard', 'clients', 'sessions', 'inventory', 'calendar', 'reports', 'settings'];
+                    
+                    document.addEventListener('touchstart', (e) => {
+                        // Don't interfere with form inputs or buttons
+                        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || 
+                            e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' ||
+                            e.target.closest('button') || e.target.closest('.modal')) {
+                            return;
+                        }
+                        
+                        touchStartX = e.touches[0].clientX;
+                        touchStartTime = Date.now();
+                    }, { passive: true });
+
+                    document.addEventListener('touchmove', (e) => {
+                        if (touchStartX === 0) return;
+                        
+                        const touchX = e.touches[0].clientX;
+                        const diff = touchX - touchStartX;
+                        
+                        // Show swipe indicators
+                        if (Math.abs(diff) > 50) {
+                            if (diff > 0 && swipeLeftIndicator) {
+                                swipeLeftIndicator.classList.add('active');
+                            } else if (diff < 0 && swipeRightIndicator) {
+                                swipeRightIndicator.classList.add('active');
+                            }
+                        }
+                    }, { passive: true });
+
+                    document.addEventListener('touchend', (e) => {
+                        if (touchStartX === 0) return;
+                        
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const diff = touchEndX - touchStartX;
+                        const timeDiff = Date.now() - touchStartTime;
+                        
+                        // Hide indicators
+                        if (swipeLeftIndicator) swipeLeftIndicator.classList.remove('active');
+                        if (swipeRightIndicator) swipeRightIndicator.classList.remove('active');
+                        
+                        // Swipe gesture detected (at least 100px and fast enough)
+                        if (Math.abs(diff) > 100 && timeDiff < 300) {
+                            const currentIndex = sections.indexOf(this.currentSection);
+                            if (currentIndex !== -1) {
+                                if (diff > 0 && currentIndex > 0) {
+                                    // Swipe right - go to previous section
+                                    this.showSection(sections[currentIndex - 1]);
+                                } else if (diff < 0 && currentIndex < sections.length - 1) {
+                                    // Swipe left - go to next section
+                                    this.showSection(sections[currentIndex + 1]);
+                                }
+                            }
+                        }
+                        
+                        touchStartX = 0;
+                        touchStartTime = 0;
                     }, { passive: true });
                 }
 
@@ -3042,6 +3529,26 @@ body.sidebar-collapsed .app-container {
                 nextHour.setHours(nextHour.getHours() + 1);
                 nextHour.setMinutes(0);
                 document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+
+                // Setup mobile bottom navigation
+                this.setupMobileBottomNav();
+            }
+
+            setupMobileBottomNav() {
+                // Add event listeners to mobile bottom nav items
+                document.querySelectorAll('.mobile-nav-item[data-section]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = e.currentTarget.dataset.section;
+                        this.showSection(section);
+                        
+                        // Update active state in mobile nav
+                        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        e.currentTarget.classList.add('active');
+                    });
+                });
             }
 
             setupHistory() {
@@ -3405,6 +3912,15 @@ body.sidebar-collapsed .app-container {
                     }
                 });
 
+                // Update mobile bottom nav active state
+                document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                    if (item.dataset.section === sectionId) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+
                 if (updateHistory && typeof history !== 'undefined' && history.pushState) {
                     const url = `#${sectionId}`;
                     if (replace) {
@@ -3434,6 +3950,7 @@ body.sidebar-collapsed .app-container {
                     case 'inventory': this.refreshInventory(); break;
                     case 'calendar': this.refreshCalendar(); break;
                     case 'reports': this.refreshReports(); break;
+                    case 'settings': this.refreshSettings(); break;
                 }
             }
 
@@ -3444,6 +3961,7 @@ body.sidebar-collapsed .app-container {
                 this.refreshInventory();
                 this.refreshCalendar();
                 this.refreshReports();
+                this.refreshSettings();
             }
 
             updateMaterialMaxQuantity(itemId) {
@@ -4452,6 +4970,206 @@ body.sidebar-collapsed .app-container {
                 this.showNotification('💾 Data exported successfully!');
             }
 
+            loadSettings() {
+                // Load all settings from localStorage
+                const settings = {
+                    theme: localStorage.getItem('inkmanager_theme') || 'dark',
+                    language: localStorage.getItem('inkmanager_language') || 'en',
+                    studioName: localStorage.getItem('inkmanager_studioName') || '',
+                    currency: localStorage.getItem('inkmanager_currency') || 'USD',
+                    defaultDuration: parseFloat(localStorage.getItem('inkmanager_defaultDuration')) || 2,
+                    lowStockThreshold: parseInt(localStorage.getItem('inkmanager_lowStockThreshold')) || 5,
+                    autoDeduct: localStorage.getItem('inkmanager_autoDeduct') === 'true',
+                    notifications: localStorage.getItem('inkmanager_notifications') !== 'false',
+                    reminderTime: parseInt(localStorage.getItem('inkmanager_reminderTime')) || 2,
+                    autoSave: localStorage.getItem('inkmanager_autoSave') !== 'false'
+                };
+
+                // Apply settings to UI
+                if (document.getElementById('settingsTheme')) {
+                    document.getElementById('settingsTheme').value = settings.theme;
+                }
+                if (document.getElementById('settingsLanguage')) {
+                    document.getElementById('settingsLanguage').value = settings.language;
+                }
+                if (document.getElementById('settingsStudioName')) {
+                    document.getElementById('settingsStudioName').value = settings.studioName;
+                }
+                if (document.getElementById('settingsCurrency')) {
+                    document.getElementById('settingsCurrency').value = settings.currency;
+                }
+                if (document.getElementById('settingsDefaultDuration')) {
+                    document.getElementById('settingsDefaultDuration').value = settings.defaultDuration;
+                }
+                if (document.getElementById('settingsLowStockThreshold')) {
+                    document.getElementById('settingsLowStockThreshold').value = settings.lowStockThreshold;
+                }
+                if (document.getElementById('settingsAutoDeduct')) {
+                    document.getElementById('settingsAutoDeduct').checked = settings.autoDeduct;
+                }
+                if (document.getElementById('settingsNotifications')) {
+                    document.getElementById('settingsNotifications').checked = settings.notifications;
+                }
+                if (document.getElementById('settingsReminderTime')) {
+                    document.getElementById('settingsReminderTime').value = settings.reminderTime;
+                }
+                if (document.getElementById('settingsAutoSave')) {
+                    document.getElementById('settingsAutoSave').checked = settings.autoSave;
+                }
+
+                // Apply theme
+                this.applyTheme(settings.theme);
+
+                return settings;
+            }
+
+            saveSettings() {
+                // Get all settings values
+                const theme = document.getElementById('settingsTheme')?.value || 'dark';
+                const language = document.getElementById('settingsLanguage')?.value || 'en';
+                const studioName = document.getElementById('settingsStudioName')?.value || '';
+                const currency = document.getElementById('settingsCurrency')?.value || 'USD';
+                const defaultDuration = parseFloat(document.getElementById('settingsDefaultDuration')?.value) || 2;
+                const lowStockThreshold = parseInt(document.getElementById('settingsLowStockThreshold')?.value) || 5;
+                const autoDeduct = document.getElementById('settingsAutoDeduct')?.checked || false;
+                const notifications = document.getElementById('settingsNotifications')?.checked || false;
+                const reminderTime = parseInt(document.getElementById('settingsReminderTime')?.value) || 2;
+                const autoSave = document.getElementById('settingsAutoSave')?.checked || false;
+
+                // Save to localStorage
+                localStorage.setItem('inkmanager_theme', theme);
+                localStorage.setItem('inkmanager_language', language);
+                localStorage.setItem('inkmanager_studioName', studioName);
+                localStorage.setItem('inkmanager_currency', currency);
+                localStorage.setItem('inkmanager_defaultDuration', defaultDuration.toString());
+                localStorage.setItem('inkmanager_lowStockThreshold', lowStockThreshold.toString());
+                localStorage.setItem('inkmanager_autoDeduct', autoDeduct.toString());
+                localStorage.setItem('inkmanager_notifications', notifications.toString());
+                localStorage.setItem('inkmanager_reminderTime', reminderTime.toString());
+                localStorage.setItem('inkmanager_autoSave', autoSave.toString());
+
+                // Apply theme immediately
+                this.applyTheme(theme);
+
+                // Apply language if changed
+                if (language !== this.currentLanguage) {
+                    this.setLanguage(language);
+                }
+
+                this.showNotification(this.translate('settings_saved') || '✅ Settings saved successfully!');
+            }
+
+            resetSettings() {
+                if (confirm(this.translate('confirm_reset_settings') || 'Reset all settings to defaults?')) {
+                    // Clear all settings from localStorage
+                    const settingsKeys = [
+                        'inkmanager_theme',
+                        'inkmanager_studioName',
+                        'inkmanager_currency',
+                        'inkmanager_defaultDuration',
+                        'inkmanager_lowStockThreshold',
+                        'inkmanager_autoDeduct',
+                        'inkmanager_notifications',
+                        'inkmanager_reminderTime',
+                        'inkmanager_autoSave'
+                    ];
+                    
+                    settingsKeys.forEach(key => localStorage.removeItem(key));
+
+                    // Reload settings with defaults
+                    this.loadSettings();
+                    
+                    this.showNotification(this.translate('settings_reset') || '✅ Settings reset to defaults');
+                }
+            }
+
+            applyTheme(theme) {
+                const body = document.body;
+                const root = document.documentElement;
+
+                // Remove existing theme classes
+                body.classList.remove('theme-dark', 'theme-light');
+
+                if (theme === 'auto') {
+                    // Use system preference
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    theme = prefersDark ? 'dark' : 'light';
+                }
+
+                if (theme === 'light') {
+                    body.classList.add('theme-light');
+                    // Light theme colors
+                    root.style.setProperty('--dark', '#f5f5f5');
+                    root.style.setProperty('--darker', '#ffffff');
+                    root.style.setProperty('--dark-gray', '#e0e0e0');
+                    root.style.setProperty('--light', '#0d1117');
+                } else {
+                    body.classList.add('theme-dark');
+                    // Reset to dark theme colors (defaults)
+                    root.style.setProperty('--dark', '#0d1117');
+                    root.style.setProperty('--darker', '#010409');
+                    root.style.setProperty('--dark-gray', '#161b22');
+                    root.style.setProperty('--light', '#f5f5f5');
+                }
+            }
+
+            refreshSettings() {
+                // Reload settings UI
+                this.loadSettings();
+            }
+
+            importData() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            
+                            // Validate data structure
+                            if (data.clients || data.sessions || data.inventory) {
+                                if (confirm('Import data? This will overwrite existing data.')) {
+                                    if (data.clients) this.clients = data.clients;
+                                    if (data.sessions) this.sessions = data.sessions;
+                                    if (data.inventory) this.inventory = data.inventory;
+                                    
+                                    this.safeSaveData(true);
+                                    this.refreshAll();
+                                    this.showNotification('✅ Data imported successfully!');
+                                }
+                            } else {
+                                this.showNotification('⚠️ Invalid data format');
+                            }
+                        } catch (error) {
+                            console.error('Import error:', error);
+                            this.showNotification('❌ Failed to import data');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            }
+
+            confirmClearData() {
+                if (confirm(this.translate('confirm_clear_data') || 'Are you sure you want to clear all data? This cannot be undone!')) {
+                    if (confirm('This will permanently delete all clients, sessions, and inventory. Are you ABSOLUTELY sure?')) {
+                        this.clients = [];
+                        this.sessions = [];
+                        this.inventory = [];
+                        this.safeSaveData(true);
+                        this.refreshAll();
+                        this.showNotification(this.translate('data_cleared') || '🗑️ All data has been cleared');
+                    }
+                }
+            }
+
             formatDateTime(date) {
                 return date.toISOString().slice(0, 16);
             }
@@ -4541,6 +5259,43 @@ body.sidebar-collapsed .app-container {
                 <i class="fas fa-download"></i> Install
             </button>
         </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav" id="mobileBottomNav">
+        <a class="mobile-nav-item active" data-section="dashboard" href="#dashboard">
+            <i class="fas fa-home"></i>
+            <span data-i18n="dashboard">Dashboard</span>
+        </a>
+        <a class="mobile-nav-item" data-section="clients" href="#clients">
+            <i class="fas fa-users"></i>
+            <span data-i18n="clients">Clients</span>
+        </a>
+        <a class="mobile-nav-item" data-section="sessions" href="#sessions">
+            <i class="fas fa-calendar"></i>
+            <span data-i18n="sessions">Sessions</span>
+        </a>
+        <a class="mobile-nav-item" data-section="inventory" href="#inventory">
+            <i class="fas fa-boxes"></i>
+            <span data-i18n="inventory">Inventory</span>
+        </a>
+        <a class="mobile-nav-item" data-section="settings" href="#settings">
+            <i class="fas fa-cog"></i>
+            <span data-i18n="settings">Settings</span>
+        </a>
+    </nav>
+
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <i class="fas fa-sync-alt"></i> <span data-i18n="refreshing">Refreshing...</span>
+    </div>
+
+    <!-- Swipe Indicators -->
+    <div class="swipe-indicator left" id="swipeLeft">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+    <div class="swipe-indicator right" id="swipeRight">
+        <i class="fas fa-chevron-right"></i>
     </div>
 </body>
 </html>
