@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <title>InkManager Pro - Professional Tattoo Studio Management</title>
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
@@ -41,36 +41,45 @@
         -webkit-touch-callout: none;
     }
 
+    html {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
     body {
         font-family: 'Roboto', sans-serif;
         background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
         color: var(--light);
         line-height: 1.7;
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
+        min-height: 100%;
+        height: 100vh;
+        width: 100%;
+        max-width: 100%;
         padding: 0;
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-        overflow-x: hidden;
-        display: flex;
-        position: fixed;
-        width: 100%;
-        max-width: 100vw;
-        height: 100vh;
-        height: -webkit-fill-available;
-    }
-
-    html {
-        height: -webkit-fill-available;
+        margin: 0;
         overflow: hidden;
-        position: fixed;
-        width: 100%;
+        display: flex;
+        position: relative;
     }
 
     /* Smooth scrolling for mobile */
     html {
         scroll-behavior: smooth;
         -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
         overscroll-behavior: none; /* Prevent pull-to-refresh bounce */
+    }
+    
+    @supports (-webkit-touch-callout: none) {
+        /* iOS-specific fix */
+        body {
+            height: -webkit-fill-available;
+        }
     }
 
     /* Better touch device support */
@@ -91,9 +100,11 @@
         position: sticky;
         top: 0;
         height: 100vh;
+        height: 100%;
         box-shadow: 2px 0 20px rgba(0,0,0,0.6);
         z-index: 1000;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         padding-bottom: 3rem;
         transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease, padding 0.3s ease;
     }
@@ -227,9 +238,12 @@ body.sidebar-collapsed .app-container {
         width: calc(100% - 280px);
         max-width: calc(100% - 280px);
         min-width: 0;
+        height: 100vh;
+        height: 100%;
         padding: 20px;
         overflow-y: auto;
         overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
         transition: width 0.3s ease, max-width 0.3s ease;
     }
 
@@ -1164,10 +1178,15 @@ body.sidebar-collapsed .app-container {
         }
 
         /* Ensure proper width containment */
-        body {
+        html, body {
             width: 100%;
-            max-width: 100vw;
+            max-width: 100%;
+            height: 100%;
             overflow-x: hidden;
+        }
+        
+        body {
+            position: relative;
         }
 
         .app-header {
