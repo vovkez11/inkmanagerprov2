@@ -1732,6 +1732,10 @@ body.sidebar-collapsed .app-container {
                 // Debounced save to reduce localStorage writes
                 this.saveTimeout = null;
                 
+                // Cache for sorted inventory to avoid re-sorting unchanged data
+                this.sortedInventoryCache = null;
+                this.sortedInventoryCacheKey = null;
+                
                 // Currency configuration
                 this.currencyConfig = {
                     'en': { symbol: '$', code: 'USD', locale: 'en-US' },
@@ -2779,14 +2783,36 @@ body.sidebar-collapsed .app-container {
 
             sortInventory(items) {
                 const { key, dir } = this.inventorySort || { key: 'name', dir: 'asc' };
+                
+                // Create cache key based on items length, sort params, and filter
+                const cacheKey = `${items.length}-${key}-${dir}-${this.inventoryFilter}-${this.inventorySearchQuery}`;
+                
+                // Return cached result if data hasn't changed
+                if (this.sortedInventoryCache && this.sortedInventoryCacheKey === cacheKey) {
+                    return this.sortedInventoryCache;
+                }
+                
+                // Perform sort
                 const mult = dir === 'desc' ? -1 : 1;
-                return [...items].sort((a, b) => {
+                const sorted = [...items].sort((a, b) => {
                     const av = a[key] ?? '';
                     const bv = b[key] ?? '';
                     if (key === 'qty') return (Number(av) - Number(bv)) * mult;
                     if (key === 'updatedAt') return ((new Date(av || 0)) - (new Date(bv || 0))) * mult;
                     return String(av).localeCompare(String(bv)) * mult;
                 });
+                
+                // Cache the result
+                this.sortedInventoryCache = sorted;
+                this.sortedInventoryCacheKey = cacheKey;
+                
+                return sorted;
+            }
+            
+            // Invalidate inventory sort cache when data changes
+            invalidateInventoryCache() {
+                this.sortedInventoryCache = null;
+                this.sortedInventoryCacheKey = null;
             }
 
             adjustInventoryQty(itemId, delta) {
@@ -2796,6 +2822,7 @@ body.sidebar-collapsed .app-container {
                 if (nextQty === item.qty) return;
                 item.qty = nextQty;
                 item.updatedAt = Date.now();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2819,6 +2846,7 @@ body.sidebar-collapsed .app-container {
                 }
 
                 item.updatedAt = Date.now();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2872,6 +2900,7 @@ body.sidebar-collapsed .app-container {
                 const deletedItems = this.inventory.filter(item => ids.includes(item.id));
                 this.inventory = this.inventory.filter(item => !ids.includes(item.id));
                 this.selectedInventory.clear();
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -2918,6 +2947,7 @@ body.sidebar-collapsed .app-container {
                     }
                 });
 
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
@@ -3155,6 +3185,7 @@ body.sidebar-collapsed .app-container {
                         }
                     }
                 });
+                this.invalidateInventoryCache();
                 this.saveData();
             }
 
@@ -3635,6 +3666,7 @@ body.sidebar-collapsed .app-container {
                             updatedAt: new Date().toISOString()
                         };
                         
+                        this.invalidateInventoryCache();
                         this.safeSaveData();
                         this.closeInventoryModal();
                         this.refreshInventory();
@@ -3654,6 +3686,7 @@ body.sidebar-collapsed .app-container {
                     };
                     
                     this.inventory.push(item);
+                    this.invalidateInventoryCache();
                     this.safeSaveData();
                     this.closeInventoryModal();
                     this.refreshInventory();
@@ -3786,6 +3819,7 @@ body.sidebar-collapsed .app-container {
                 const deleted = this.inventory.find(i => i.id === itemId);
                 this.selectedInventory.delete(itemId);
                 this.inventory = this.inventory.filter(i => i.id !== itemId);
+                this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
                 this.refreshDashboard();
