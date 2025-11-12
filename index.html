@@ -4104,5 +4104,21 @@ body.sidebar-collapsed .app-container {
 
     <!-- Toast Notification Element -->
     <div id="toast" class="toast"></div>
+
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt">
+        <div>
+            <strong>📱 Install InkManager Pro</strong>
+            <p style="margin: 5px 0 0; font-size: 0.9em;">Get quick access and work offline</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="this.closest('.install-prompt').classList.remove('show')">
+                Later
+            </button>
+            <button class="btn btn-success" onclick="handleInstallClick()">
+                <i class="fas fa-download"></i> Install
+            </button>
+        </div>
+    </div>
 </body>
 </html>
