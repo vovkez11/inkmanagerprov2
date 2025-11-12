@@ -480,13 +480,16 @@ body.sidebar-collapsed .app-container {
         align-items: center;
         gap: 12px;
         font-weight: 700;
-        cursor: pointer;
         transition: var(--transition);
         padding: 8px 16px;
         border-radius: 10px;
     }
 
-    .card-title:hover {
+    .card-title[onclick] {
+        cursor: pointer;
+    }
+
+    .card-title[onclick]:hover {
         background: rgba(0, 188, 212, 0.1);
         transform: none;
     }
@@ -1858,7 +1861,7 @@ body.sidebar-collapsed .app-container {
         <section id="clients" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title">
                         <i class="fas fa-users"></i> <span data-i18n="client_management">Client Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addClientBtn">
@@ -1888,7 +1891,7 @@ body.sidebar-collapsed .app-container {
         <section id="sessions" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title">
                         <i class="fas fa-calendar-alt"></i> <span data-i18n="session_management">Session Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addSessionBtn">
@@ -1913,7 +1916,7 @@ body.sidebar-collapsed .app-container {
         <section id="inventory" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title">
                         <i class="fas fa-syringe"></i> <span data-i18n="inventory_management">Inventory Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addInventoryBtn">
@@ -1989,7 +1992,7 @@ body.sidebar-collapsed .app-container {
         <section id="calendar" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title">
                         <i class="fas fa-calendar-day"></i> <span data-i18n="studio_calendar">Studio Calendar</span>
                     </h2>
                     <button class="btn btn-primary" id="addCalendarSessionBtn">
@@ -2017,7 +2020,7 @@ body.sidebar-collapsed .app-container {
         <section id="reports" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title">
                         <i class="fas fa-chart-bar"></i> <span data-i18n="analytics_reports">Analytics & Reports</span>
                     </h2>
                 </div>
