@@ -1530,6 +1530,56 @@ body.sidebar-collapsed .app-container {
         to { transform: rotate(360deg); }
     }
 
+    /* Pro Features Styles */
+    .pro-badge {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: var(--darker);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.7em;
+        font-weight: 700;
+        margin-left: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    }
+
+    .vip-client-card {
+        background: linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,152,0,0.1) 100%);
+        border-left: 4px solid #ffd700;
+        padding: 18px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        transition: var(--transition);
+    }
+
+    .vip-client-card:hover {
+        transform: none;
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+    }
+
+    .loyalty-points {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9em;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 12px;
+        padding: 20px;
+    }
+
     /* Light Theme Support */
     body.theme-light {
         background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
@@ -1896,6 +1946,24 @@ body.sidebar-collapsed .app-container {
                     </div>
                 </div>
             </div>
+
+            <!-- PRO: Revenue Trends Chart -->
+            <div class="card" id="revenueTrendsCard" style="display: none;">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-area"></i> <span>💎 Revenue Trends (Pro)</span>
+                </h3>
+                <div id="revenueTrendsChart" style="position: relative; height: 300px;">
+                    <canvas id="revenueCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- PRO: Client Loyalty Program -->
+            <div class="card" id="loyaltyProgramCard" style="display: none;">
+                <h3 class="card-title">
+                    <i class="fas fa-star"></i> <span>💎 VIP Clients (Pro)</span>
+                </h3>
+                <div id="vipClientsList"></div>
+            </div>
         </section>
 
         <!-- Clients Section -->
@@ -2226,6 +2294,34 @@ body.sidebar-collapsed .app-container {
                     </div>
                 </div>
 
+                <!-- PRO Features -->
+                <div style="margin-bottom: 30px;">
+                    <h3 class="card-title">
+                        <i class="fas fa-gem"></i> <span>💎 Pro Features</span>
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="settingsEnableProFeatures" style="width: auto; min-height: auto;" checked>
+                            <span>Enable Premium Features</span>
+                        </label>
+                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);">
+                            Unlock advanced analytics, loyalty programs, and more!
+                        </small>
+                    </div>
+
+                    <div id="proFeaturesList" style="margin-top: 15px; padding: 15px; background: rgba(255,215,0,0.1); border-radius: 8px; border: 1px solid rgba(255,215,0,0.3);">
+                        <ul style="margin: 0; padding-left: 20px; color: rgba(255,255,255,0.8);">
+                            <li>📊 Revenue Analytics & Charts</li>
+                            <li>⭐ VIP Client Loyalty Program</li>
+                            <li>📸 Session Photo Gallery</li>
+                            <li>📈 Advanced Business Reports</li>
+                            <li>🎨 Custom Branding Options</li>
+                            <li>📧 Client Reminder System</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <!-- About -->
                 <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,188,212,0.1); border-radius: 12px; border: 1px solid rgba(0,188,212,0.3);">
                     <h3 class="card-title"><i class="fas fa-info-circle"></i> <span data-i18n="about">About</span></h3>
@@ -2513,6 +2609,10 @@ body.sidebar-collapsed .app-container {
                 this.editingSessionId = null;
                 this.currentSessionMaterials = [];
                 this.currentLanguage = localStorage.getItem('inkmanager_language') || 'en';
+                
+                // PRO FEATURES
+                this.proFeaturesEnabled = localStorage.getItem('inkmanager_proFeatures') !== 'false';
+                this.clientLoyaltyPoints = JSON.parse(localStorage.getItem('inkmanager_loyaltyPoints')) || {};
                 
                 // Cache DOM elements to avoid repeated queries
                 this.domCache = {};
@@ -4976,6 +5076,9 @@ body.sidebar-collapsed .app-container {
                         </div>
                     `;
                 }
+
+                // Refresh Pro Features
+                this.refreshProFeatures();
             }
 
             refreshCalendar() {
@@ -5137,7 +5240,8 @@ body.sidebar-collapsed .app-container {
                     autoDeduct: localStorage.getItem('inkmanager_autoDeduct') === 'true',
                     notifications: localStorage.getItem('inkmanager_notifications') !== 'false',
                     reminderTime: parseInt(localStorage.getItem('inkmanager_reminderTime')) || 2,
-                    autoSave: localStorage.getItem('inkmanager_autoSave') !== 'false'
+                    autoSave: localStorage.getItem('inkmanager_autoSave') !== 'false',
+                    proFeatures: localStorage.getItem('inkmanager_proFeatures') !== 'false'
                 };
 
                 // Apply settings to UI
@@ -5171,6 +5275,9 @@ body.sidebar-collapsed .app-container {
                 if (document.getElementById('settingsAutoSave')) {
                     document.getElementById('settingsAutoSave').checked = settings.autoSave;
                 }
+                if (document.getElementById('settingsEnableProFeatures')) {
+                    document.getElementById('settingsEnableProFeatures').checked = settings.proFeatures;
+                }
 
                 // Apply theme
                 this.applyTheme(settings.theme);
@@ -5190,6 +5297,7 @@ body.sidebar-collapsed .app-container {
                 const notifications = document.getElementById('settingsNotifications')?.checked || false;
                 const reminderTime = parseInt(document.getElementById('settingsReminderTime')?.value) || 2;
                 const autoSave = document.getElementById('settingsAutoSave')?.checked || false;
+                const proFeatures = document.getElementById('settingsEnableProFeatures')?.checked !== false;
 
                 // Save to localStorage
                 localStorage.setItem('inkmanager_theme', theme);
@@ -5210,6 +5318,9 @@ body.sidebar-collapsed .app-container {
                 if (language !== this.currentLanguage) {
                     this.setLanguage(language);
                 }
+
+                // Apply pro features toggle
+                this.toggleProFeatures(proFeatures);
 
                 this.showNotification(this.translate('settings_saved') || '✅ Settings saved successfully!');
             }
@@ -5380,6 +5491,197 @@ body.sidebar-collapsed .app-container {
                 localStorage.setItem('inkmanager_clients', JSON.stringify(this.clients));
                 localStorage.setItem('inkmanager_sessions', JSON.stringify(this.sessions));
                 localStorage.setItem('inkmanager_inventory', JSON.stringify(this.inventory));
+                localStorage.setItem('inkmanager_loyaltyPoints', JSON.stringify(this.clientLoyaltyPoints));
+            }
+
+            // PRO FEATURES METHODS
+            
+            calculateLoyaltyPoints(clientId) {
+                if (!this.proFeaturesEnabled) return 0;
+                
+                const clientSessions = this.sessions.filter(s => s.clientId === clientId);
+                let points = 0;
+                
+                // Award points: 1 point per $10 spent + bonus for sessions
+                clientSessions.forEach(session => {
+                    points += Math.floor((session.price || 0) / 10); // 1 point per $10
+                    points += 10; // 10 bonus points per session
+                });
+                
+                return points;
+            }
+
+            getClientLoyaltyTier(points) {
+                if (points >= 500) return { name: '💎 Diamond VIP', color: '#00bcd4', bonus: '25% off' };
+                if (points >= 300) return { name: '🥇 Gold VIP', color: '#ffd700', bonus: '15% off' };
+                if (points >= 150) return { name: '🥈 Silver VIP', color: '#c0c0c0', bonus: '10% off' };
+                if (points >= 50) return { name: '🥉 Bronze', color: '#cd7f32', bonus: '5% off' };
+                return { name: '⭐ Member', color: '#ffffff', bonus: 'None' };
+            }
+
+            refreshProFeatures() {
+                if (!this.proFeaturesEnabled) {
+                    document.getElementById('revenueTrendsCard').style.display = 'none';
+                    document.getElementById('loyaltyProgramCard').style.display = 'none';
+                    return;
+                }
+
+                // Show Pro Features
+                document.getElementById('revenueTrendsCard').style.display = 'block';
+                document.getElementById('loyaltyProgramCard').style.display = 'block';
+
+                // Render Revenue Trends Chart
+                this.renderRevenueChart();
+
+                // Render VIP Clients
+                this.renderVIPClients();
+            }
+
+            renderRevenueChart() {
+                const canvas = document.getElementById('revenueCanvas');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                const container = canvas.parentElement;
+                canvas.width = container.clientWidth - 40;
+                canvas.height = 260;
+
+                // Get last 6 months of revenue data
+                const months = [];
+                const revenue = [];
+                const now = new Date();
+                
+                for (let i = 5; i >= 0; i--) {
+                    const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const monthName = month.toLocaleDateString('en-US', { month: 'short' });
+                    months.push(monthName);
+                    
+                    const monthRevenue = this.sessions
+                        .filter(s => {
+                            const sessionDate = new Date(s.dateTime);
+                            return sessionDate.getMonth() === month.getMonth() && 
+                                   sessionDate.getFullYear() === month.getFullYear();
+                        })
+                        .reduce((sum, s) => sum + (s.price || 0), 0);
+                    revenue.push(monthRevenue);
+                }
+
+                // Simple bar chart
+                const maxRevenue = Math.max(...revenue, 100);
+                const barWidth = (canvas.width - 100) / months.length;
+                const barSpacing = 10;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw bars
+                revenue.forEach((rev, idx) => {
+                    const barHeight = (rev / maxRevenue) * (canvas.height - 50);
+                    const x = 50 + idx * barWidth;
+                    const y = canvas.height - barHeight - 30;
+
+                    // Gradient bar
+                    const gradient = ctx.createLinearGradient(x, y, x, canvas.height - 30);
+                    gradient.addColorStop(0, '#00bcd4');
+                    gradient.addColorStop(1, '#ff4081');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, y, barWidth - barSpacing, barHeight);
+
+                    // Month label
+                    ctx.fillStyle = '#f5f5f5';
+                    ctx.font = '12px Roboto';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(months[idx], x + barWidth / 2 - barSpacing / 2, canvas.height - 10);
+
+                    // Revenue label
+                    ctx.fillText('$' + Math.round(rev), x + barWidth / 2 - barSpacing / 2, y - 5);
+                });
+
+                // Y-axis
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(45, 10);
+                ctx.lineTo(45, canvas.height - 25);
+                ctx.stroke();
+
+                // Title
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = 'bold 14px Roboto';
+                ctx.textAlign = 'left';
+                ctx.fillText('Monthly Revenue Trend', 50, 20);
+            }
+
+            renderVIPClients() {
+                const container = document.getElementById('vipClientsList');
+                if (!container) return;
+
+                // Calculate loyalty points for all clients
+                const clientsWithPoints = this.clients.map(client => {
+                    const points = this.calculateLoyaltyPoints(client.id);
+                    const tier = this.getClientLoyaltyTier(points);
+                    const sessions = this.sessions.filter(s => s.clientId === client.id);
+                    const totalSpent = sessions.reduce((sum, s) => sum + (s.price || 0), 0);
+                    
+                    return {
+                        ...client,
+                        points,
+                        tier,
+                        sessionCount: sessions.length,
+                        totalSpent
+                    };
+                }).filter(c => c.points >= 50) // Only show clients with 50+ points
+                  .sort((a, b) => b.points - a.points);
+
+                if (clientsWithPoints.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-crown"></i>
+                            <h3>No VIP Clients Yet</h3>
+                            <p>Clients earn points through sessions and spending</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = clientsWithPoints.map(client => `
+                    <div class="vip-client-card" onclick="app.showSection('clients')">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.1em; color: var(--light); margin-bottom: 4px;">
+                                    <i class="fas fa-crown" style="color: ${client.tier.color};"></i> ${client.name}
+                                </div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.7);">
+                                    ${client.tier.name}
+                                </div>
+                            </div>
+                            <div class="loyalty-points">
+                                <i class="fas fa-star"></i> ${client.points} pts
+                            </div>
+                        </div>
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.7); line-height: 1.6;">
+                            <div>📅 ${client.sessionCount} sessions</div>
+                            <div>💰 ${this.formatCurrency(client.totalSpent)} total spent</div>
+                            <div style="color: ${client.tier.color}; font-weight: 600; margin-top: 4px;">
+                                🎁 Next reward: ${client.tier.bonus}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            toggleProFeatures(enabled) {
+                this.proFeaturesEnabled = enabled;
+                localStorage.setItem('inkmanager_proFeatures', enabled.toString());
+                this.refreshDashboard();
+                this.refreshProFeatures();
+                
+                if (enabled) {
+                    this.showNotification('✨ Pro Features Enabled!');
+                } else {
+                    this.showNotification('Pro Features Disabled');
+                }
             }
         }
 
