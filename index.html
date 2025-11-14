@@ -25,22 +25,75 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
 <style>
+    /* Base Theme Variables - Define all themeable properties */
     :root {
+        /* Color palette - base colors that don't change */
         --primary: #00bcd4;
         --primary-dark: #008ba3;
         --primary-light: #80deea;
         --secondary: #ff4081;
-        --accent: #ff9800;
-        --dark: #0d1117;
-        --darker: #010409;
-        --dark-gray: #161b22;
-        --light: #f5f5f5;
+        --accent-orange: #ff9800;
         --success: #4caf50;
         --warning: #ff9800;
         --danger: #f44336;
+        
+        /* Themeable color properties - default to dark theme */
+        --color-bg: #0d1117;
+        --color-bg-darker: #010409;
+        --color-bg-elevated: #161b22;
+        --color-text: #f5f5f5;
+        --color-text-muted: rgba(255, 255, 255, 0.6);
+        --color-border: #30363d;
+        --color-accent: var(--primary);
+        --color-shadow: rgba(0, 0, 0, 0.4);
+        
+        /* Layout properties */
         --border-radius: 16px;
-        --shadow: 0 12px 40px rgba(0,0,0,0.4);
+        --shadow: 0 12px 40px var(--color-shadow);
         --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        
+        /* Legacy variable mappings for backwards compatibility */
+        --dark: var(--color-bg);
+        --darker: var(--color-bg-darker);
+        --dark-gray: var(--color-bg-elevated);
+        --light: var(--color-text);
+        --accent: var(--color-accent);
+    }
+
+    /* Dark Theme - Default */
+    [data-theme="dark"] {
+        --color-bg: #0d1117;
+        --color-bg-darker: #010409;
+        --color-bg-elevated: #161b22;
+        --color-text: #f5f5f5;
+        --color-text-muted: rgba(255, 255, 255, 0.6);
+        --color-border: #30363d;
+        --color-accent: #00bcd4;
+        --color-shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Light Theme - High contrast light theme */
+    [data-theme="light"] {
+        --color-bg: #ffffff;
+        --color-bg-darker: #f5f5f5;
+        --color-bg-elevated: #e8e8e8;
+        --color-text: #1a1a1a;
+        --color-text-muted: rgba(0, 0, 0, 0.6);
+        --color-border: #d0d0d0;
+        --color-accent: #007a8a;
+        --color-shadow: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Accent Theme - Vibrant cyan/orange accent theme */
+    [data-theme="accent"] {
+        --color-bg: #0a0e12;
+        --color-bg-darker: #000000;
+        --color-bg-elevated: #1a2332;
+        --color-text: #e0f7fa;
+        --color-text-muted: rgba(224, 247, 250, 0.7);
+        --color-border: #00bcd4;
+        --color-accent: #ff9800;
+        --color-shadow: rgba(0, 188, 212, 0.3);
     }
 
     * {
@@ -2134,11 +2187,12 @@ body.sidebar-collapsed .app-container {
                     
                     <div class="form-group">
                         <label class="form-label" data-i18n="theme">Theme</label>
-                        <select class="form-control" id="settingsTheme">
-                            <option value="dark" data-i18n="dark_theme">Dark (Default)</option>
-                            <option value="light" data-i18n="light_theme">Light</option>
-                            <option value="auto" data-i18n="auto_theme">Auto (System)</option>
+                        <select class="form-control" id="settingsTheme" onchange="app.previewTheme(this.value)">
+                            <option value="dark" data-i18n="dark_theme">🌙 Dark</option>
+                            <option value="light" data-i18n="light_theme">☀️ Light</option>
+                            <option value="accent" data-i18n="accent_theme">🎨 Accent</option>
                         </select>
+                        <small style="display: block; margin-top: 8px; color: var(--color-text-muted);" data-i18n="theme_help">Changes apply instantly</small>
                     </div>
 
                     <div class="form-group">
@@ -2720,9 +2774,10 @@ body.sidebar-collapsed .app-container {
                         "settings": "Settings",
                         "appearance": "Appearance",
                         "theme": "Theme",
-                        "dark_theme": "Dark (Default)",
-                        "light_theme": "Light",
-                        "auto_theme": "Auto (System)",
+                        "dark_theme": "🌙 Dark",
+                        "light_theme": "☀️ Light",
+                        "accent_theme": "🎨 Accent",
+                        "theme_help": "Changes apply instantly",
                         "language_preference": "Language Preference",
                         "business_settings": "Business Settings",
                         "studio_name": "Studio Name",
@@ -5152,9 +5207,18 @@ body.sidebar-collapsed .app-container {
             }
 
             loadSettings() {
+                // Detect theme preference on first load
+                let theme = localStorage.getItem('uiTheme');
+                if (!theme) {
+                    // First load - auto-detect from system preference
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    theme = prefersDark ? 'dark' : 'light';
+                    localStorage.setItem('uiTheme', theme);
+                }
+                
                 // Load all settings from localStorage
                 const settings = {
-                    theme: localStorage.getItem('inkmanager_theme') || 'dark',
+                    theme: theme,
                     language: localStorage.getItem('inkmanager_language') || 'en',
                     studioName: localStorage.getItem('inkmanager_studioName') || '',
                     currency: localStorage.getItem('inkmanager_currency') || 'USD',
@@ -5222,7 +5286,7 @@ body.sidebar-collapsed .app-container {
                 const notificationsChanged = previousNotifications !== notifications;
 
                 // Save to localStorage
-                localStorage.setItem('inkmanager_theme', theme);
+                localStorage.setItem('uiTheme', theme);
                 localStorage.setItem('inkmanager_language', language);
                 localStorage.setItem('inkmanager_studioName', studioName);
                 localStorage.setItem('inkmanager_currency', currency);
@@ -5233,7 +5297,7 @@ body.sidebar-collapsed .app-container {
                 localStorage.setItem('inkmanager_reminderTime', reminderTime.toString());
                 localStorage.setItem('inkmanager_autoSave', autoSave.toString());
 
-                // Apply theme immediately
+                // Apply theme immediately (live preview already happened via onchange)
                 this.applyTheme(theme);
 
                 // Apply language if changed
@@ -5259,7 +5323,7 @@ body.sidebar-collapsed .app-container {
                 if (confirm(this.translate('confirm_reset_settings') || 'Reset all settings to defaults?')) {
                     // Clear all settings from localStorage
                     const settingsKeys = [
-                        'inkmanager_theme',
+                        'uiTheme',
                         'inkmanager_studioName',
                         'inkmanager_currency',
                         'inkmanager_defaultDuration',
@@ -5280,33 +5344,30 @@ body.sidebar-collapsed .app-container {
             }
 
             applyTheme(theme) {
-                const body = document.body;
-                const root = document.documentElement;
-
-                // Remove existing theme classes
-                body.classList.remove('theme-dark', 'theme-light');
-
-                if (theme === 'auto') {
-                    // Use system preference
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    theme = prefersDark ? 'dark' : 'light';
+                // Validate theme value
+                const validThemes = ['dark', 'light', 'accent'];
+                if (!validThemes.includes(theme)) {
+                    theme = 'dark';
                 }
-
-                if (theme === 'light') {
-                    body.classList.add('theme-light');
-                    // Light theme colors
-                    root.style.setProperty('--dark', '#f5f5f5');
-                    root.style.setProperty('--darker', '#ffffff');
-                    root.style.setProperty('--dark-gray', '#e0e0e0');
-                    root.style.setProperty('--light', '#0d1117');
-                } else {
-                    body.classList.add('theme-dark');
-                    // Reset to dark theme colors (defaults)
-                    root.style.setProperty('--dark', '#0d1117');
-                    root.style.setProperty('--darker', '#010409');
-                    root.style.setProperty('--dark-gray', '#161b22');
-                    root.style.setProperty('--light', '#f5f5f5');
+                
+                // Apply theme via data-theme attribute on document root
+                document.documentElement.setAttribute('data-theme', theme);
+                
+                // Update theme-color meta tag for PWA
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                if (themeColorMeta) {
+                    const themeColors = {
+                        'dark': '#00bcd4',
+                        'light': '#007a8a',
+                        'accent': '#ff9800'
+                    };
+                    themeColorMeta.setAttribute('content', themeColors[theme]);
                 }
+            }
+
+            previewTheme(theme) {
+                // Live preview - apply theme immediately without saving
+                this.applyTheme(theme);
             }
 
             refreshSettings() {
