@@ -2193,7 +2193,7 @@ body.sidebar-collapsed .app-container {
                     <h3 class="card-title"><i class="fas fa-palette"></i> <span data-i18n="appearance">Appearance</span></h3>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="theme">Theme</label>
+                        <label class="form-label" for="settingsTheme" data-i18n="theme">Theme</label>
                         <select class="form-control" id="settingsTheme">
                             <option value="dark" data-i18n="dark_theme">Dark (Default)</option>
                             <option value="light" data-i18n="light_theme">Light</option>
@@ -2202,7 +2202,7 @@ body.sidebar-collapsed .app-container {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="language_preference">Language Preference</label>
+                        <label class="form-label" for="settingsLanguage" data-i18n="language_preference">Language Preference</label>
                         <select class="form-control" id="settingsLanguage">
                             <option value="en">🇬🇧 English</option>
                             <option value="es">🇪🇸 Español</option>
@@ -2217,12 +2217,12 @@ body.sidebar-collapsed .app-container {
                     <h3 class="card-title"><i class="fas fa-briefcase"></i> <span data-i18n="business_settings">Business Settings</span></h3>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="studio_name">Studio Name</label>
+                        <label class="form-label" for="settingsStudioName" data-i18n="studio_name">Studio Name</label>
                         <input type="text" class="form-control" id="settingsStudioName" placeholder="Your Studio Name">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="currency_symbol">Currency Symbol</label>
+                        <label class="form-label" for="settingsCurrency" data-i18n="currency_symbol">Currency Symbol</label>
                         <select class="form-control" id="settingsCurrency">
                             <option value="USD">$ USD (US Dollar)</option>
                             <option value="EUR">€ EUR (Euro)</option>
@@ -2235,7 +2235,7 @@ body.sidebar-collapsed .app-container {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="default_session_duration">Default Session Duration (hours)</label>
+                        <label class="form-label" for="settingsDefaultDuration" data-i18n="default_session_duration">Default Session Duration (hours)</label>
                         <input type="number" class="form-control" id="settingsDefaultDuration" min="0.5" step="0.5" value="2">
                     </div>
                 </div>
@@ -2245,7 +2245,7 @@ body.sidebar-collapsed .app-container {
                     <h3 class="card-title"><i class="fas fa-boxes"></i> <span data-i18n="inventory_settings">Inventory Settings</span></h3>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
+                        <label class="form-label" for="settingsLowStockThreshold" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
                         <input type="number" class="form-control" id="settingsLowStockThreshold" min="0" value="5">
                         <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
                     </div>
@@ -2271,7 +2271,7 @@ body.sidebar-collapsed .app-container {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="session_reminder">Session Reminder (hours before)</label>
+                        <label class="form-label" for="settingsReminderTime" data-i18n="session_reminder">Session Reminder (hours before)</label>
                         <input type="number" class="form-control" id="settingsReminderTime" min="0" max="48" value="2">
                         <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="reminder_help">You'll be notified this many hours before a session starts</small>
                     </div>
@@ -2361,30 +2361,30 @@ body.sidebar-collapsed .app-container {
             </div>
             <form id="clientForm">
                 <div class="form-group">
-                    <label class="form-label" data-i18n="full_name">Full Name *</label>
+                    <label class="form-label" for="clientName" data-i18n="full_name">Full Name *</label>
                     <input type="text" class="form-control" id="clientName" placeholder="John Smith" data-i18n-placeholder="name_placeholder" required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label" data-i18n="phone_number">Phone Number</label>
+                        <label class="form-label" for="clientPhone" data-i18n="phone_number">Phone Number</label>
                         <input type="tel" class="form-control" id="clientPhone" placeholder="+1 (555) 123-4567" data-i18n-placeholder="phone_placeholder">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="email_address">Email Address</label>
+                        <label class="form-label" for="clientEmail" data-i18n="email_address">Email Address</label>
                         <input type="email" class="form-control" id="clientEmail" placeholder="john@example.com" data-i18n-placeholder="email_placeholder">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label" data-i18n="birth_date">Birth Date</label>
+                        <label class="form-label" for="clientBirthDate" data-i18n="birth_date">Birth Date</label>
                         <input type="date" class="form-control" id="clientBirthDate">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="skin_type">Skin Type</label>
+                        <label class="form-label" for="clientSkinType" data-i18n="skin_type">Skin Type</label>
                         <select class="form-control" id="clientSkinType">
                             <option value="" data-i18n="select_skin_type">Select skin type...</option>
                             <option value="normal" data-i18n="normal">Normal</option>
@@ -2397,13 +2397,13 @@ body.sidebar-collapsed .app-container {
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="emergency_contact">Emergency Contact</label>
+                    <label class="form-label" for="clientEmergencyContact" data-i18n="emergency_contact">Emergency Contact</label>
                     <input type="text" class="form-control" id="clientEmergencyContact" 
                            placeholder="Name and phone number" data-i18n-placeholder="emergency_placeholder">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="notes_preferences">Notes & Preferences</label>
+                    <label class="form-label" for="clientNotes" data-i18n="notes_preferences">Notes & Preferences</label>
                     <textarea class="form-control" id="clientNotes" 
                               placeholder="Allergies, style preferences, important medical notes, design ideas..." 
                               data-i18n-placeholder="notes_placeholder" rows="4"></textarea>
@@ -2432,32 +2432,32 @@ body.sidebar-collapsed .app-container {
             </div>
             <form id="sessionForm">
                 <div class="form-group">
-                    <label class="form-label" data-i18n="client">Client *</label>
+                    <label class="form-label" for="sessionClient" data-i18n="client">Client *</label>
                     <select class="form-control" id="sessionClient" required>
                         <option value="" data-i18n="select_client">Select a client...</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="session_title">Session Title *</label>
+                    <label class="form-label" for="sessionTitle" data-i18n="session_title">Session Title *</label>
                     <input type="text" class="form-control" id="sessionTitle" 
                            placeholder="e.g., Sleeve Outline, Cover-up, New Tattoo..." data-i18n-placeholder="session_title_placeholder" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="date_time">Date & Time *</label>
+                    <label class="form-label" for="sessionDateTime" data-i18n="date_time">Date & Time *</label>
                     <input type="datetime-local" class="form-control" id="sessionDateTime" required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label" data-i18n="duration_hours">Duration (hours)</label>
+                        <label class="form-label" for="sessionDuration" data-i18n="duration_hours">Duration (hours)</label>
                         <input type="number" class="form-control" id="sessionDuration" 
                                placeholder="2" min="1" max="12" step="0.5" value="2">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="price">Price</label>
+                        <label class="form-label" for="sessionPrice" data-i18n="price">Price</label>
                         <input type="number" class="form-control" id="sessionPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
@@ -2471,13 +2471,13 @@ body.sidebar-collapsed .app-container {
                     
                     <div class="materials-grid">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="item">Item</label>
+                            <label class="form-label" for="materialItem" data-i18n="item">Item</label>
                             <select class="form-control" id="materialItem">
                                 <option value="" data-i18n="select_item">Select item...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="quantity">Quantity</label>
+                            <label class="form-label" for="materialQty" data-i18n="quantity">Quantity</label>
                             <input type="number" class="form-control material-qty" id="materialQty" 
                                    min="1" value="1" placeholder="Qty">
                         </div>
@@ -2492,7 +2492,7 @@ body.sidebar-collapsed .app-container {
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="session_notes">Session Notes</label>
+                    <label class="form-label" for="sessionNotes" data-i18n="session_notes">Session Notes</label>
                     <textarea class="form-control" id="sessionNotes" 
                               placeholder="Design details, placement, special requests, aftercare instructions..." 
                               data-i18n-placeholder="session_notes_placeholder" rows="4"></textarea>
@@ -2516,14 +2516,14 @@ body.sidebar-collapsed .app-container {
             </div>
             <form id="inventoryForm">
                 <div class="form-group">
-                    <label class="form-label" data-i18n="item_name">Item Name *</label>
+                    <label class="form-label" for="itemName" data-i18n="item_name">Item Name *</label>
                     <input type="text" class="form-control" id="itemName" 
                            placeholder="Round Liner 5RL, Eternal Ink Black, Disposable Grips..." data-i18n-placeholder="item_name_placeholder" required>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label" data-i18n="type">Type *</label>
+                        <label class="form-label" for="itemType" data-i18n="type">Type *</label>
                         <select class="form-control" id="itemType" required>
                             <option value="" data-i18n="select_type">Select type...</option>
                             <option value="needle" data-i18n="needle">Needle</option>
@@ -2536,7 +2536,7 @@ body.sidebar-collapsed .app-container {
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="current_quantity">Current Quantity *</label>
+                        <label class="form-label" for="itemQty" data-i18n="current_quantity">Current Quantity *</label>
                         <input type="number" class="form-control" id="itemQty" 
                                placeholder="10" min="0" required value="10">
                     </div>
@@ -2544,20 +2544,20 @@ body.sidebar-collapsed .app-container {
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label class="form-label" data-i18n="low_stock_alert">Low Stock Alert</label>
+                        <label class="form-label" for="itemAlert" data-i18n="low_stock_alert">Low Stock Alert</label>
                         <input type="number" class="form-control" id="itemAlert" 
                                placeholder="5" min="1" value="5">
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" data-i18n="price_per_unit">Price per Unit</label>
+                        <label class="form-label" for="itemPrice" data-i18n="price_per_unit">Price per Unit</label>
                         <input type="number" class="form-control" id="itemPrice" 
                                placeholder="0.00" step="0.01" min="0">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" data-i18n="supplier_notes">Supplier & Notes</label>
+                    <label class="form-label" for="itemNotes" data-i18n="supplier_notes">Supplier & Notes</label>
                     <textarea class="form-control" id="itemNotes" 
                               placeholder="Supplier information, color codes, expiration dates..." 
                               data-i18n-placeholder="supplier_notes_placeholder" rows="3"></textarea>
