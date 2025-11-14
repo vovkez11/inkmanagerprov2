@@ -3236,6 +3236,17 @@ body.sidebar-collapsed .app-container {
                 this.init();
             }
 
+            /**
+             * Initialize the InkManager Pro application
+             * Sets up all event listeners, PWA features, and loads initial state
+             * 
+             * @returns {void}
+             * @side-effect Sets up event listeners for all UI interactions
+             * @side-effect Registers PWA and service worker
+             * @side-effect Loads settings from localStorage
+             * @side-effect Sets language and refreshes UI
+             * @side-effect Initializes notification system
+             */
             init() {
                 this.setupEventListeners();
                 this.setupPWA();
@@ -3449,6 +3460,13 @@ body.sidebar-collapsed .app-container {
                 };
             }
 
+            /**
+             * Format a number as currency based on current language
+             * Uses Intl.NumberFormat for locale-specific currency formatting
+             * 
+             * @param {number} amount - The amount to format
+             * @returns {string} Formatted currency string (e.g., "$100.00", "€100,00", "₽100")
+             */
             formatCurrency(amount) {
                 const config = this.currencyConfig[this.currentLanguage] || this.currencyConfig['en'];
                 if (!amount) amount = 0;
@@ -3469,6 +3487,17 @@ body.sidebar-collapsed .app-container {
                 }
             }
 
+            /**
+             * Set the application language
+             * Updates UI text, placeholders, and refreshes all views with new language
+             * 
+             * @param {string} lang - Language code ('en', 'es', 'ru', 'he')
+             * @returns {void}
+             * @side-effect Updates this.currentLanguage
+             * @side-effect Saves language preference to localStorage
+             * @side-effect Updates all translatable elements in the DOM
+             * @side-effect Refreshes all views to apply new language
+             */
             setLanguage(lang) {
                 this.currentLanguage = lang;
                 localStorage.setItem('inkmanager_language', lang);
@@ -4054,6 +4083,22 @@ body.sidebar-collapsed .app-container {
                 }, 10000);
             }
 
+            /**
+             * Show a specific section of the application
+             * Hides all sections and displays the requested one with proper navigation state
+             * 
+             * @param {string} sectionId - The ID of the section to show (e.g., 'dashboard', 'clients', 'sessions')
+             * @param {Object} [options={}] - Options for showing the section
+             * @param {boolean} [options.updateHistory=true] - Whether to update browser history
+             * @param {boolean} [options.replace=false] - Whether to replace current history entry
+             * @param {boolean} [options.force=false] - Force refresh even if already showing this section
+             * @returns {void}
+             * @side-effect Updates this.currentSection
+             * @side-effect Modifies DOM to hide/show sections
+             * @side-effect Updates navigation link active states
+             * @side-effect Updates browser history (if updateHistory is true)
+             * @side-effect Scrolls app container to top
+             */
             showSection(sectionId, options = {}) {
                 const { updateHistory = true, replace = false, force = false } = options;
                 if (!sectionId) return;
@@ -4119,6 +4164,15 @@ body.sidebar-collapsed .app-container {
                 }
             }
 
+            /**
+             * Refresh a specific section's content
+             * Reloads and re-renders the content for the specified section
+             * 
+             * @param {string} sectionId - The ID of the section to refresh
+             * @returns {void}
+             * @side-effect Calls appropriate refresh method based on section
+             * @side-effect Updates DOM with fresh data
+             */
             refreshSection(sectionId) {
                 switch(sectionId) {
                     case 'dashboard': this.refreshDashboard(); break;
@@ -4235,6 +4289,17 @@ body.sidebar-collapsed .app-container {
                 this.saveData();
             }
 
+            /**
+             * Open the client modal for creating or editing
+             * Displays the client form modal, optionally pre-filled with existing client data
+             * 
+             * @param {string|null} [clientId=null] - ID of client to edit, or null for new client
+             * @returns {void}
+             * @side-effect Updates this.editingClientId
+             * @side-effect Displays client modal
+             * @side-effect Pre-fills form fields if editing existing client
+             * @side-effect Sets focus to name input field
+             */
             openClientModal(clientId = null) {
                 document.getElementById('clientForm').reset();
                 
@@ -4263,11 +4328,31 @@ body.sidebar-collapsed .app-container {
                 setTimeout(() => document.getElementById('clientName').focus(), 300);
             }
 
+            /**
+             * Close the client modal
+             * Hides the client modal and resets the editing state
+             * 
+             * @returns {void}
+             * @side-effect Hides client modal
+             * @side-effect Resets this.editingClientId to null
+             */
             closeClientModal() {
                 document.getElementById('clientModal').style.display = 'none';
                 this.editingClientId = null;
             }
 
+            /**
+             * Save a new client or update an existing one
+             * Validates required fields, creates/updates client object, and persists to localStorage
+             * 
+             * @returns {void}
+             * @side-effect Validates form inputs and shows error if invalid
+             * @side-effect Updates this.clients array
+             * @side-effect Saves data to localStorage via safeSaveData()
+             * @side-effect Closes client modal
+             * @side-effect Refreshes client list and dashboard
+             * @side-effect Shows success notification
+             */
             saveClient() {
                 const name = document.getElementById('clientName').value.trim();
                 const phone = document.getElementById('clientPhone').value.trim();
@@ -4329,6 +4414,15 @@ body.sidebar-collapsed .app-container {
                 }
             }
 
+            /**
+             * Refresh the clients list view
+             * Renders all clients with their stats and updates the UI
+             * 
+             * @returns {void}
+             * @side-effect Updates DOM with current client list
+             * @side-effect Calculates and displays client statistics
+             * @side-effect Shows empty state if no clients exist
+             */
             refreshClients() {
                 const container = document.getElementById('clientsList');
                 
@@ -4401,6 +4495,15 @@ body.sidebar-collapsed .app-container {
                 }).join('');
             }
 
+            /**
+             * Search clients by name, phone, or email
+             * Filters and displays clients matching the search query
+             * 
+             * @param {string} query - Search term to filter clients
+             * @returns {void}
+             * @side-effect Updates DOM to show filtered client list
+             * @side-effect Shows "no results" message if no matches found
+             */
             searchClients(query) {
                 const container = document.getElementById('clientsList');
                 const filteredClients = this.clients.filter(client => 
@@ -4427,6 +4530,18 @@ body.sidebar-collapsed .app-container {
                 `).join('');
             }
 
+            /**
+             * Delete a client and all their sessions
+             * Prompts for confirmation before deleting client and associated data
+             * 
+             * @param {string} clientId - ID of the client to delete
+             * @returns {void}
+             * @side-effect Shows confirmation dialog
+             * @side-effect Removes client from this.clients array
+             * @side-effect Removes all sessions associated with this client
+             * @side-effect Saves updated data to localStorage
+             * @side-effect Refreshes all views
+             */
             deleteClient(clientId) {
                 if (confirm('Are you sure you want to delete this client and all their sessions?')) {
                     this.clients = this.clients.filter(c => c.id !== clientId);
@@ -4437,6 +4552,20 @@ body.sidebar-collapsed .app-container {
                 }
             }
 
+            /**
+             * Open the session modal for creating or editing
+             * Displays the session form modal, optionally pre-filled with existing session data
+             * 
+             * @param {string|null} [sessionId=null] - ID of session to edit, or null for new session
+             * @param {string|null} [selectedDate=null] - Pre-selected date for new session (ISO format)
+             * @returns {void}
+             * @side-effect Shows error if no clients exist
+             * @side-effect Updates this.editingSessionId
+             * @side-effect Displays session modal
+             * @side-effect Populates client dropdown
+             * @side-effect Populates material dropdown with available inventory
+             * @side-effect Pre-fills form fields if editing existing session
+             */
             openSessionModal(sessionId = null, selectedDate = null) {
                 if (this.clients.length === 0) {
                     this.showNotification('Please add clients first!');
@@ -4501,6 +4630,15 @@ body.sidebar-collapsed .app-container {
                 document.getElementById('sessionModal').style.display = 'block';
             }
 
+            /**
+             * Close the session modal
+             * Hides the session modal and resets the editing state
+             * 
+             * @returns {void}
+             * @side-effect Hides session modal
+             * @side-effect Resets this.editingSessionId to null
+             * @side-effect Clears this.currentSessionMaterials array
+             */
             closeSessionModal() {
                 document.getElementById('sessionModal').style.display = 'none';
                 this.editingSessionId = null;

@@ -19,6 +19,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 /**
  * Show the PWA install button when install is available
+ * Displays the install button and optional prompt banner
+ * 
+ * @returns {void}
+ * @side-effect Modifies DOM by showing install button and prompt banner
  */
 function showInstallButton() {
     const installBtn = document.getElementById('installButton');
@@ -37,6 +41,13 @@ function showInstallButton() {
 
 /**
  * Handle PWA install button click
+ * Triggers the browser's PWA installation prompt and handles user response
+ * 
+ * @returns {void}
+ * @side-effect Shows browser install prompt
+ * @side-effect Displays toast notification on success
+ * @side-effect Hides install UI on success
+ * @side-effect Clears deferredPrompt reference
  */
 function handleInstallClick() {
     if (!deferredPrompt) {
@@ -63,6 +74,10 @@ function handleInstallClick() {
 
 /**
  * Hide install UI after installation
+ * Removes install button and prompt banner from the UI
+ * 
+ * @returns {void}
+ * @side-effect Hides install button and prompt banner in DOM
  */
 function hideInstallUI() {
     const installBtn = document.getElementById('installButton');
@@ -78,7 +93,11 @@ function hideInstallUI() {
 
 /**
  * Show toast notification
- * @param {string} message - The message to display
+ * Displays a temporary toast message that auto-dismisses after 4 seconds
+ * 
+ * @param {string} message - The message to display in the toast
+ * @returns {void}
+ * @side-effect Displays toast element in DOM for 4 seconds
  */
 function showToast(message) {
     const toast = document.getElementById('toast');
@@ -103,6 +122,12 @@ let isMobileMenuOpen = false;
 
 /**
  * Toggle mobile sidebar menu
+ * Opens or closes the mobile navigation sidebar
+ * 
+ * @returns {void}
+ * @side-effect Updates isMobileMenuOpen state
+ * @side-effect Modifies sidebar display and body overflow
+ * @side-effect Adds/removes CSS classes on body element
  */
 function toggleMobileMenu() {
     const sidebar = document.getElementById('sidebar');
@@ -140,6 +165,13 @@ function toggleMobileMenu() {
 
 /**
  * Handle sidebar toggle button click
+ * On desktop: toggles sidebar collapse state
+ * On mobile: opens/closes mobile menu
+ * 
+ * @returns {void}
+ * @side-effect Saves collapsed state to localStorage (desktop only)
+ * @side-effect Calls toggleMobileMenu() on mobile
+ * @side-effect Toggles sidebar-collapsed class on body (desktop)
  */
 function handleSidebarToggle() {
     const body = document.body;
@@ -168,6 +200,11 @@ function handleSidebarToggle() {
 
 /**
  * Close mobile menu when clicking outside
+ * Detects clicks outside the sidebar and closes the mobile menu
+ * 
+ * @param {Event} event - The click event
+ * @returns {void}
+ * @side-effect Closes mobile menu if click is outside sidebar
  */
 function handleOutsideClick(event) {
     if (isMobileMenuOpen && window.innerWidth <= 768) {
@@ -184,6 +221,12 @@ function handleOutsideClick(event) {
 /**
  * Basic Client-Side Routing
  * Handles navigation between sections using hash-based routing
+ * Sets up click event listeners on all navigation links
+ * 
+ * @returns {void}
+ * @side-effect Attaches click event listeners to all nav links
+ * @side-effect Delegates section changes to window.app.showSection
+ * @side-effect Closes mobile menu after navigation on mobile
  */
 function initRouting() {
     // Get all nav links
@@ -208,6 +251,11 @@ function initRouting() {
 
 /**
  * Handle inventory tab filtering
+ * Sets up click handlers for inventory filter tabs
+ * 
+ * @returns {void}
+ * @side-effect Attaches click event listeners to inventory tab buttons
+ * @side-effect Delegates filter changes to window.app.setInventoryFilter
  */
 function initInventoryTabs() {
     const tabButtons = document.querySelectorAll('#inventoryTabs [data-filter]');
@@ -225,6 +273,11 @@ function initInventoryTabs() {
 
 /**
  * Handle modal open/close
+ * Sets up event listeners for closing modals on outside click or Escape key
+ * 
+ * @returns {void}
+ * @side-effect Attaches click event listeners to all modal elements
+ * @side-effect Attaches keydown listener to document for Escape key
  */
 function initModals() {
     // Close modal when clicking outside modal content
@@ -254,12 +307,28 @@ function initModals() {
  * Material add/remove handlers
  * These are placeholder stubs that hook into the main app
  */
+
+/**
+ * Handle adding material to current session
+ * Delegates to the main app's addMaterialToSession method
+ * 
+ * @returns {void}
+ * @side-effect Calls window.app.addMaterialToSession if available
+ */
 function handleMaterialAdd() {
     if (window.app && window.app.addMaterialToSession) {
         window.app.addMaterialToSession();
     }
 }
 
+/**
+ * Handle removing material from current session
+ * Delegates to the main app's removeMaterial method
+ * 
+ * @param {number} index - The index of the material to remove
+ * @returns {void}
+ * @side-effect Calls window.app.removeMaterial if available
+ */
 function handleMaterialRemove(index) {
     if (window.app && window.app.removeMaterial) {
         window.app.removeMaterial(index);
@@ -268,6 +337,13 @@ function handleMaterialRemove(index) {
 
 /**
  * Initialize all app functionality
+ * Main initialization function called on DOM ready
+ * Sets up all event listeners and initializes UI components
+ * 
+ * @returns {void}
+ * @side-effect Attaches multiple event listeners for PWA, sidebar, routing, etc.
+ * @side-effect Restores sidebar collapsed state from localStorage
+ * @side-effect Sets up window resize handler
  */
 function initApp() {
     console.log('🚀 Initializing InkManager Pro UI...');
@@ -399,6 +475,10 @@ if ('serviceWorker' in navigator) {
 
 /**
  * Show update notification when a new version is available
+ * Creates and displays a toast notification prompting user to reload
+ * 
+ * @returns {void}
+ * @side-effect Creates and appends update toast element to DOM
  */
 function showUpdateNotification() {
     const updateToast = document.createElement('div');
@@ -430,6 +510,10 @@ function showUpdateNotification() {
 
 /**
  * Dismiss the update notification
+ * Hides and removes the update notification toast
+ * 
+ * @returns {void}
+ * @side-effect Removes update toast from DOM after transition
  */
 function dismissUpdateNotification() {
     const updateToast = document.querySelector('.update-toast');
@@ -443,6 +527,11 @@ function dismissUpdateNotification() {
 
 /**
  * Reload the app to activate the new service worker
+ * Sends SKIP_WAITING message to service worker and reloads the page
+ * 
+ * @returns {void}
+ * @side-effect Sends message to service worker
+ * @side-effect Reloads the browser window
  */
 function reloadApp() {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
