@@ -309,6 +309,9 @@ export function scrollIntoView(elementId) {
     if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
+}
+
+/**
  * Handles UI components like migration banners
  */
 

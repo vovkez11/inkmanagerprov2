@@ -58,6 +58,11 @@ export function getItem(key, defaultValue = null) {
         return localStorage.getItem(key) || defaultValue;
     } catch (error) {
         console.error(`Error getting ${key}:`, error);
+        return defaultValue;
+    }
+}
+
+/**
  * InkManager Pro - Versioned Storage Module
  * Manages localStorage with version control and data migrations
  */
@@ -128,6 +133,11 @@ export function setItem(key, value) {
         return true;
     } catch (error) {
         console.error(`Error setting ${key}:`, error);
+        return false;
+    }
+}
+
+/**
  * Set data in localStorage with error handling
  * @param {string} key - The localStorage key
  * @param {*} value - The value to store (will be JSON stringified if not a string)
@@ -150,6 +160,16 @@ function setData(key, value) {
  * @returns {boolean} Success status
  */
 export function removeItem(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        console.error(`Error removing ${key}:`, error);
+        return false;
+    }
+}
+
+/**
  * Remove data from localStorage
  * @param {string} key - The localStorage key to remove
  * @returns {boolean} True if successful, false otherwise
@@ -285,6 +305,8 @@ export function importAllData(data) {
 
 // Export storage keys for use in other modules
 export { STORAGE_KEYS };
+
+/**
  * Migration registry
  * Each migration should have:
  * - version: target version number
