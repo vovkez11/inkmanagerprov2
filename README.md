@@ -12,7 +12,7 @@
 - 📱 **Progressive Web App** - Install on any device and work offline
 - 📊 **Analytics & Reports** - Track revenue, sessions, and client retention
 - 💾 **Data Export & Backup** - Export your data anytime
-- 🎨 **Modern UI** - Beautiful dark theme with smooth animations
+- 🎨 **Customizable Themes** - Choose from Dark, Light, and Accent themes (NEW!)
 
 ## PWA Features (New!)
 - 📲 **Install Prompt** - Get prompted to install the app on your device
@@ -38,6 +38,64 @@
 5. Click "Test Notifications" to verify everything works
 6. Save settings
 
+## Theming (NEW!)
+
+InkManager Pro V2 now supports multiple themes to customize your experience. Choose from three professionally designed themes with full accessibility support.
+
+### Available Themes
+
+- **🌙 Dark Theme** (Default) - Professional dark interface optimized for low-light environments
+- **☀️ Light Theme** - Clean light interface with high contrast for bright environments
+- **🎨 Accent Theme** - Vibrant cyan/orange accent theme with enhanced visual appeal
+
+### How to Change Themes
+
+1. Navigate to **Settings** in the app
+2. Under **Appearance**, select your preferred theme from the dropdown
+3. The theme applies instantly (no reload required)
+4. Click "Save Settings" to persist your choice
+
+### Theme Customization
+
+All themes are built using CSS custom properties for easy customization. You can add your own theme by:
+
+1. Open `index.html` in a text editor
+2. Add a new theme block in the `<style>` section:
+
+```css
+[data-theme="your-theme-name"] {
+    --color-bg: #yourBackgroundColor;
+    --color-bg-darker: #yourDarkerBackground;
+    --color-bg-elevated: #yourElevatedBackground;
+    --color-text: #yourTextColor;
+    --color-text-muted: rgba(r, g, b, 0.6);
+    --color-border: #yourBorderColor;
+    --color-accent: #yourAccentColor;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+}
+```
+
+3. Add your theme option to the Settings dropdown:
+
+```html
+<option value="your-theme-name" data-i18n="your_theme">Your Theme Name</option>
+```
+
+4. Update the `applyTheme()` function to include your theme's meta color:
+
+```javascript
+const themeColors = {
+    'dark': '#00bcd4',
+    'light': '#007a8a',
+    'accent': '#ff9800',
+    'your-theme-name': '#yourMetaColor'
+};
+```
+
+### Accessibility
+
+All built-in themes meet WCAG AA accessibility standards with contrast ratios ≥4.5:1 for body text. When creating custom themes, ensure sufficient contrast between text and background colors for readability.
+
 ## Mobile Experience
 - 🍔 **Hamburger Menu** - Easy navigation on mobile devices
 - 📱 **Touch-Optimized** - All buttons and interactions are touch-friendly
@@ -51,13 +109,15 @@
 - **Web Notifications API** - Browser-native notification support
 - **Vanilla JavaScript** - No framework dependencies, lightweight and fast
 - **PWA Manifest** - Installable on iOS, Android, and Desktop
+- **CSS Custom Properties** - Dynamic theming with CSS variables
 
 ## Getting Started
 1. Open the app in a modern browser (Chrome, Firefox, Safari, Edge)
 2. Click the "Install App" button when prompted (or use browser's install option)
-3. Enable notifications in Settings for session reminders
-4. Start adding clients, sessions, and inventory items
-5. Export your data regularly for backup
+3. Choose your preferred theme in Settings
+4. Enable notifications in Settings for session reminders
+5. Start adding clients, sessions, and inventory items
+6. Export your data regularly for backup
 
 ## Privacy
 This app stores all data locally on your device. **No data is sent to servers or third parties.** Your client information and business data remain completely private. Notifications are generated locally by your browser.
