@@ -59,45 +59,58 @@
             border-radius: 4px;
             overflow-x: auto;
         }
+        
+        /* Enhanced focus states for accessibility */
+        button:focus,
+        input:focus {
+            outline: 3px solid #00bcd4;
+            outline-offset: 2px;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
+    <main role="main">
     <h1>🔔 InkManager Pro - Notification Testing</h1>
     
-    <div class="test-section">
-        <h2>1. Browser Support Check</h2>
-        <div id="supportStatus"></div>
-        <button onclick="checkSupport()">Check Browser Support</button>
-    </div>
+    <section class="test-section" aria-labelledby="support-check-title">
+        <h2 id="support-check-title">1. Browser Support Check</h2>
+        <div id="supportStatus" role="status" aria-live="polite"></div>
+        <button onclick="checkSupport()" aria-describedby="support-check-title">Check Browser Support</button>
+    </section>
 
-    <div class="test-section">
-        <h2>2. Request Permission</h2>
-        <div id="permissionStatus"></div>
-        <button onclick="requestPermission()">Request Notification Permission</button>
-    </div>
+    <section class="test-section" aria-labelledby="permission-title">
+        <h2 id="permission-title">2. Request Permission</h2>
+        <div id="permissionStatus" role="status" aria-live="polite"></div>
+        <button onclick="requestPermission()" aria-describedby="permission-title">Request Notification Permission</button>
+    </section>
 
-    <div class="test-section">
-        <h2>3. Test Basic Notification</h2>
-        <button onclick="sendBasicNotification()">Send Basic Notification</button>
-    </div>
+    <section class="test-section" aria-labelledby="basic-notification-title">
+        <h2 id="basic-notification-title">3. Test Basic Notification</h2>
+        <button onclick="sendBasicNotification()" aria-describedby="basic-notification-title">Send Basic Notification</button>
+    </section>
 
-    <div class="test-section">
-        <h2>4. Test Service Worker Notification</h2>
-        <div id="swStatus"></div>
-        <button onclick="registerServiceWorker()">Register Service Worker</button>
-        <button onclick="sendSWNotification()">Send Service Worker Notification</button>
-    </div>
+    <section class="test-section" aria-labelledby="sw-notification-title">
+        <h2 id="sw-notification-title">4. Test Service Worker Notification</h2>
+        <div id="swStatus" role="status" aria-live="polite"></div>
+        <button onclick="registerServiceWorker()" aria-describedby="sw-notification-title">Register Service Worker</button>
+        <button onclick="sendSWNotification()" aria-describedby="sw-notification-title">Send Service Worker Notification</button>
+    </section>
 
-    <div class="test-section">
-        <h2>5. Test Session Notification (Simulated)</h2>
-        <label>Hours until session: <input type="number" id="hoursUntil" value="2" min="0" max="24" step="0.5"></label><br><br>
-        <button onclick="sendSessionNotification()">Send Session Notification</button>
-    </div>
+    <section class="test-section" aria-labelledby="session-notification-title">
+        <h2 id="session-notification-title">5. Test Session Notification (Simulated)</h2>
+        <label for="hoursUntil">Hours until session: <input type="number" id="hoursUntil" value="2" min="0" max="24" step="0.5" aria-label="Hours until session"></label><br><br>
+        <button onclick="sendSessionNotification()" aria-describedby="session-notification-title">Send Session Notification</button>
+    </section>
 
-    <div class="test-section">
-        <h2>Test Results</h2>
-        <div id="results"></div>
-    </div>
+    <section class="test-section" aria-labelledby="test-results-title">
+        <h2 id="test-results-title">Test Results</h2>
+        <div id="results" role="log" aria-live="polite"></div>
+    </section>
 
     <script>
         let swRegistration = null;
@@ -305,5 +318,6 @@
             log('Test page loaded', 'success');
         });
     </script>
+    </main>
 </body>
 </html>

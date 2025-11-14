@@ -107,26 +107,34 @@
             color: var(--primary);
             font-weight: bold;
         }
+
+        /* Enhanced focus states for accessibility */
+        button:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
+    <main role="main">
     <div class="offline-container">
-        <div class="offline-icon">📡</div>
+        <div class="offline-icon" aria-hidden="true">📡</div>
         <h1>You're Offline</h1>
         <p>It looks like you've lost your internet connection. Don't worry, your data is safe and stored locally.</p>
-        <button class="retry-btn" onclick="window.location.reload()">
+        <button class="retry-btn" onclick="window.location.reload()" aria-label="Reload page to try again">
             🔄 Try Again
         </button>
         
-        <div class="offline-features">
-            <h3>When you're back online:</h3>
+        <aside class="offline-features" aria-labelledby="offline-features-title">
+            <h3 id="offline-features-title">When you're back online:</h3>
             <ul>
                 <li>Access all your client data</li>
                 <li>View and manage sessions</li>
                 <li>Track inventory</li>
                 <li>Generate reports</li>
             </ul>
-        </div>
+        </aside>
     </div>
+    </main>
 </body>
 </html>
