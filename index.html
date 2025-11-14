@@ -5104,35 +5104,55 @@ body.sidebar-collapsed .app-container {
 
             exportData(type) {
                 let data, filename;
+                const now = new Date();
+                const dateStamp = now.getFullYear() + 
+                    String(now.getMonth() + 1).padStart(2, '0') + 
+                    String(now.getDate()).padStart(2, '0');
                 
                 switch(type) {
                     case 'all':
+                        // Gather all app data including settings
                         data = {
+                            // Core data
                             clients: this.clients,
                             sessions: this.sessions,
                             inventory: this.inventory,
-                            exportDate: new Date().toISOString(),
-                            version: 'InkManager Pro Complete Version',
-                            statistics: {
-                                totalClients: this.clients.length,
-                                totalSessions: this.sessions.length,
-                                totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
-                                totalInventory: this.inventory.length
-                            }
+                            
+                            // Settings
+                            settings: {
+                                theme: localStorage.getItem('inkmanager_theme'),
+                                language: localStorage.getItem('inkmanager_language'),
+                                studioName: localStorage.getItem('inkmanager_studioName'),
+                                currency: localStorage.getItem('inkmanager_currency'),
+                                defaultDuration: localStorage.getItem('inkmanager_defaultDuration'),
+                                lowStockThreshold: localStorage.getItem('inkmanager_lowStockThreshold'),
+                                autoDeduct: localStorage.getItem('inkmanager_autoDeduct'),
+                                notifications: localStorage.getItem('inkmanager_notifications'),
+                                reminderTime: localStorage.getItem('inkmanager_reminderTime'),
+                                autoSave: localStorage.getItem('inkmanager_autoSave'),
+                                sidebarCollapsed: localStorage.getItem('inkmanager_sidebarCollapsed'),
+                                inventoryFilter: localStorage.getItem('inkmanager_inventoryFilter'),
+                                inventorySort: localStorage.getItem('inkmanager_inventorySort')
+                            },
+                            
+                            // Metadata
+                            exportDate: now.toISOString(),
+                            version: 'InkManager Pro V2',
+                            appVersion: '2.0.0'
                         };
-                        filename = 'inkmanager-pro-complete-backup.json';
+                        filename = `inkmanager-backup-${dateStamp}.json`;
                         break;
                     case 'clients':
                         data = this.clients;
-                        filename = 'inkmanager-pro-clients.json';
+                        filename = `inkmanager-clients-${dateStamp}.json`;
                         break;
                     case 'sessions':
                         data = this.sessions;
-                        filename = 'inkmanager-pro-sessions.json';
+                        filename = `inkmanager-sessions-${dateStamp}.json`;
                         break;
                     case 'inventory':
                         data = this.inventory;
-                        filename = 'inkmanager-pro-inventory.json';
+                        filename = `inkmanager-inventory-${dateStamp}.json`;
                         break;
                 }
                 
@@ -5324,29 +5344,181 @@ body.sidebar-collapsed .app-container {
                         try {
                             const data = JSON.parse(event.target.result);
                             
-                            // Validate data structure
-                            if (data.clients || data.sessions || data.inventory) {
-                                if (confirm('Import data? This will overwrite existing data.')) {
-                                    if (data.clients) this.clients = data.clients;
-                                    if (data.sessions) this.sessions = data.sessions;
-                                    if (data.inventory) this.inventory = data.inventory;
-                                    
-                                    this.safeSaveData(true);
-                                    this.refreshAll();
-                                    this.showNotification('✅ Data imported successfully!');
-                                }
+                            // Comprehensive validation
+                            const validationResult = this.validateImportData(data);
+                            
+                            if (!validationResult.valid) {
+                                this.showNotification(`❌ ${validationResult.error}`);
+                                return;
+                            }
+                            
+                            // Show detailed confirmation dialog
+                            const hasExistingData = this.clients.length > 0 || 
+                                                   this.sessions.length > 0 || 
+                                                   this.inventory.length > 0;
+                            
+                            let confirmMessage = '⚠️ Import Backup Data?\n\n';
+                            
+                            if (hasExistingData) {
+                                confirmMessage += '⚠️ WARNING: This will OVERWRITE your existing data!\n\n';
+                                confirmMessage += '📊 Current Data:\n';
+                                confirmMessage += `  • Clients: ${this.clients.length}\n`;
+                                confirmMessage += `  • Sessions: ${this.sessions.length}\n`;
+                                confirmMessage += `  • Inventory: ${this.inventory.length}\n\n`;
+                                confirmMessage += '📥 Import Data:\n';
+                                confirmMessage += `  • Clients: ${data.clients?.length || 0}\n`;
+                                confirmMessage += `  • Sessions: ${data.sessions?.length || 0}\n`;
+                                confirmMessage += `  • Inventory: ${data.inventory?.length || 0}\n\n`;
+                                confirmMessage += '💡 RECOMMENDATION: Export your current data as backup before proceeding!\n\n';
+                                confirmMessage += 'Continue with import?';
                             } else {
-                                this.showNotification('⚠️ Invalid data format');
+                                confirmMessage += '📥 Import Data:\n';
+                                confirmMessage += `  • Clients: ${data.clients?.length || 0}\n`;
+                                confirmMessage += `  • Sessions: ${data.sessions?.length || 0}\n`;
+                                confirmMessage += `  • Inventory: ${data.inventory?.length || 0}\n\n`;
+                                confirmMessage += 'Continue with import?';
+                            }
+                            
+                            if (confirm(confirmMessage)) {
+                                // Import core data
+                                if (data.clients && Array.isArray(data.clients)) {
+                                    this.clients = data.clients;
+                                }
+                                if (data.sessions && Array.isArray(data.sessions)) {
+                                    this.sessions = data.sessions;
+                                }
+                                if (data.inventory && Array.isArray(data.inventory)) {
+                                    this.inventory = data.inventory;
+                                }
+                                
+                                // Import settings if available
+                                if (data.settings && typeof data.settings === 'object') {
+                                    const settings = data.settings;
+                                    
+                                    if (settings.theme) localStorage.setItem('inkmanager_theme', settings.theme);
+                                    if (settings.language) localStorage.setItem('inkmanager_language', settings.language);
+                                    if (settings.studioName) localStorage.setItem('inkmanager_studioName', settings.studioName);
+                                    if (settings.currency) localStorage.setItem('inkmanager_currency', settings.currency);
+                                    if (settings.defaultDuration) localStorage.setItem('inkmanager_defaultDuration', settings.defaultDuration);
+                                    if (settings.lowStockThreshold) localStorage.setItem('inkmanager_lowStockThreshold', settings.lowStockThreshold);
+                                    if (settings.autoDeduct !== null) localStorage.setItem('inkmanager_autoDeduct', settings.autoDeduct);
+                                    if (settings.notifications !== null) localStorage.setItem('inkmanager_notifications', settings.notifications);
+                                    if (settings.reminderTime) localStorage.setItem('inkmanager_reminderTime', settings.reminderTime);
+                                    if (settings.autoSave !== null) localStorage.setItem('inkmanager_autoSave', settings.autoSave);
+                                    if (settings.sidebarCollapsed !== null) localStorage.setItem('inkmanager_sidebarCollapsed', settings.sidebarCollapsed);
+                                    if (settings.inventoryFilter) localStorage.setItem('inkmanager_inventoryFilter', settings.inventoryFilter);
+                                    if (settings.inventorySort) localStorage.setItem('inkmanager_inventorySort', settings.inventorySort);
+                                }
+                                
+                                // Save data and refresh
+                                this.safeSaveData(true);
+                                this.showNotification('✅ Data imported successfully! Reloading...');
+                                
+                                // Reload the app state
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
                             }
                         } catch (error) {
                             console.error('Import error:', error);
-                            this.showNotification('❌ Failed to import data');
+                            if (error instanceof SyntaxError) {
+                                this.showNotification('❌ Invalid JSON file. Please select a valid backup file.');
+                            } else {
+                                this.showNotification('❌ Failed to import data. Please check the file format.');
+                            }
                         }
                     };
                     reader.readAsText(file);
                 };
                 
                 input.click();
+            }
+            
+            validateImportData(data) {
+                // Check if data is an object
+                if (!data || typeof data !== 'object') {
+                    return {
+                        valid: false,
+                        error: 'Invalid file format. Backup file must contain a JSON object.'
+                    };
+                }
+                
+                // Check for required keys (at least one data type should be present)
+                const hasClients = data.hasOwnProperty('clients');
+                const hasSessions = data.hasOwnProperty('sessions');
+                const hasInventory = data.hasOwnProperty('inventory');
+                
+                if (!hasClients && !hasSessions && !hasInventory) {
+                    return {
+                        valid: false,
+                        error: 'Invalid backup file. Must contain at least clients, sessions, or inventory data.'
+                    };
+                }
+                
+                // Validate data types
+                if (hasClients && !Array.isArray(data.clients)) {
+                    return {
+                        valid: false,
+                        error: 'Invalid backup file. Clients data must be an array.'
+                    };
+                }
+                
+                if (hasSessions && !Array.isArray(data.sessions)) {
+                    return {
+                        valid: false,
+                        error: 'Invalid backup file. Sessions data must be an array.'
+                    };
+                }
+                
+                if (hasInventory && !Array.isArray(data.inventory)) {
+                    return {
+                        valid: false,
+                        error: 'Invalid backup file. Inventory data must be an array.'
+                    };
+                }
+                
+                // Validate settings if present
+                if (data.settings && typeof data.settings !== 'object') {
+                    return {
+                        valid: false,
+                        error: 'Invalid backup file. Settings must be an object.'
+                    };
+                }
+                
+                // Basic structure validation for clients
+                if (hasClients && data.clients.length > 0) {
+                    const sampleClient = data.clients[0];
+                    if (!sampleClient.id || !sampleClient.name) {
+                        return {
+                            valid: false,
+                            error: 'Invalid clients data. Each client must have an id and name.'
+                        };
+                    }
+                }
+                
+                // Basic structure validation for sessions
+                if (hasSessions && data.sessions.length > 0) {
+                    const sampleSession = data.sessions[0];
+                    if (!sampleSession.id) {
+                        return {
+                            valid: false,
+                            error: 'Invalid sessions data. Each session must have an id.'
+                        };
+                    }
+                }
+                
+                // Basic structure validation for inventory
+                if (hasInventory && data.inventory.length > 0) {
+                    const sampleItem = data.inventory[0];
+                    if (!sampleItem.id || !sampleItem.name) {
+                        return {
+                            valid: false,
+                            error: 'Invalid inventory data. Each item must have an id and name.'
+                        };
+                    }
+                }
+                
+                return { valid: true };
             }
 
             confirmClearData() {
