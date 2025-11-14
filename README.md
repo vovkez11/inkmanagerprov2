@@ -208,6 +208,41 @@ If you encounter an accessibility barrier, please [open an issue](https://github
 - Browser and assistive technology used
 - Suggested improvement (if applicable)
 
+## Troubleshooting
+
+### App appears frozen or won't load
+If the app appears frozen or doesn't load properly:
+
+1. **Clear browser cache and reload:**
+   - Chrome/Edge: Press `Ctrl+Shift+Delete` (or `Cmd+Shift+Delete` on Mac), select "Cached images and files", then click "Clear data"
+   - Firefox: Press `Ctrl+Shift+Delete`, select "Cache", then click "Clear Now"
+   - Safari: Go to Preferences > Privacy > Manage Website Data, search for the site, and click "Remove"
+
+2. **Unregister the service worker:**
+   - Open browser DevTools (F12)
+   - Go to Application > Service Workers (Chrome/Edge) or Storage > Service Workers (Firefox)
+   - Click "Unregister" next to InkManager Pro
+   - Reload the page
+
+3. **Try incognito/private mode:**
+   - This helps determine if the issue is cache-related
+
+4. **Check browser console for errors:**
+   - Open DevTools (F12) and check the Console tab for any error messages
+
+5. **Verify you're using a supported browser:**
+   - Chrome 90+, Edge 90+, Firefox 88+, Safari 14+
+
+### Data not saving
+- Ensure your browser allows localStorage
+- Check that you're not in private/incognito mode (data won't persist)
+- Verify you have sufficient storage space
+
+### Notifications not working
+- Allow notification permissions when prompted
+- Check browser notification settings
+- Test notifications using the "Test Notifications" button in Settings
+
 ## Support
 For issues or feature requests, please open an issue on GitHub.
 
