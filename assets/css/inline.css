@@ -1737,3 +1737,39 @@ body.sidebar-collapsed .app-container {
             font-size: 16px; /* Prevents zoom on iOS */
         }
     }
+
+
+/* Auto-generated classes from inline styles */
+.inline-style-1 { margin-bottom: 30px; }
+.inline-style-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.inline-style-3 { display: block; margin-top: 8px; color: rgba(255,255,255,0.6); }
+.inline-style-4 { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.inline-style-5 { width: auto; min-height: auto; }
+.inline-style-6 { display: flex; gap: 12px; margin-top: 25px; }
+.inline-style-7 { flex: 1; }
+.inline-style-8 { flex: 2; }
+.inline-style-9 { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+.inline-style-10 { display: flex; gap: 8px; align-items: center; margin: 6px 0 14px; flex-wrap: wrap; }
+.inline-style-11 { opacity:0.8; }
+.inline-style-12 { max-width: 180px; }
+.inline-style-13 { display:none; align-items:center; justify-content:space-between; gap:12px; background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.inline-style-14 { font-weight:600; }
+.inline-style-15 { display:flex; gap:10px; flex-wrap: wrap; align-items:center; }
+.inline-style-16 { display:flex; align-items:center; gap:6px; }
+.inline-style-17 { opacity:0.7; font-size:0.85rem; }
+.inline-style-18 { max-width: 160px; }
+.inline-style-19 { color: var(--primary); font-weight: 700; font-size: 1.3em; }
+.inline-style-20 { margin: 25px 0; }
+.inline-style-21 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+.inline-style-22 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+.inline-style-23 { margin-bottom: 20px; padding: 20px; background: rgba(0,188,212,0.1); border-radius: 12px; border: 1px solid rgba(0,188,212,0.3); }
+.inline-style-24 { margin: 10px 0; color: rgba(255,255,255,0.8); }
+.inline-style-25 { margin: 10px 0; font-size: 0.9em; color: rgba(255,255,255,0.6); }
+.inline-style-26 { display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px; }
+.inline-style-27 { font-weight: 600; font-size: 1em; }
+.inline-style-28 { display: flex; gap: 12px; }
+.inline-style-29 { color: var(--primary); margin-bottom: 15px; }
+.inline-style-30 { min-height: 50px; }
+.inline-style-31 { width: 100%; padding: 16px; font-size: 1.1em; }
+.inline-style-32 { margin: 5px 0 0; font-size: 0.9em; }
+.inline-style-33 { display: flex; gap: 10px; }

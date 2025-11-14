@@ -7,7 +7,7 @@
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">    
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
 
     
     <!-- PWA -->
@@ -240,7 +240,7 @@
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
-                <div id="inventoryTabs" style="display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px;">
+                <div id="inventoryTabs" class="inline-style-9">
                     <button class="btn btn-primary" data-filter="all"><span data-i18n="all">All</span></button>
                     <button class="btn btn-outline" data-filter="needle"><span data-i18n="needle">Needle</span></button>
                     <button class="btn btn-outline" data-filter="ink"><span data-i18n="ink">Ink</span></button>
@@ -250,9 +250,9 @@
                     <button class="btn btn-outline" data-filter="safety"><span data-i18n="safety">Safety</span></button>
                 </div>
 
-                <div id="inventorySortBar" style="display: flex; gap: 8px; align-items: center; margin: 6px 0 14px; flex-wrap: wrap;">
-                    <span style="opacity:0.8;">Sort by:</span>
-                    <select class="form-control" id="inventorySortKey" style="max-width: 180px;">
+                <div id="inventorySortBar" class="inline-style-10">
+                    <span class="inline-style-11">Sort by:</span>
+                    <select class="form-control" id="inventorySortKey" class="inline-style-12">
                         <option value="name">Name</option>
                         <option value="type">Type</option>
                         <option value="qty">Quantity</option>
@@ -263,12 +263,12 @@
                     <button class="btn btn-outline" id="inventoryClearSelectionBtn">Clear</button>
                 </div>
 
-                <div id="inventoryBulkActions" style="display:none; align-items:center; justify-content:space-between; gap:12px; background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-                    <div style="font-weight:600;"><span id="inventorySelectedCount">0</span> selected</div>
-                    <div style="display:flex; gap:10px; flex-wrap: wrap; align-items:center;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <label for="inventoryBulkTypeSelect" style="opacity:0.7; font-size:0.85rem;" data-i18n="type">Type</label>
-                            <select class="form-control" id="inventoryBulkTypeSelect" style="max-width: 160px;">
+                <div id="inventoryBulkActions" class="inline-style-13">
+                    <div class="inline-style-14"><span id="inventorySelectedCount">0</span> selected</div>
+                    <div class="inline-style-15">
+                        <div class="inline-style-16">
+                            <label for="inventoryBulkTypeSelect" class="inline-style-17" data-i18n="type">Type</label>
+                            <select class="form-control" id="inventoryBulkTypeSelect" class="inline-style-18">
                                 <option value="">--</option>
                                 <option value="needle" data-i18n="needle">Needle</option>
                                 <option value="ink" data-i18n="ink">Ink</option>
@@ -315,7 +315,7 @@
                     <button class="btn btn-outline" id="prevMonthBtn">
                         <i class="fas fa-chevron-left"></i> <span data-i18n="previous">Previous</span>
                     </button>
-                    <h3 id="calendarMonth" style="color: var(--primary); font-weight: 700; font-size: 1.3em;"></h3>
+                    <h3 id="calendarMonth" class="inline-style-19"></h3>
                     <button class="btn btn-outline" id="nextMonthBtn">
                         <span data-i18n="next">Next</span> <i class="fas fa-chevron-right"></i>
                     </button>
@@ -355,9 +355,9 @@
                     </div>
                 </div>
 
-                <div style="margin: 25px 0;">
+                <div class="inline-style-20">
                     <h3 class="card-title"><i class="fas fa-download"></i> <span data-i18n="data_export">Data Export</span></h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div class="inline-style-21">
                         <button class="btn btn-success" id="exportAllBtn1"><i class="fas fa-database"></i> <span data-i18n="full_backup">Full Backup</span>
                         </button>
                         <button class="btn btn-outline" id="exportClientsBtn"><i class="fas fa-users"></i> <span data-i18n="export_clients">Export Clients</span>
@@ -381,7 +381,7 @@
                 </div>
 
                 <!-- Appearance Settings -->
-                <div style="margin-bottom: 30px;">
+                <div class="inline-style-1">
                     <h3 class="card-title"><i class="fas fa-palette"></i> <span data-i18n="appearance">Appearance</span></h3>
                     
                     <div class="form-group">
@@ -405,7 +405,7 @@
                 </div>
 
                 <!-- Business Settings -->
-                <div style="margin-bottom: 30px;">
+                <div class="inline-style-1">
                     <h3 class="card-title"><i class="fas fa-briefcase"></i> <span data-i18n="business_settings">Business Settings</span></h3>
                     
                     <div class="form-group">
@@ -433,39 +433,39 @@
                 </div>
 
                 <!-- Inventory Settings -->
-                <div style="margin-bottom: 30px;">
+                <div class="inline-style-1">
                     <h3 class="card-title"><i class="fas fa-boxes"></i> <span data-i18n="inventory_settings">Inventory Settings</span></h3>
                     
                     <div class="form-group">
                         <label class="form-label" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
                         <input type="number" class="form-control" id="settingsLowStockThreshold" min="0" value="5">
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
+                        <small class="inline-style-3" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
                     </div>
 
                     <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsAutoDeduct" style="width: auto; min-height: auto;">
+                        <label class="inline-style-4">
+                            <input type="checkbox" id="settingsAutoDeduct" class="inline-style-5">
                             <span data-i18n="auto_deduct_materials">Auto-deduct materials after sessions</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Notifications Settings -->
-                <div style="margin-bottom: 30px;">
+                <div class="inline-style-1">
                     <h3 class="card-title"><i class="fas fa-bell"></i> <span data-i18n="notifications">Notifications</span></h3>
                     
                     <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsNotifications" style="width: auto; min-height: auto;" checked>
+                        <label class="inline-style-4">
+                            <input type="checkbox" id="settingsNotifications" class="inline-style-5" checked>
                             <span data-i18n="enable_notifications">Enable notifications</span>
                         </label>
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="notifications_help">Get notified about upcoming sessions</small>
+                        <small class="inline-style-3" data-i18n="notifications_help">Get notified about upcoming sessions</small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" data-i18n="session_reminder">Session Reminder (hours before)</label>
                         <input type="number" class="form-control" id="settingsReminderTime" min="0" max="48" value="2">
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="reminder_help">You'll be notified this many hours before a session starts</small>
+                        <small class="inline-style-3" data-i18n="reminder_help">You'll be notified this many hours before a session starts</small>
                     </div>
 
                     <div class="form-group">
@@ -475,18 +475,18 @@
                 </div>
 
                 <!-- Data Management -->
-                <div style="margin-bottom: 30px;">
+                <div class="inline-style-1">
                     <h3 class="card-title"><i class="fas fa-database"></i> <span data-i18n="data_management">Data Management</span></h3>
                     
                     <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsAutoSave" style="width: auto; min-height: auto;" checked>
+                        <label class="inline-style-4">
+                            <input type="checkbox" id="settingsAutoSave" class="inline-style-5" checked>
                             <span data-i18n="auto_save">Auto-save changes</span>
                         </label>
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="auto_save_help">Changes are saved automatically to your browser</small>
+                        <small class="inline-style-3" data-i18n="auto_save_help">Changes are saved automatically to your browser</small>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div class="inline-style-22">
                         <button class="btn btn-success" id="exportAllBtn2"><i class="fas fa-download"></i> <span data-i18n="backup_all_data">Backup All Data</span>
                         </button>
                         <button class="btn btn-outline" id="importDataBtn"><i class="fas fa-upload"></i> <span data-i18n="import_data">Import Data</span>
@@ -497,19 +497,19 @@
                 </div>
 
                 <!-- About -->
-                <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,188,212,0.1); border-radius: 12px; border: 1px solid rgba(0,188,212,0.3);">
+                <div class="inline-style-23">
                     <h3 class="card-title"><i class="fas fa-info-circle"></i> <span data-i18n="about">About</span></h3>
-                    <p style="margin: 10px 0; color: rgba(255,255,255,0.8);">
+                    <p class="inline-style-24">
                         <strong>InkManager Pro</strong> v2.0<br>
                         <span data-i18n="about_description">Professional Tattoo Studio Management System</span>
                     </p>
-                    <p style="margin: 10px 0; font-size: 0.9em; color: rgba(255,255,255,0.6);">
+                    <p class="inline-style-25">
                         <span data-i18n="made_with">Made with</span> ❤️ <span data-i18n="for_artists">for tattoo artists worldwide</span>
                     </p>
                 </div>
 
                 <!-- Save Settings Button -->
-                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
+                <div class="inline-style-26">
                     <button class="btn btn-outline" id="resetSettingsBtn"><i class="fas fa-undo"></i> <span data-i18n="reset_defaults">Reset to Defaults</span>
                     </button>
                     <button class="btn btn-primary" id="saveSettingsBtn"><i class="fas fa-save"></i> <span data-i18n="save_settings">Save Settings</span>
@@ -524,8 +524,8 @@
 
     <!-- Install Prompt -->
     <div class="install-prompt" id="installPrompt">
-        <span style="font-weight: 600; font-size: 1em;" data-i18n="install_prompt">Install InkManager Pro for the ultimate experience?</span>
-        <div style="display: flex; gap: 12px;">
+        <span class="inline-style-27" data-i18n="install_prompt">Install InkManager Pro for the ultimate experience?</span>
+        <div class="inline-style-28">
             <button class="btn btn-success" id="installConfirmBtn">
                 <i class="fas fa-download"></i> <span data-i18n="install_now">Install Now</span>
             </button>
@@ -550,7 +550,7 @@
                     <input type="text" class="form-control" id="clientName" placeholder="John Smith" data-i18n-placeholder="name_placeholder" required>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="inline-style-2">
                     <div class="form-group">
                         <label class="form-label" data-i18n="phone_number">Phone Number</label>
                         <input type="tel" class="form-control" id="clientPhone" placeholder="+1 (555) 123-4567" data-i18n-placeholder="phone_placeholder">
@@ -562,7 +562,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="inline-style-2">
                     <div class="form-group">
                         <label class="form-label" data-i18n="birth_date">Birth Date</label>
                         <input type="date" class="form-control" id="clientBirthDate">
@@ -594,11 +594,11 @@
                               data-i18n-placeholder="notes_placeholder" rows="4"></textarea>
                 </div>
 
-                <div style="display: flex; gap: 12px; margin-top: 25px;">
-                    <button type="button" class="btn btn-outline" id="cancelClientBtn" style="flex: 1;">
+                <div class="inline-style-6">
+                    <button type="button" class="btn btn-outline" id="cancelClientBtn" class="inline-style-7">
                         <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveClientBtn" style="flex: 2;">
+                    <button type="submit" class="btn btn-primary" id="saveClientBtn" class="inline-style-8">
                         <i class="fas fa-save"></i> <span data-i18n="save_client">Save Client</span>
                     </button>
                 </div>
@@ -634,7 +634,7 @@
                     <input type="datetime-local" class="form-control" id="sessionDateTime" required>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="inline-style-2">
                     <div class="form-group">
                         <label class="form-label" data-i18n="duration_hours">Duration (hours)</label>
                         <input type="number" class="form-control" id="sessionDuration" 
@@ -650,7 +650,7 @@
 
                 <!-- Materials Used Section -->
                 <div class="materials-section">
-                    <h4 style="color: var(--primary); margin-bottom: 15px;">
+                    <h4 class="inline-style-29">
                         <i class="fas fa-syringe"></i> <span data-i18n="materials_used">Materials Used</span>
                     </h4>
                     
@@ -666,7 +666,7 @@
                             <input type="number" class="form-control material-qty" id="materialQty" 
                                    min="1" value="1" placeholder="Qty">
                         </div>
-                        <button type="button" class="btn btn-primary" id="addMaterialBtn" style="min-height: 50px;">
+                        <button type="button" class="btn btn-primary" id="addMaterialBtn" class="inline-style-30">
                             <i class="fas fa-plus"></i> <span data-i18n="add">Add</span>
                         </button>
                     </div>
@@ -683,7 +683,7 @@
                               data-i18n-placeholder="session_notes_placeholder" rows="4"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1em;">
+                <button type="submit" class="btn btn-primary" class="inline-style-31">
                     <i class="fas fa-save"></i> <span data-i18n="save_session">Save Session</span>
                 </button>
             </form>
@@ -706,7 +706,7 @@
                            placeholder="Round Liner 5RL, Eternal Ink Black, Disposable Grips..." data-i18n-placeholder="item_name_placeholder" required>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="inline-style-2">
                     <div class="form-group">
                         <label class="form-label" data-i18n="type">Type *</label>
                         <select class="form-control" id="itemType" required>
@@ -727,7 +727,7 @@
                     </div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="inline-style-2">
                     <div class="form-group">
                         <label class="form-label" data-i18n="low_stock_alert">Low Stock Alert</label>
                         <input type="number" class="form-control" id="itemAlert" 
@@ -748,11 +748,11 @@
                               data-i18n-placeholder="supplier_notes_placeholder" rows="3"></textarea>
                 </div>
                 
-                <div style="display: flex; gap: 12px; margin-top: 25px;">
-                    <button type="button" class="btn btn-outline" id="cancelInventoryBtn" style="flex: 1;">
+                <div class="inline-style-6">
+                    <button type="button" class="btn btn-outline" id="cancelInventoryBtn" class="inline-style-7">
                         <span data-i18n="cancel">Cancel</span>
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveInventoryBtn" style="flex: 2;">
+                    <button type="submit" class="btn btn-primary" id="saveInventoryBtn" class="inline-style-8">
                         <i class="fas fa-save"></i> <span data-i18n="save_item">Save Item</span>
                     </button>
                 </div>
@@ -775,9 +775,9 @@
     <div class="install-prompt">
         <div>
             <strong>📱 Install InkManager Pro</strong>
-            <p style="margin: 5px 0 0; font-size: 0.9em;">Get quick access and work offline</p>
+            <p class="inline-style-32">Get quick access and work offline</p>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div class="inline-style-33">
             <button class="btn btn-outline">
                 Later
             </button>
