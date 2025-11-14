@@ -3,8 +3,8 @@
  * Provides offline functionality and caching for PWA
  */
 
-const CACHE_NAME = 'inkmanager-pro-v2.1';
-const RUNTIME_CACHE = 'inkmanager-runtime-v2.1';
+const CACHE_NAME = 'inkmanager-pro-v2.2-modules';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.2';
 const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install
@@ -19,7 +19,13 @@ const urlsToCache = [
   '/inkmanagerprov2/icons/icon-512.png',
   '/inkmanagerprov2/icon-maskable.png',
   '/inkmanagerprov2/icon-monochrome.png',
-  '/inkmanagerprov2/assets/app.js'
+  '/inkmanagerprov2/assets/js/app.js',
+  '/inkmanagerprov2/assets/js/inkmanager.js',
+  '/inkmanagerprov2/assets/js/modules/i18n.js',
+  '/inkmanagerprov2/assets/js/modules/storage.js',
+  '/inkmanagerprov2/assets/js/modules/ui.js',
+  '/inkmanagerprov2/assets/js/modules/clients.js',
+  '/inkmanagerprov2/assets/js/modules/appointments.js'
 ];
 
 /**

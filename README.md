@@ -70,12 +70,84 @@ This app stores all data locally on your device. **No data is sent to servers or
 
 **Note:** Notification features require browser permission and may not be available in all browsers or configurations.
 
+## Storage Versioning
+
+InkManager Pro uses a versioned storage system to safely evolve saved data without user data loss.
+
+### How It Works
+
+- **Version Key**: `inkmanager_storage_version` tracks the current storage schema version
+- **Automatic Migration**: On app startup, the storage system detects the current version and runs necessary migrations
+- **Idempotent Migrations**: All migrations are safe to run multiple times without data corruption
+- **User Notification**: When migrations run, users see a dismissible banner confirming the successful upgrade
+
+### Current Storage Version
+
+The current storage version is **v3**. The storage module handles three migration paths:
+
+- **v0 → v1**: Initialize storage with default settings and empty data arrays
+- **v1 → v2**: Add notification tracking and inventory filter/sort defaults
+- **v2 → v3**: Add sidebar state and perform data integrity checks
+
+### Adding a New Migration
+
+To add a new migration:
+
+1. Open `assets/js/modules/storage.js`
+2. Increment the `CURRENT_VERSION` constant
+3. Add a new migration object to the `migrations` array:
+
+```javascript
+{
+    version: 4,  // Next version number
+    description: 'Brief description of what this migration does',
+    up: function() {
+        console.log('📦 Running migration v3 → v4: Your description');
+        
+        // Your migration code here
+        // Always check if data exists before creating (idempotent)
+        if (!getData('inkmanager_newFeature')) {
+            setData('inkmanager_newFeature', defaultValue);
+            console.log('  ✓ Added new feature data');
+        }
+        
+        console.log('✅ Migration v3 → v4 complete');
+    }
+}
+```
+
+4. Test the migration using `tests/storage-migration.html`
+
+### Important Guidelines
+
+- **Always make migrations idempotent**: Check if data exists before creating/modifying it
+- **Never delete user data**: Only add or transform data, never remove it unless explicitly migrating away from deprecated fields
+- **Test thoroughly**: Use the test page to verify migrations work correctly
+- **Document changes**: Update this README when adding new migrations
+
+### Testing Migrations
+
+Open `tests/storage-migration.html` in your browser to:
+
+- Simulate different storage versions
+- Run automated migration tests
+- Verify data integrity and idempotence
+- View current storage state
+
+The test page includes automated tests that verify:
+- Migrations from each version work correctly
+- Data is preserved (no data loss)
+- Migrations are idempotent (safe to run multiple times)
+
 ## Development
 The app consists of:
 - `index.html` - Main application with inline CSS and core JavaScript
 - `assets/app.js` - PWA install, mobile menu, routing, and UI interactions
+- `assets/js/modules/storage.js` - Versioned storage management and migrations
+- `assets/js/modules/ui.js` - UI components (migration banners, etc.)
 - `manifest.json` - PWA configuration
 - `sw.js` - Service worker for offline functionality and notifications
+- `tests/storage-migration.html` - Storage migration test suite
 
 ## Accessibility
 
