@@ -97,6 +97,63 @@
         cursor: pointer;
     }
 
+    /* Skip to main content link for keyboard accessibility */
+    .skip-to-main {
+        position: absolute;
+        top: -100px;
+        left: 0;
+        z-index: 10000;
+        padding: 12px 20px;
+        background: var(--primary);
+        color: var(--darker);
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 0 0 8px 0;
+        transition: top 0.3s ease;
+    }
+
+    .skip-to-main:focus {
+        top: 0;
+        outline: 3px solid var(--primary-light);
+        outline-offset: 2px;
+    }
+
+    /* Enhanced focus states for accessibility */
+    a:focus,
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus,
+    [tabindex]:focus {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* Focus-visible for modern browsers */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* Remove focus outline for mouse users */
+    a:focus:not(:focus-visible),
+    button:focus:not(:focus-visible),
+    [tabindex]:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    /* Enhanced focus for navigation links */
+    .nav-link:focus {
+        background: rgba(0, 188, 212, 0.2);
+        outline: 3px solid var(--primary);
+        outline-offset: -3px;
+    }
+
     /* Sidebar Navigation */
     #sidebar {
         width: 280px;
@@ -1767,8 +1824,11 @@ body.sidebar-collapsed .app-container {
 </style>
 </head>
 <body>
+    <!-- Skip to main content link for keyboard users -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
     <!-- Sidebar Navigation -->
-    <nav id="sidebar">
+    <nav id="sidebar" aria-label="Main navigation">
         <div class="logo">
             <i class="fas fa-dragon"></i>
             <span class="logo-text">InkManager Pro</span>
@@ -1816,10 +1876,10 @@ body.sidebar-collapsed .app-container {
     <!-- Main Content Area -->
     <div class="app-container">
         <!-- Professional Header -->
-        <div class="app-header">
+        <header class="app-header" role="banner">
             <div class="app-header-top">
                 <div class="header-left">
-                    <button class="icon-btn" id="sidebarToggle" title="Toggle sidebar">
+                    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="true" aria-controls="sidebar">
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="logo">
@@ -1843,13 +1903,15 @@ body.sidebar-collapsed .app-container {
                 </div>
             </div>
             <div class="tagline" data-i18n="tagline">Professional Tattoo Studio Management System</div>
-        </div>
+        </header>
 
+        <!-- Main content sections -->
+        <main id="main-content" role="main">
         <!-- Dashboard Section -->
-        <section id="dashboard" class="section active">
+        <section id="dashboard" class="section active" aria-labelledby="dashboard-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" onclick="app.showSection('dashboard')">
+                    <h2 class="card-title" id="dashboard-title" onclick="app.showSection('dashboard')">
                         <i class="fas fa-tachometer-alt"></i> <span data-i18n="studio_overview">Studio Overview</span>
                     </h2>
                     <button class="btn btn-outline" onclick="app.exportData('all')">
@@ -1909,10 +1971,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Clients Section -->
-        <section id="clients" class="section">
+        <section id="clients" class="section" aria-labelledby="clients-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="clients-title">
                         <i class="fas fa-users"></i> <span data-i18n="client_management">Client Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addClientBtn">
@@ -1939,10 +2001,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Sessions Section -->
-        <section id="sessions" class="section">
+        <section id="sessions" class="section" aria-labelledby="sessions-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="sessions-title">
                         <i class="fas fa-calendar-alt"></i> <span data-i18n="session_management">Session Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addSessionBtn">
@@ -1964,10 +2026,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Inventory Section -->
-        <section id="inventory" class="section">
+        <section id="inventory" class="section" aria-labelledby="inventory-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="inventory-title">
                         <i class="fas fa-syringe"></i> <span data-i18n="inventory_management">Inventory Management</span>
                     </h2>
                     <button class="btn btn-primary" id="addInventoryBtn">
@@ -2040,10 +2102,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Calendar Section -->
-        <section id="calendar" class="section">
+        <section id="calendar" class="section" aria-labelledby="calendar-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="calendar-title">
                         <i class="fas fa-calendar-day"></i> <span data-i18n="studio_calendar">Studio Calendar</span>
                     </h2>
                     <button class="btn btn-primary" id="addCalendarSessionBtn">
@@ -2068,10 +2130,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Reports Section -->
-        <section id="reports" class="section">
+        <section id="reports" class="section" aria-labelledby="reports-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="reports-title">
                         <i class="fas fa-chart-bar"></i> <span data-i18n="analytics_reports">Analytics & Reports</span>
                     </h2>
                 </div>
@@ -2116,10 +2178,10 @@ body.sidebar-collapsed .app-container {
         </section>
 
         <!-- Settings Section -->
-        <section id="settings" class="section">
+        <section id="settings" class="section" aria-labelledby="settings-title">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">
+                    <h2 class="card-title" id="settings-title">
                         <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
                     </h2>
                 </div>
@@ -2267,6 +2329,7 @@ body.sidebar-collapsed .app-container {
                 </div>
             </div>
         </section>
+        </main>
     </div>
 
     <!-- Toast Notification -->
@@ -5676,25 +5739,25 @@ body.sidebar-collapsed .app-container {
     </div>
 
     <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav" id="mobileBottomNav">
-        <a class="mobile-nav-item active" data-section="dashboard" href="#dashboard">
-            <i class="fas fa-home"></i>
+    <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile navigation">
+        <a class="mobile-nav-item active" data-section="dashboard" href="#dashboard" aria-label="Dashboard" aria-current="page">
+            <i class="fas fa-home" aria-hidden="true"></i>
             <span data-i18n="dashboard">Dashboard</span>
         </a>
-        <a class="mobile-nav-item" data-section="clients" href="#clients">
-            <i class="fas fa-users"></i>
+        <a class="mobile-nav-item" data-section="clients" href="#clients" aria-label="Clients">
+            <i class="fas fa-users" aria-hidden="true"></i>
             <span data-i18n="clients">Clients</span>
         </a>
-        <a class="mobile-nav-item" data-section="sessions" href="#sessions">
-            <i class="fas fa-calendar"></i>
+        <a class="mobile-nav-item" data-section="sessions" href="#sessions" aria-label="Sessions">
+            <i class="fas fa-calendar" aria-hidden="true"></i>
             <span data-i18n="sessions">Sessions</span>
         </a>
-        <a class="mobile-nav-item" data-section="inventory" href="#inventory">
-            <i class="fas fa-boxes"></i>
+        <a class="mobile-nav-item" data-section="inventory" href="#inventory" aria-label="Inventory">
+            <i class="fas fa-boxes" aria-hidden="true"></i>
             <span data-i18n="inventory">Inventory</span>
         </a>
-        <a class="mobile-nav-item" data-section="settings" href="#settings">
-            <i class="fas fa-cog"></i>
+        <a class="mobile-nav-item" data-section="settings" href="#settings" aria-label="Settings">
+            <i class="fas fa-cog" aria-hidden="true"></i>
             <span data-i18n="settings">Settings</span>
         </a>
     </nav>
