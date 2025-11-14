@@ -3,20 +3,23 @@
  * Provides offline functionality and caching for PWA
  */
 
-const CACHE_NAME = 'inkmanager-pro-v2.0';
-const RUNTIME_CACHE = 'inkmanager-runtime-v2.0';
+const CACHE_NAME = 'inkmanager-pro-v2.1';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.1';
+const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install
 const urlsToCache = [
-  './',
-  './index.html',
-  './landing.html', 
-  './privacy-policy.html',
-  './manifest.json',
-  './icon.png',
-  './icon-maskable.png',
-  './icon-monochrome.png',
-  './assets/app.js'
+  '/inkmanagerprov2/',
+  '/inkmanagerprov2/index.html',
+  '/inkmanagerprov2/landing.html', 
+  '/inkmanagerprov2/privacy-policy.html',
+  '/inkmanagerprov2/offline.html',
+  '/inkmanagerprov2/manifest.json',
+  '/inkmanagerprov2/icons/icon-192.png',
+  '/inkmanagerprov2/icons/icon-512.png',
+  '/inkmanagerprov2/icon-maskable.png',
+  '/inkmanagerprov2/icon-monochrome.png',
+  '/inkmanagerprov2/assets/app.js'
 ];
 
 /**
@@ -41,7 +44,7 @@ self.addEventListener('install', event => {
 });
 
 /**
- * Activate event - clean up old caches
+ * Activate event - clean up old caches and notify clients of update
  */
 self.addEventListener('activate', event => {
   console.log('🔄 [SW] Activating service worker...');
@@ -57,6 +60,16 @@ self.addEventListener('activate', event => {
       );
     }).then(() => {
       console.log('✅ [SW] Service worker activated');
+      // Notify all clients about the update
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SW_UPDATED',
+            version: CACHE_NAME
+          });
+        });
+      });
+    }).then(() => {
       return self.clients.claim();
     })
   );
@@ -64,7 +77,7 @@ self.addEventListener('activate', event => {
 
 /**
  * Fetch event - serve cached content when offline
- * Strategy: Network first, falling back to cache
+ * Strategy: Network first, falling back to cache, then offline page
  */
 self.addEventListener('fetch', event => {
   const { request } = event;
@@ -88,9 +101,36 @@ self.addEventListener('fetch', event => {
         })
         .catch(() => {
           // If network fails, try cache
-          return caches.match(request).then(response => {
-            return response || caches.match('./index.html');
-          });
+          return caches.match(request)
+            .then(response => {
+              if (response) {
+                return response;
+              }
+              // Try to serve the main app page
+              return caches.match('/inkmanagerprov2/index.html')
+                .then(indexResponse => {
+                  if (indexResponse) {
+                    return indexResponse;
+                  }
+                  // Last resort: offline page
+                  return caches.match(OFFLINE_PAGE).then(offlineResponse => {
+                    if (offlineResponse) {
+                      return offlineResponse;
+                    }
+                    // If no offline page cached, return a basic response
+                    return new Response(
+                      '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>You are offline</h1><p>Please check your internet connection.</p></body></html>',
+                      {
+                        status: 200,
+                        statusText: 'OK',
+                        headers: new Headers({
+                          'Content-Type': 'text/html'
+                        })
+                      }
+                    );
+                  });
+                });
+            });
         })
     );
     return;
