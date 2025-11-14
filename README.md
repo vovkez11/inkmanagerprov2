@@ -80,5 +80,60 @@ The app consists of:
 ## Support
 For issues or feature requests, please open an issue on GitHub.
 
+## App Updates
+
+InkManager Pro V2 includes an intelligent in-app update system that notifies you when a new version is available.
+
+### How App Updates Work
+
+1. **Automatic Detection** - The app automatically checks for updates every minute while running
+2. **Smart Notifications** - When a new version is detected, you'll see an update notification banner
+3. **User Control** - You decide when to apply updates - no forced interruptions
+4. **Seamless Updates** - Updates apply smoothly without losing your current work
+
+### Update Actions
+
+When you see the "New version available" notification, you have two options:
+
+- **Reload Now** - Immediately apply the update and refresh the app
+  - Your data is preserved during the update
+  - The app reloads to the latest version
+  - Takes just a few seconds
+  
+- **Dismiss** - Continue using the current version
+  - The notification will be hidden until a newer version is released
+  - You can update later at your convenience
+  - Your current session continues uninterrupted
+
+### Update Process
+
+1. A new version is deployed to the server
+2. The app detects the update in the background
+3. You see a notification: "🎉 New version available!"
+4. Choose your action:
+   - Click **Reload Now** to update immediately
+   - Click **Dismiss** to update later
+5. If you reload, the app automatically:
+   - Saves your current state
+   - Activates the new version
+   - Refreshes the page
+   - Restores your data
+
+### Technical Details
+
+- Updates use Service Worker technology for reliability
+- All updates are downloaded in the background
+- No hard refresh required - updates are seamless
+- Offline functionality is preserved during updates
+- Your data is never lost during the update process
+- Dismissed updates won't show again until a newer version appears
+
+### Privacy & Data Safety
+
+- All updates happen locally in your browser
+- Your data remains on your device during updates
+- No data is sent to external servers
+- Updates only affect the app code, not your stored data
+
 ## License
 MIT License - feel free to use and modify.

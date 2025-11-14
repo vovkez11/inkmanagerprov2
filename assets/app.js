@@ -374,13 +374,23 @@ if ('serviceWorker' in navigator) {
                 // Listen for updates
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
+                    console.log('🔄 New service worker found, installing...');
                     
                     newWorker.addEventListener('statechange', () => {
+                        console.log('📦 Service Worker state changed to:', newWorker.state);
+                        
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New service worker is installed, show update notification
-                            showUpdateNotification();
+                            // New service worker is installed but waiting
+                            console.log('⏸️ New service worker installed and waiting');
+                            showUpdateNotification(newWorker);
                         }
                     });
+                });
+                
+                // Listen for controller change (when new SW takes over)
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('🔄 Service Worker controller changed, reloading page...');
+                    window.location.reload();
                 });
             })
             .catch(error => {
@@ -391,7 +401,6 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'SW_UPDATED') {
                 console.log('📦 Service Worker updated:', event.data.version);
-                showUpdateNotification();
             }
         });
     });
@@ -399,41 +408,73 @@ if ('serviceWorker' in navigator) {
 
 /**
  * Show update notification when a new version is available
+ * @param {ServiceWorker} newWorker - The new service worker waiting to be activated
  */
-function showUpdateNotification() {
+function showUpdateNotification(newWorker) {
+    // Get the current SW version from cache name or use timestamp
+    const currentVersion = Date.now().toString();
+    
+    // Check if this version was already dismissed
+    const dismissedVersion = localStorage.getItem('inkmanager_swDismissedVersion');
+    if (dismissedVersion === currentVersion) {
+        console.log('⏭️ Update notification already dismissed for this version');
+        return;
+    }
+    
+    // Remove any existing update toast
+    const existingToast = document.querySelector('.update-toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
     const updateToast = document.createElement('div');
     updateToast.className = 'toast show update-toast';
+    updateToast.setAttribute('data-version', currentVersion);
     updateToast.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-            <div style="font-weight: 600;">
+        <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <div style="font-weight: 600; font-size: 1rem; text-align: center;">
                 🎉 New version available!
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="dismissUpdateNotification()">
-                    Later
+            <div style="font-size: 0.9rem; opacity: 0.9; text-align: center;">
+                A new version of InkManager Pro is ready to install
+            </div>
+            <div style="display: flex; gap: 10px; width: 100%; justify-content: center;">
+                <button class="btn btn-outline" style="padding: 10px 20px; font-size: 0.9rem; flex: 1; max-width: 120px;" onclick="dismissUpdateNotification()">
+                    Dismiss
                 </button>
-                <button class="btn btn-success" style="padding: 8px 16px; font-size: 0.9rem;" onclick="reloadApp()">
-                    <i class="fas fa-sync-alt"></i> Update Now
+                <button class="btn btn-success" style="padding: 10px 20px; font-size: 0.9rem; flex: 1; max-width: 120px;" onclick="reloadApp()">
+                    <i class="fas fa-sync-alt"></i> Reload Now
                 </button>
             </div>
         </div>
     `;
-    updateToast.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
-    updateToast.style.padding = '20px 25px';
+    updateToast.style.background = 'linear-gradient(135deg, #00bcd4 0%, #0097a7 100%)';
+    updateToast.style.padding = '24px';
     updateToast.style.borderRadius = '16px';
-    updateToast.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)';
-    updateToast.style.maxWidth = '95%';
+    updateToast.style.boxShadow = '0 12px 40px rgba(0, 188, 212, 0.4)';
+    updateToast.style.maxWidth = '400px';
+    updateToast.style.width = '90%';
     updateToast.style.zIndex = '10000';
+    updateToast.style.color = '#ffffff';
     
     document.body.appendChild(updateToast);
+    
+    console.log('📢 Update notification shown for version:', currentVersion);
 }
 
 /**
- * Dismiss the update notification
+ * Dismiss the update notification and remember this version
  */
 function dismissUpdateNotification() {
     const updateToast = document.querySelector('.update-toast');
     if (updateToast) {
+        // Save the dismissed version to localStorage
+        const version = updateToast.getAttribute('data-version');
+        if (version) {
+            localStorage.setItem('inkmanager_swDismissedVersion', version);
+            console.log('💾 Update notification dismissed for version:', version);
+        }
+        
         updateToast.classList.remove('show');
         setTimeout(() => {
             updateToast.remove();
@@ -445,10 +486,25 @@ function dismissUpdateNotification() {
  * Reload the app to activate the new service worker
  */
 function reloadApp() {
+    console.log('🔄 User initiated app reload for update');
+    
+    // Clear the dismissed version flag since user is updating
+    localStorage.removeItem('inkmanager_swDismissedVersion');
+    
+    // Send message to waiting service worker to skip waiting
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+        console.log('📤 Sent SKIP_WAITING message to service worker');
+        
+        // The page will reload automatically when controllerchange event fires
+        // But add a fallback timeout in case something goes wrong
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    } else {
+        // If no controller, just reload
+        window.location.reload();
     }
-    window.location.reload();
 }
 
 // Export functions for use by inline handlers and the main app

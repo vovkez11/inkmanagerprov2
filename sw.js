@@ -1,10 +1,17 @@
 /**
  * InkManager Pro - Service Worker
+ * Version: 2.1.0
  * Provides offline functionality and caching for PWA
+ * 
+ * Update Flow:
+ * - Install event caches core resources but does NOT auto-activate
+ * - Waits for user consent (SKIP_WAITING message) before activating
+ * - This ensures users have control over when updates are applied
  */
 
 const CACHE_NAME = 'inkmanager-pro-v2.1';
 const RUNTIME_CACHE = 'inkmanager-runtime-v2.1';
+const SW_VERSION = '2.1.0'; // Update this version when making SW changes
 const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install
@@ -24,9 +31,10 @@ const urlsToCache = [
 
 /**
  * Install event - cache core resources
+ * NOTE: Does NOT auto-activate (no skipWaiting) - waits for user consent
  */
 self.addEventListener('install', event => {
-  console.log('📦 [SW] Installing service worker...');
+  console.log(`📦 [SW] Installing service worker v${SW_VERSION}...`);
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -34,8 +42,8 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
       .then(() => {
-        console.log('✅ [SW] Service worker installed');
-        return self.skipWaiting();
+        console.log('✅ [SW] Service worker installed, waiting for activation');
+        // Do NOT call self.skipWaiting() here - wait for user consent
       })
       .catch(err => {
         console.error('❌ [SW] Installation failed:', err);
@@ -47,7 +55,7 @@ self.addEventListener('install', event => {
  * Activate event - clean up old caches and notify clients of update
  */
 self.addEventListener('activate', event => {
-  console.log('🔄 [SW] Activating service worker...');
+  console.log(`🔄 [SW] Activating service worker v${SW_VERSION}...`);
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -65,7 +73,7 @@ self.addEventListener('activate', event => {
         clients.forEach(client => {
           client.postMessage({
             type: 'SW_UPDATED',
-            version: CACHE_NAME
+            version: SW_VERSION
           });
         });
       });
@@ -178,9 +186,13 @@ self.addEventListener('fetch', event => {
 
 /**
  * Message event - handle messages from the app
+ * Listens for SKIP_WAITING message to activate new service worker
  */
 self.addEventListener('message', event => {
+  console.log('📨 [SW] Received message:', event.data);
+  
   if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('⏭️ [SW] Skipping waiting phase and activating new service worker');
     self.skipWaiting();
   }
 });
