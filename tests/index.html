@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkManager Pro - Test Suite</title>
+    
+    <!-- Mocha CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha@10.2.0/mocha.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #010409 0%, #0d1117 100%);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #00bcd4;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+        }
+        
+        #mocha {
+            margin: 20px;
+        }
+        
+        .controls {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .controls button {
+            background: #00bcd4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .controls button:hover {
+            background: #008ba3;
+            transform: translateY(-2px);
+        }
+        
+        .info {
+            background: #e3f2fd;
+            color: #0d47a1;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00bcd4;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 InkManager Pro Test Suite</h1>
+        <p>Automated tests for storage, migrations, and formatting utilities</p>
+    </div>
+    
+    <div class="info">
+        <strong>ℹ️ Test Isolation:</strong> These tests use isolated localStorage keys (prefixed with <code>test_inkmanager_</code>) 
+        and automatically clean up after each test run. Your production data is safe!
+    </div>
+    
+    <div class="controls">
+        <button onclick="location.reload()">🔄 Re-run Tests</button>
+        <button onclick="clearTestData()">🗑️ Clear Test Data</button>
+        <button onclick="window.location.href='../index.html'">🏠 Back to App</button>
+    </div>
+    
+    <!-- Mocha test results container -->
+    <div id="mocha"></div>
+    
+    <!-- Mocha and Chai from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mocha@10.2.0/mocha.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chai@4.3.10/chai.min.js"></script>
+    
+    <script>
+        // Setup Mocha
+        mocha.setup('bdd');
+        
+        // Make chai's expect globally available
+        const expect = chai.expect;
+        
+        // Utility to clear test data
+        function clearTestData() {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('test_inkmanager_')) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            console.log(`✅ Cleared ${keysToRemove.length} test keys from localStorage`);
+            alert(`Cleared ${keysToRemove.length} test keys`);
+        }
+        
+        // Auto-cleanup test data after all tests complete
+        window.addEventListener('load', () => {
+            // Clean up before tests start
+            clearTestData();
+        });
+    </script>
+    
+    <!-- Load test files -->
+    <script src="test-storage.js"></script>
+    <script src="test-migrations.js"></script>
+    <script src="test-format.js"></script>
+    
+    <!-- Run tests -->
+    <script>
+        mocha.run().on('end', function() {
+            // Cleanup after tests complete
+            setTimeout(() => {
+                console.log('🧹 Cleaning up test data...');
+                clearTestData();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
