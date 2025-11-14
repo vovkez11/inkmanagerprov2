@@ -3,8 +3,8 @@
  * Provides offline functionality and caching for PWA
  */
 
-const CACHE_NAME = 'inkmanager-pro-v2.1';
-const RUNTIME_CACHE = 'inkmanager-runtime-v2.1';
+const CACHE_NAME = 'inkmanager-pro-v2.2';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.2';
 const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install
@@ -100,36 +100,29 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => {
-          // If network fails, try cache
+          // If network fails, try cache first
           return caches.match(request)
             .then(response => {
               if (response) {
                 return response;
               }
-              // Try to serve the main app page
-              return caches.match('/inkmanagerprov2/index.html')
-                .then(indexResponse => {
-                  if (indexResponse) {
-                    return indexResponse;
+              // For non-cached routes, show offline page
+              return caches.match(OFFLINE_PAGE).then(offlineResponse => {
+                if (offlineResponse) {
+                  return offlineResponse;
+                }
+                // Fallback if offline page is not cached
+                return new Response(
+                  '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>You are offline</h1><p>Please check your internet connection.</p></body></html>',
+                  {
+                    status: 200,
+                    statusText: 'OK',
+                    headers: new Headers({
+                      'Content-Type': 'text/html'
+                    })
                   }
-                  // Last resort: offline page
-                  return caches.match(OFFLINE_PAGE).then(offlineResponse => {
-                    if (offlineResponse) {
-                      return offlineResponse;
-                    }
-                    // If no offline page cached, return a basic response
-                    return new Response(
-                      '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>You are offline</h1><p>Please check your internet connection.</p></body></html>',
-                      {
-                        status: 200,
-                        statusText: 'OK',
-                        headers: new Headers({
-                          'Content-Type': 'text/html'
-                        })
-                      }
-                    );
-                  });
-                });
+                );
+              });
             });
         })
     );

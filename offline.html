@@ -75,6 +75,40 @@
             box-shadow: 0 10px 30px rgba(0, 188, 212, 0.4);
         }
         
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.3);
+        }
+        
+        .action-btn .icon {
+            font-size: 1.2rem;
+        }
+        
         .offline-features {
             margin-top: 40px;
             text-align: left;
@@ -107,7 +141,104 @@
             color: var(--primary);
             font-weight: bold;
         }
+        
+        .help-section {
+            margin-top: 30px;
+            text-align: left;
+            padding: 20px;
+            background: rgba(0, 188, 212, 0.1);
+            border-radius: 12px;
+            border: 1px solid var(--primary);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .help-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .help-content p {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .help-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .help-content li {
+            padding: 6px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .help-content li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--primary);
+            font-weight: bold;
+        }
     </style>
+    <script>
+        function exportData() {
+            try {
+                const data = {};
+                
+                // Collect all InkManager data from localStorage
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('inkmanager_') || key.startsWith('ink_')) {
+                        data[key] = localStorage.getItem(key);
+                    }
+                }
+                
+                if (Object.keys(data).length === 0) {
+                    alert('No data found to export. Your InkManager data will be available when you return to the app.');
+                    return;
+                }
+                
+                // Create downloadable JSON file
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `inkmanager-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('Data exported successfully! Your backup has been downloaded.');
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Unable to export data. Please try again when you reconnect.');
+            }
+        }
+        
+        function toggleHelp() {
+            const helpSection = document.getElementById('help-section');
+            if (helpSection.style.display === 'none') {
+                helpSection.style.display = 'block';
+            } else {
+                helpSection.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="offline-container">
@@ -118,6 +249,15 @@
             🔄 Try Again
         </button>
         
+        <div class="action-buttons">
+            <button class="action-btn" onclick="exportData()">
+                <i class="icon">💾</i> Export Data
+            </button>
+            <button class="action-btn" onclick="toggleHelp()">
+                <i class="icon">❓</i> Basic Help
+            </button>
+        </div>
+        
         <div class="offline-features">
             <h3>When you're back online:</h3>
             <ul>
@@ -126,6 +266,20 @@
                 <li>Track inventory</li>
                 <li>Generate reports</li>
             </ul>
+        </div>
+        
+        <div id="help-section" class="help-section" style="display: none;">
+            <h3>Quick Help</h3>
+            <div class="help-content">
+                <p><strong>You're offline!</strong> Don't worry, your data is safe. InkManager Pro stores all your data locally on your device.</p>
+                <p><strong>What you can do:</strong></p>
+                <ul>
+                    <li>Click "Try Again" to reconnect when internet is restored</li>
+                    <li>Use "Export Data" to backup your information anytime</li>
+                    <li>All your clients, sessions, and inventory are safe</li>
+                </ul>
+                <p><strong>Note:</strong> New features and navigation require an internet connection to load the main app.</p>
+            </div>
         </div>
     </div>
 </body>
