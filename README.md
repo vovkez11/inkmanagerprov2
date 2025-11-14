@@ -77,8 +77,30 @@ The app consists of:
 - `manifest.json` - PWA configuration
 - `sw.js` - Service worker for offline functionality and notifications
 
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+- Setting up your development environment
+- Coding standards and style guide
+- Testing procedures
+- How to submit changes
+
+## Filing Issues
+
+Found a bug or have a feature request? Please file an issue on GitHub:
+
+- **Bug Reports**: Use our [bug report template](.github/ISSUE_TEMPLATE/bug_report.md) to report issues
+- **Feature Requests**: Use our [feature request template](.github/ISSUE_TEMPLATE/feature_request.md) to suggest new features
+
+When filing issues, please include:
+- Browser and version information
+- Steps to reproduce (for bugs)
+- Screenshots if applicable
+- Console errors (check browser DevTools)
+
 ## Support
-For issues or feature requests, please open an issue on GitHub.
+
+For questions or general support, please open an issue on GitHub with the `question` label.
 
 ## License
 MIT License - feel free to use and modify.
