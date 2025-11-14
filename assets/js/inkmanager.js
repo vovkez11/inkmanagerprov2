@@ -224,7 +224,17 @@ import { showToast, debounce } from './modules/ui.js';
             }
 
             applySidebarState() {
-                document.body.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
+                // Check if on mobile (screen width < 768px)
+                const isMobile = window.innerWidth < 768;
+                
+                if (isMobile) {
+                    // On mobile, toggle mobile-open class to slide sidebar in/out
+                    document.body.classList.toggle('mobile-open', this.sidebarCollapsed);
+                } else {
+                    // On desktop, toggle sidebar-collapsed class to expand/collapse sidebar
+                    document.body.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
+                }
+                
                 const toggleBtn = document.getElementById('sidebarToggle');
                 if (toggleBtn) {
                     const icon = toggleBtn.querySelector('i');
@@ -406,6 +416,21 @@ import { showToast, debounce } from './modules/ui.js';
                 if (sidebarToggle) sidebarToggle.addEventListener('click', (e) => {
                     e.preventDefault();
                     this.toggleSidebar();
+                });
+
+                // Close mobile sidebar when clicking outside of it
+                document.addEventListener('click', (e) => {
+                    const isMobile = window.innerWidth < 768;
+                    const sidebar = document.getElementById('sidebar');
+                    const isOpen = document.body.classList.contains('mobile-open');
+                    
+                    // Only handle if on mobile and sidebar is open
+                    if (isMobile && isOpen) {
+                        // Check if click is outside sidebar and not the toggle button
+                        if (sidebar && !sidebar.contains(e.target) && e.target.id !== 'sidebarToggle' && !e.target.closest('#sidebarToggle')) {
+                            this.toggleSidebar();
+                        }
+                    }
                 });
 
                 const quickAddClient = document.getElementById('quickAddClient');
