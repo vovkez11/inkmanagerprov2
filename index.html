@@ -1767,6 +1767,10 @@ body.sidebar-collapsed .app-container {
 </style>
 </head>
 <body>
+    <!-- Storage Module - Must load before app initialization -->
+    <script src="./assets/js/modules/storage.js"></script>
+    <script src="./assets/js/modules/ui.js"></script>
+    
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
         <div class="logo">
@@ -5633,6 +5637,19 @@ body.sidebar-collapsed .app-container {
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Run storage migrations before initializing the app
+            if (window.InkManagerStorage) {
+                const migrationResult = window.InkManagerStorage.migrateIfNeeded();
+                
+                // Show migration banner if migration occurred
+                if (migrationResult.migrated && window.InkManagerUI) {
+                    window.InkManagerUI.showMigrationBanner(
+                        migrationResult.fromVersion,
+                        migrationResult.toVersion
+                    );
+                }
+            }
+            
             window.app = new InkManagerPro();
             
             // Fix viewport height for mobile devices

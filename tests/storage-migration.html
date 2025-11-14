@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Migration Test - InkManager Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --dark: #0d1117;
+            --darker: #010409;
+            --dark-gray: #161b22;
+            --light: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 30px 0 15px;
+            color: var(--light);
+        }
+
+        .description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .test-section {
+            background: var(--dark-gray);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .test-result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .test-result pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .status-pass {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-fail {
+            background: var(--danger);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        .log-entry {
+            margin: 4px 0;
+            padding-left: 16px;
+        }
+
+        .log-success { color: var(--success); }
+        .log-error { color: var(--danger); }
+        .log-warning { color: var(--warning); }
+        .log-info { color: var(--primary); }
+
+        .storage-info {
+            background: rgba(0, 188, 212, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .storage-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+
+        .storage-info-label {
+            font-weight: 500;
+        }
+
+        .storage-info-value {
+            color: var(--primary);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-vial"></i> Storage Migration Test</h1>
+        <p class="description">
+            This page tests the InkManager Pro versioned storage system. It simulates different storage versions
+            and validates that migrations work correctly without data loss.
+        </p>
+
+        <div class="storage-info" id="storageInfo">
+            <div class="storage-info-item">
+                <span class="storage-info-label">Current Version:</span>
+                <span class="storage-info-value" id="currentVersion">-</span>
+            </div>
+            <div class="storage-info-item">
+                <span class="storage-info-label">Target Version:</span>
+                <span class="storage-info-value" id="targetVersion">-</span>
+            </div>
+            <div class="storage-info-item">
+                <span class="storage-info-label">Total Storage Keys:</span>
+                <span class="storage-info-value" id="storageKeyCount">-</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Controls</h2>
+            <div class="test-controls">
+                <button class="btn btn-primary" onclick="updateStorageInfo()">
+                    <i class="fas fa-sync"></i> Refresh Info
+                </button>
+                <button class="btn btn-warning" onclick="simulateVersion0()">
+                    <i class="fas fa-database"></i> Simulate v0 (No Data)
+                </button>
+                <button class="btn btn-warning" onclick="simulateVersion1()">
+                    <i class="fas fa-database"></i> Simulate v1
+                </button>
+                <button class="btn btn-warning" onclick="simulateVersion2()">
+                    <i class="fas fa-database"></i> Simulate v2
+                </button>
+                <button class="btn btn-success" onclick="runMigration()">
+                    <i class="fas fa-rocket"></i> Run Migration
+                </button>
+                <button class="btn btn-danger" onclick="clearStorage()">
+                    <i class="fas fa-trash"></i> Clear All Storage
+                </button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Automated Tests</h2>
+            <div class="test-controls">
+                <button class="btn btn-success" onclick="runAllTests()">
+                    <i class="fas fa-play"></i> Run All Tests
+                </button>
+            </div>
+            <div id="testResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Manual Test Results</h2>
+            <div id="manualResults" class="test-result">
+                <pre>Ready to run tests. Click "Run All Tests" or individual test controls above.</pre>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Current Storage State</h2>
+            <button class="btn btn-primary" onclick="displayStorageState()" style="margin-bottom: 16px;">
+                <i class="fas fa-eye"></i> View Storage
+            </button>
+            <div id="storageState" class="test-result" style="display: none;">
+                <pre id="storageStateContent"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include storage module -->
+    <script src="../assets/js/modules/storage.js"></script>
+
+    <script>
+        // Test utilities
+        const log = {
+            info: (msg) => addLog('info', msg),
+            success: (msg) => addLog('success', msg),
+            warning: (msg) => addLog('warning', msg),
+            error: (msg) => addLog('error', msg)
+        };
+
+        function addLog(type, message) {
+            const resultsDiv = document.getElementById('manualResults');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${type.toUpperCase()}] ${message}`;
+            
+            if (resultsDiv.firstChild && resultsDiv.firstChild.tagName === 'PRE') {
+                resultsDiv.innerHTML = '';
+            }
+            
+            resultsDiv.appendChild(logEntry);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('manualResults').innerHTML = '<pre>Test output cleared.</pre>';
+        }
+
+        function updateStorageInfo() {
+            const storage = window.InkManagerStorage;
+            if (!storage) {
+                log.error('Storage module not loaded');
+                return;
+            }
+
+            document.getElementById('currentVersion').textContent = storage.getVersion();
+            document.getElementById('targetVersion').textContent = storage.CURRENT_VERSION;
+            
+            let count = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                if (localStorage.key(i).startsWith('inkmanager_')) {
+                    count++;
+                }
+            }
+            document.getElementById('storageKeyCount').textContent = count;
+            
+            log.info('Storage info updated');
+        }
+
+        function simulateVersion0() {
+            clearLogs();
+            log.info('Simulating version 0 (clean slate)...');
+            
+            // Clear all inkmanager data
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('inkmanager_')) {
+                    keysToRemove.push(key);
+                }
+            }
+            
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            log.success(`Cleared ${keysToRemove.length} storage keys`);
+            log.info('Storage is now at version 0 (no version key)');
+            updateStorageInfo();
+        }
+
+        function simulateVersion1() {
+            clearLogs();
+            log.info('Simulating version 1...');
+            
+            simulateVersion0();
+            
+            // Run v0->v1 migration manually
+            const storage = window.InkManagerStorage;
+            storage.setVersion(0);
+            storage.migrateIfNeeded({ targetVersion: 1 });
+            
+            log.success('Simulated version 1 with basic data');
+            updateStorageInfo();
+        }
+
+        function simulateVersion2() {
+            clearLogs();
+            log.info('Simulating version 2...');
+            
+            simulateVersion0();
+            
+            // Run migrations up to v2
+            const storage = window.InkManagerStorage;
+            storage.setVersion(0);
+            storage.migrateIfNeeded({ targetVersion: 2 });
+            
+            log.success('Simulated version 2 with notification tracking');
+            updateStorageInfo();
+        }
+
+        function runMigration() {
+            clearLogs();
+            log.info('Running migration...');
+            
+            const storage = window.InkManagerStorage;
+            const result = storage.migrateIfNeeded();
+            
+            if (result.migrated) {
+                log.success(`Migration complete: v${result.fromVersion} → v${result.toVersion}`);
+            } else if (result.error) {
+                log.error(`Migration failed: ${result.error.message}`);
+            } else {
+                log.info('No migration needed - already at target version');
+            }
+            
+            updateStorageInfo();
+        }
+
+        function clearStorage() {
+            if (!confirm('This will clear ALL localStorage data. Continue?')) {
+                return;
+            }
+            
+            clearLogs();
+            log.warning('Clearing all localStorage...');
+            localStorage.clear();
+            log.success('All storage cleared');
+            updateStorageInfo();
+        }
+
+        function displayStorageState() {
+            const stateDiv = document.getElementById('storageState');
+            const contentDiv = document.getElementById('storageStateContent');
+            
+            const state = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('inkmanager_')) {
+                    try {
+                        state[key] = JSON.parse(localStorage.getItem(key));
+                    } catch {
+                        state[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+            
+            contentDiv.textContent = JSON.stringify(state, null, 2);
+            stateDiv.style.display = 'block';
+        }
+
+        // Automated tests
+        function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<div class="status status-pending"><i class="fas fa-spinner fa-spin"></i> Running tests...</div>';
+            
+            const tests = [
+                testMigrationFromV0,
+                testMigrationFromV1,
+                testMigrationFromV2,
+                testIdempotence,
+                testDataIntegrity
+            ];
+            
+            const results = [];
+            let allPassed = true;
+            
+            for (const test of tests) {
+                try {
+                    const result = test();
+                    results.push(result);
+                    if (!result.passed) {
+                        allPassed = false;
+                    }
+                } catch (error) {
+                    results.push({
+                        name: test.name,
+                        passed: false,
+                        message: `Test threw error: ${error.message}`
+                    });
+                    allPassed = false;
+                }
+            }
+            
+            displayTestResults(results, allPassed);
+        }
+
+        function displayTestResults(results, allPassed) {
+            const resultsDiv = document.getElementById('testResults');
+            
+            const statusClass = allPassed ? 'status-pass' : 'status-fail';
+            const statusIcon = allPassed ? 'fa-check-circle' : 'fa-times-circle';
+            const statusText = allPassed ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED';
+            
+            let html = `<div class="status ${statusClass}"><i class="fas ${statusIcon}"></i> ${statusText}</div>`;
+            
+            html += '<div class="test-result">';
+            results.forEach(result => {
+                const icon = result.passed ? '✅' : '❌';
+                const color = result.passed ? 'log-success' : 'log-error';
+                html += `<div class="${color}">${icon} ${result.name}</div>`;
+                html += `<div style="padding-left: 24px; color: rgba(255,255,255,0.7); font-size: 12px;">${result.message}</div>`;
+            });
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function testMigrationFromV0() {
+            // Clear storage and set version to 0
+            localStorage.clear();
+            
+            const storage = window.InkManagerStorage;
+            const result = storage.migrateIfNeeded({ currentVersion: 0, targetVersion: storage.CURRENT_VERSION });
+            
+            const hasClients = Array.isArray(storage.getData('inkmanager_clients'));
+            const hasSessions = Array.isArray(storage.getData('inkmanager_sessions'));
+            const hasInventory = Array.isArray(storage.getData('inkmanager_inventory'));
+            const hasVersion = storage.getVersion() === storage.CURRENT_VERSION;
+            
+            const passed = result.migrated && hasClients && hasSessions && hasInventory && hasVersion;
+            
+            return {
+                name: 'Migration from v0 to current',
+                passed,
+                message: passed ? 
+                    `Successfully migrated from v0 to v${storage.CURRENT_VERSION} with all data structures` :
+                    `Failed to migrate properly. Migrated: ${result.migrated}, Has data: ${hasClients && hasSessions && hasInventory}, Version: ${hasVersion}`
+            };
+        }
+
+        function testMigrationFromV1() {
+            localStorage.clear();
+            
+            const storage = window.InkManagerStorage;
+            
+            // Set up v1 state
+            storage.setData('inkmanager_clients', []);
+            storage.setData('inkmanager_sessions', []);
+            storage.setData('inkmanager_inventory', []);
+            storage.setVersion(1);
+            
+            const result = storage.migrateIfNeeded({ targetVersion: storage.CURRENT_VERSION });
+            
+            const hasNotifiedSessions = Array.isArray(storage.getData('inkmanager_notifiedSessions'));
+            const hasInventoryFilter = storage.getData('inkmanager_inventoryFilter') !== null;
+            const hasVersion = storage.getVersion() === storage.CURRENT_VERSION;
+            
+            const passed = result.migrated && hasNotifiedSessions && hasInventoryFilter && hasVersion;
+            
+            return {
+                name: 'Migration from v1 to current',
+                passed,
+                message: passed ?
+                    `Successfully migrated from v1 to v${storage.CURRENT_VERSION}` :
+                    `Failed to migrate from v1. Has notified sessions: ${hasNotifiedSessions}, Has filter: ${hasInventoryFilter}`
+            };
+        }
+
+        function testMigrationFromV2() {
+            localStorage.clear();
+            
+            const storage = window.InkManagerStorage;
+            
+            // Set up v2 state
+            storage.setData('inkmanager_clients', []);
+            storage.setData('inkmanager_sessions', []);
+            storage.setData('inkmanager_inventory', []);
+            storage.setData('inkmanager_notifiedSessions', []);
+            storage.setData('inkmanager_inventoryFilter', 'all');
+            storage.setVersion(2);
+            
+            const result = storage.migrateIfNeeded({ targetVersion: storage.CURRENT_VERSION });
+            
+            const hasSidebarState = localStorage.getItem('inkmanager_sidebarCollapsed') !== null;
+            const hasVersion = storage.getVersion() === storage.CURRENT_VERSION;
+            
+            const passed = result.migrated && hasSidebarState && hasVersion;
+            
+            return {
+                name: 'Migration from v2 to current',
+                passed,
+                message: passed ?
+                    `Successfully migrated from v2 to v${storage.CURRENT_VERSION}` :
+                    `Failed to migrate from v2. Has sidebar state: ${hasSidebarState}`
+            };
+        }
+
+        function testIdempotence() {
+            localStorage.clear();
+            
+            const storage = window.InkManagerStorage;
+            
+            // Run migration twice
+            storage.migrateIfNeeded({ currentVersion: 0, targetVersion: storage.CURRENT_VERSION });
+            
+            const dataAfterFirst = {
+                clients: storage.getData('inkmanager_clients'),
+                sessions: storage.getData('inkmanager_sessions'),
+                inventory: storage.getData('inkmanager_inventory')
+            };
+            
+            // Run again
+            storage.migrateIfNeeded({ targetVersion: storage.CURRENT_VERSION });
+            
+            const dataAfterSecond = {
+                clients: storage.getData('inkmanager_clients'),
+                sessions: storage.getData('inkmanager_sessions'),
+                inventory: storage.getData('inkmanager_inventory')
+            };
+            
+            const passed = JSON.stringify(dataAfterFirst) === JSON.stringify(dataAfterSecond);
+            
+            return {
+                name: 'Idempotence (safe to run multiple times)',
+                passed,
+                message: passed ?
+                    'Migration is idempotent - running twice produces same result' :
+                    'Migration changed data when run twice - NOT idempotent'
+            };
+        }
+
+        function testDataIntegrity() {
+            localStorage.clear();
+            
+            const storage = window.InkManagerStorage;
+            
+            // Set up some test data
+            const testClient = { id: 1, name: 'Test Client', phone: '123-456-7890' };
+            const testSession = { id: 1, clientId: 1, date: '2024-01-01' };
+            const testItem = { id: 1, name: 'Test Ink', quantity: 10 };
+            
+            storage.setData('inkmanager_clients', [testClient]);
+            storage.setData('inkmanager_sessions', [testSession]);
+            storage.setData('inkmanager_inventory', [testItem]);
+            storage.setVersion(1);
+            
+            // Run migration
+            storage.migrateIfNeeded({ targetVersion: storage.CURRENT_VERSION });
+            
+            // Check data is intact
+            const clients = storage.getData('inkmanager_clients');
+            const sessions = storage.getData('inkmanager_sessions');
+            const inventory = storage.getData('inkmanager_inventory');
+            
+            const clientIntact = clients.length === 1 && clients[0].name === 'Test Client';
+            const sessionIntact = sessions.length === 1 && sessions[0].clientId === 1;
+            const inventoryIntact = inventory.length === 1 && inventory[0].quantity === 10;
+            
+            const passed = clientIntact && sessionIntact && inventoryIntact;
+            
+            return {
+                name: 'Data integrity (no data loss)',
+                passed,
+                message: passed ?
+                    'All data preserved correctly during migration' :
+                    'Data was lost or corrupted during migration'
+            };
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateStorageInfo();
+            log.info('Storage Migration Test Page loaded');
+            log.info('Click "Run All Tests" to execute automated tests');
+        });
+    </script>
+</body>
+</html>
