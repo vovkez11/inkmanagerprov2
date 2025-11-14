@@ -21,6 +21,7 @@
 - 📱 **Mobile-Optimized** - Responsive design with mobile menu toggle
 - ⚡ **Fast Performance** - Network-first caching strategy
 - 🏠 **App Shortcuts** - Quick access to Dashboard, Clients, and Sessions
+- 📡 **Offline Experience** - Branded offline page with data export and help when connection is lost
 
 ## Notification Features (NEW!)
 - 🔔 **Session Reminders** - Get notified before sessions start (configurable time window)
@@ -37,6 +38,20 @@
 4. Configure your preferred reminder time (default: 2 hours before session)
 5. Click "Test Notifications" to verify everything works
 6. Save settings
+
+## Offline Experience
+
+When you lose internet connectivity, InkManager Pro displays a branded offline page instead of a generic browser error. The offline experience includes:
+
+- **Visual Feedback** - Clear indication that you're offline with a satellite icon
+- **Retry Connection** - Quick button to attempt reconnecting
+- **Export Data** - Download your complete InkManager data as a backup JSON file, even while offline
+- **Basic Help** - In-page help guide explaining offline functionality
+- **Feature Preview** - List of features that will be available when you reconnect
+
+![Offline Experience](https://github.com/user-attachments/assets/9ea38360-99da-4b45-bae0-771860485265)
+
+The offline page is fully self-contained with inline styles and scripts, ensuring it loads even when all network requests fail. Your data remains safe in browser storage and can be exported at any time.
 
 ## Mobile Experience
 - 🍔 **Hamburger Menu** - Easy navigation on mobile devices
