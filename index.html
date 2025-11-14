@@ -1984,6 +1984,7 @@ body.sidebar-collapsed .app-container {
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="clientSearch" 
+                           aria-label="Search clients by name, phone, or email"
                            placeholder="🔍 Search clients by name, phone, or email..." data-i18n-placeholder="search_clients">
                 </div>
 
@@ -2039,6 +2040,7 @@ body.sidebar-collapsed .app-container {
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="inventorySearch" 
+                           aria-label="Search inventory items"
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
@@ -2349,11 +2351,11 @@ body.sidebar-collapsed .app-container {
     </div>
 
     <!-- Client Modal -->
-    <div id="clientModal" class="modal">
-        <div class="modal-content">
+    <div id="clientModal" class="modal" role="dialog" aria-labelledby="clientModalTitle" aria-modal="true">
+        <div class="modal-content" role="document">
             <div class="card-header">
                 <h3 class="card-title" id="clientModalTitle"><i class="fas fa-user-plus"></i> <span data-i18n="create_new_client">Create New Client</span></h3>
-                <button class="btn btn-danger" id="closeClientModalBtn">
+                <button class="btn btn-danger" id="closeClientModalBtn" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -2420,11 +2422,11 @@ body.sidebar-collapsed .app-container {
     </div>
 
     <!-- Session Modal -->
-    <div id="sessionModal" class="modal">
-        <div class="modal-content">
+    <div id="sessionModal" class="modal" role="dialog" aria-labelledby="sessionModalTitle" aria-modal="true">
+        <div class="modal-content" role="document">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span></h3>
-                <button class="btn btn-danger" id="closeSessionModalBtn">
+                <h3 class="card-title" id="sessionModalTitle"><i class="fas fa-calendar-plus"></i> <span data-i18n="schedule_session">Schedule Session</span></h3>
+                <button class="btn btn-danger" id="closeSessionModalBtn" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -2504,11 +2506,11 @@ body.sidebar-collapsed .app-container {
     </div>
 
     <!-- Inventory Modal -->
-    <div id="inventoryModal" class="modal">
-        <div class="modal-content">
+    <div id="inventoryModal" class="modal" role="dialog" aria-labelledby="inventoryModalTitle" aria-modal="true">
+        <div class="modal-content" role="document">
             <div class="card-header">
                 <h3 class="card-title" id="inventoryModalTitle"><i class="fas fa-box"></i> <span data-i18n="new_inventory_item">New Inventory Item</span></h3>
-                <button class="btn btn-danger" id="closeInventoryModalBtn">
+                <button class="btn btn-danger" id="closeInventoryModalBtn" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
