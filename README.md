@@ -77,6 +77,65 @@ The app consists of:
 - `manifest.json` - PWA configuration
 - `sw.js` - Service worker for offline functionality and notifications
 
+## Accessibility
+
+InkManager Pro V2 is designed with accessibility in mind to ensure all users can effectively manage their tattoo studio, regardless of how they interact with the app.
+
+### Accessibility Features
+
+- ♿ **Semantic HTML5** - Proper use of `<header>`, `<nav>`, `<main>`, `<footer>`, and `<section>` elements for clear document structure
+- ⌨️ **Keyboard Navigation** - Full app navigation using Tab, Enter, and arrow keys
+- 🎯 **Skip Link** - "Skip to main content" link visible on keyboard focus for quick navigation
+- 🔍 **Focus Indicators** - Clear, high-contrast focus outlines (WCAG AA compliant) on all interactive elements
+- 🏷️ **ARIA Labels** - Proper labeling of icon-only buttons, navigation landmarks, and dynamic content
+- 📝 **Form Accessibility** - All form inputs explicitly associated with labels using `for` and `id` attributes
+- 🔔 **Live Regions** - Status updates and notifications announced to screen readers using `aria-live`
+- 🎨 **High Contrast** - Dark theme with cyan (#00bcd4) accents for excellent visibility
+- 📱 **Touch Targets** - Minimum 44×44px touch targets for easy interaction on mobile devices
+
+### Keyboard Shortcuts
+
+- `Tab` - Move forward through interactive elements
+- `Shift + Tab` - Move backward through interactive elements
+- `Enter` or `Space` - Activate buttons and links
+- `Esc` - Close modals and dialogs
+
+### Screen Reader Support
+
+The app has been optimized for screen readers with:
+- Descriptive ARIA labels on all navigation elements
+- Proper heading hierarchy (h1-h4) for document structure
+- `aria-current="page"` to identify the active page
+- `role="dialog"` and `aria-modal="true"` for modal dialogs
+- `role="status"` for dynamic content updates
+- Decorative icons marked with `aria-hidden="true"`
+
+### Contributing to Accessibility
+
+We welcome contributions to improve accessibility! When contributing:
+
+1. **Test with keyboard only** - Ensure all features are accessible without a mouse
+2. **Use semantic HTML** - Choose the right HTML element for the job
+3. **Add ARIA when needed** - Use ARIA attributes to enhance semantics when HTML alone isn't sufficient
+4. **Maintain focus styles** - Never remove focus outlines without providing an alternative
+5. **Test with screen readers** - Verify changes work with NVDA, JAWS, or VoiceOver
+6. **Check color contrast** - Ensure text meets WCAG AA standards (4.5:1 for normal text)
+7. **Document changes** - Update this section when adding accessibility features
+
+### Known Limitations
+
+- Some third-party icon fonts may not be optimally labeled
+- Calendar navigation could be enhanced with arrow key support
+- Drag-and-drop features are not yet keyboard accessible
+
+### Reporting Accessibility Issues
+
+If you encounter an accessibility barrier, please [open an issue](https://github.com/vovkez11/inkmanagerprov2/issues) with:
+- Description of the barrier
+- Steps to reproduce
+- Browser and assistive technology used
+- Suggested improvement (if applicable)
+
 ## Support
 For issues or feature requests, please open an issue on GitHub.
 
