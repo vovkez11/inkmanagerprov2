@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Test - InkManager Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0d1117;
+            color: #f5f5f5;
+        }
+        h1 {
+            color: #00bcd4;
+        }
+        .test-section {
+            background: #161b22;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        button {
+            background: #00bcd4;
+            color: #0d1117;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+        }
+        button:hover {
+            background: #00acc1;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+        }
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+        }
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+        }
+        pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔔 InkManager Pro - Notification Testing</h1>
+    
+    <div class="test-section">
+        <h2>1. Browser Support Check</h2>
+        <div id="supportStatus"></div>
+        <button onclick="checkSupport()">Check Browser Support</button>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Request Permission</h2>
+        <div id="permissionStatus"></div>
+        <button onclick="requestPermission()">Request Notification Permission</button>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Basic Notification</h2>
+        <button onclick="sendBasicNotification()">Send Basic Notification</button>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test Service Worker Notification</h2>
+        <div id="swStatus"></div>
+        <button onclick="registerServiceWorker()">Register Service Worker</button>
+        <button onclick="sendSWNotification()">Send Service Worker Notification</button>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Test Session Notification (Simulated)</h2>
+        <label>Hours until session: <input type="number" id="hoursUntil" value="2" min="0" max="24" step="0.5"></label><br><br>
+        <button onclick="sendSessionNotification()">Send Session Notification</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let swRegistration = null;
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'warning';
+            results.innerHTML = `<div class="status ${className}">[${timestamp}] ${message}</div>` + results.innerHTML;
+        }
+
+        function checkSupport() {
+            const status = document.getElementById('supportStatus');
+            let html = '<div class="status">';
+            
+            if (!('Notification' in window)) {
+                html += '<p class="error">❌ Notifications are NOT supported in this browser</p>';
+            } else {
+                html += '<p class="success">✅ Notifications are supported</p>';
+            }
+            
+            if ('serviceWorker' in navigator) {
+                html += '<p class="success">✅ Service Workers are supported</p>';
+            } else {
+                html += '<p class="warning">⚠️ Service Workers are NOT supported</p>';
+            }
+            
+            html += `<p>Current permission: <strong>${Notification.permission}</strong></p>`;
+            html += '</div>';
+            
+            status.innerHTML = html;
+            log('Browser support checked', 'success');
+        }
+
+        async function requestPermission() {
+            const status = document.getElementById('permissionStatus');
+            
+            if (!('Notification' in window)) {
+                status.innerHTML = '<div class="status error">❌ Notifications not supported</div>';
+                log('Notification request failed - not supported', 'error');
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                status.innerHTML = '<div class="status success">✅ Permission already granted</div>';
+                log('Permission already granted', 'success');
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                status.innerHTML = '<div class="status error">❌ Permission was denied. Please reset in browser settings.</div>';
+                log('Permission denied', 'error');
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    status.innerHTML = '<div class="status success">✅ Permission granted!</div>';
+                    log('Notification permission granted', 'success');
+                } else {
+                    status.innerHTML = '<div class="status error">❌ Permission denied</div>';
+                    log('Notification permission denied by user', 'error');
+                }
+            } catch (error) {
+                status.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+                log('Error requesting permission: ' + error.message, 'error');
+            }
+        }
+
+        function sendBasicNotification() {
+            if (Notification.permission !== 'granted') {
+                log('Please grant notification permission first', 'warning');
+                return;
+            }
+
+            try {
+                const notification = new Notification('🔔 InkManager Pro Test', {
+                    body: 'This is a basic notification test',
+                    icon: './icon.png',
+                    badge: './icon-monochrome.png',
+                    tag: 'basic-test',
+                    requireInteraction: false
+                });
+
+                notification.onclick = () => {
+                    log('Basic notification clicked!', 'success');
+                    notification.close();
+                };
+
+                log('Basic notification sent', 'success');
+            } catch (error) {
+                log('Error sending basic notification: ' + error.message, 'error');
+            }
+        }
+
+        async function registerServiceWorker() {
+            const status = document.getElementById('swStatus');
+            
+            if (!('serviceWorker' in navigator)) {
+                status.innerHTML = '<div class="status error">❌ Service Workers not supported</div>';
+                log('Service Worker registration failed - not supported', 'error');
+                return;
+            }
+
+            try {
+                swRegistration = await navigator.serviceWorker.register('./sw.js');
+                status.innerHTML = '<div class="status success">✅ Service Worker registered</div>';
+                log('Service Worker registered successfully', 'success');
+                
+                await navigator.serviceWorker.ready;
+                log('Service Worker is ready', 'success');
+            } catch (error) {
+                status.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+                log('Service Worker registration error: ' + error.message, 'error');
+            }
+        }
+
+        async function sendSWNotification() {
+            if (Notification.permission !== 'granted') {
+                log('Please grant notification permission first', 'warning');
+                return;
+            }
+
+            if (!swRegistration) {
+                log('Please register Service Worker first', 'warning');
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.ready;
+                await registration.showNotification('🔔 InkManager Pro SW Test', {
+                    body: 'This notification was sent via Service Worker',
+                    icon: './icon.png',
+                    badge: './icon-monochrome.png',
+                    tag: 'sw-test',
+                    requireInteraction: false,
+                    vibrate: [200, 100, 200],
+                    data: {
+                        url: './index.html#sessions'
+                    }
+                });
+                log('Service Worker notification sent', 'success');
+            } catch (error) {
+                log('Error sending SW notification: ' + error.message, 'error');
+            }
+        }
+
+        function sendSessionNotification() {
+            if (Notification.permission !== 'granted') {
+                log('Please grant notification permission first', 'warning');
+                return;
+            }
+
+            const hoursUntil = parseFloat(document.getElementById('hoursUntil').value) || 2;
+            const hours = Math.floor(hoursUntil);
+            const minutes = Math.round((hoursUntil - hours) * 60);
+            
+            let timeText = '';
+            if (hours >= 1) {
+                timeText = `in ${hours} hour${hours > 1 ? 's' : ''}`;
+                if (minutes > 0) {
+                    timeText += ` and ${minutes} minute${minutes > 1 ? 's' : ''}`;
+                }
+            } else {
+                timeText = `in ${minutes} minute${minutes > 1 ? 's' : ''}`;
+            }
+
+            const sessionTime = new Date(Date.now() + hoursUntil * 60 * 60 * 1000);
+            const timeString = sessionTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const title = '📅 Upcoming Session: Full Sleeve Tattoo';
+            const body = `Client: John Doe\nTime: ${timeString}\nStarting ${timeText}`;
+
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification(title, {
+                        body: body,
+                        icon: './icon.png',
+                        badge: './icon-monochrome.png',
+                        tag: 'session-test',
+                        requireInteraction: false,
+                        vibrate: [200, 100, 200],
+                        data: {
+                            sessionId: 'test-session-123',
+                            url: './index.html#sessions'
+                        }
+                    });
+                    log(`Session notification sent (${hoursUntil}h before)`, 'success');
+                });
+            } else {
+                new Notification(title, {
+                    body: body,
+                    icon: './icon.png',
+                    tag: 'session-test',
+                    requireInteraction: false
+                });
+                log(`Basic session notification sent (${hoursUntil}h before)`, 'success');
+            }
+        }
+
+        // Auto-check support on load
+        window.addEventListener('load', () => {
+            checkSupport();
+            log('Test page loaded', 'success');
+        });
+    </script>
+</body>
+</html>
