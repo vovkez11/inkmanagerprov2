@@ -12,7 +12,7 @@ export const currencyConfig = {
 };
 
 // Translation resources for all supported languages
-{
+export const translations = {
                     en: {
                         // Navigation
                         "main_navigation": "Main Navigation",
@@ -693,7 +693,6 @@ export const currencyConfig = {
                         "last_updated": "עודכן"
                     }
                 };
-export const translations = 
 
 /**
  * Format currency amount based on current language
