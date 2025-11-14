@@ -365,11 +365,90 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('✅ Service Worker registered:', registration.scope);
+                
+                // Check for updates periodically
+                setInterval(() => {
+                    registration.update();
+                }, 60000); // Check every minute
+                
+                // Listen for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New service worker is installed, show update notification
+                            showUpdateNotification();
+                        }
+                    });
+                });
             })
             .catch(error => {
                 console.log('❌ Service Worker registration failed:', error);
             });
+        
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SW_UPDATED') {
+                console.log('📦 Service Worker updated:', event.data.version);
+                showUpdateNotification();
+            }
+        });
     });
+}
+
+/**
+ * Show update notification when a new version is available
+ */
+function showUpdateNotification() {
+    const updateToast = document.createElement('div');
+    updateToast.className = 'toast show update-toast';
+    updateToast.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <div style="font-weight: 600;">
+                🎉 New version available!
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="dismissUpdateNotification()">
+                    Later
+                </button>
+                <button class="btn btn-success" style="padding: 8px 16px; font-size: 0.9rem;" onclick="reloadApp()">
+                    <i class="fas fa-sync-alt"></i> Update Now
+                </button>
+            </div>
+        </div>
+    `;
+    updateToast.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
+    updateToast.style.padding = '20px 25px';
+    updateToast.style.borderRadius = '16px';
+    updateToast.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)';
+    updateToast.style.maxWidth = '95%';
+    updateToast.style.zIndex = '10000';
+    
+    document.body.appendChild(updateToast);
+}
+
+/**
+ * Dismiss the update notification
+ */
+function dismissUpdateNotification() {
+    const updateToast = document.querySelector('.update-toast');
+    if (updateToast) {
+        updateToast.classList.remove('show');
+        setTimeout(() => {
+            updateToast.remove();
+        }, 400);
+    }
+}
+
+/**
+ * Reload the app to activate the new service worker
+ */
+function reloadApp() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+    }
+    window.location.reload();
 }
 
 // Export functions for use by inline handlers and the main app
@@ -378,3 +457,5 @@ window.toggleMobileMenu = toggleMobileMenu;
 window.handleSidebarToggle = handleSidebarToggle;
 window.handleMaterialAdd = handleMaterialAdd;
 window.handleMaterialRemove = handleMaterialRemove;
+window.dismissUpdateNotification = dismissUpdateNotification;
+window.reloadApp = reloadApp;
