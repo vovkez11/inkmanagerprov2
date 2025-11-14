@@ -7,6 +7,10 @@
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
     
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     
@@ -43,6 +47,80 @@
         --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
+    /* Fallback icons when Font Awesome is not loaded */
+    /* These use Unicode symbols to provide visual cues even without the icon font */
+    .fas:not([class*="fa-"])::before,
+    .far:not([class*="fa-"])::before,
+    .fab:not([class*="fa-"])::before {
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+        font-style: normal;
+    }
+    
+    /* Navigation and common icons */
+    .fa-tachometer-alt::before, .fa-dashboard::before { content: "📊"; }
+    .fa-users::before, .fa-user::before { content: "👥"; }
+    .fa-user-plus::before { content: "➕👤"; }
+    .fa-user-edit::before { content: "✏️👤"; }
+    .fa-calendar-check::before, .fa-calendar::before { content: "📅"; }
+    .fa-calendar-plus::before { content: "➕📅"; }
+    .fa-calendar-day::before { content: "📆"; }
+    .fa-calendar-times::before { content: "❌📅"; }
+    .fa-boxes::before, .fa-box::before { content: "📦"; }
+    .fa-box-open::before { content: "📭"; }
+    .fa-chart-bar::before, .fa-chart::before { content: "📈"; }
+    .fa-cog::before, .fa-settings::before { content: "⚙️"; }
+    .fa-dragon::before { content: "🐲"; }
+    .fa-bars::before, .fa-menu::before { content: "☰"; }
+    .fa-globe::before { content: "🌍"; }
+    .fa-download::before { content: "⬇️"; }
+    .fa-upload::before { content: "⬆️"; }
+    .fa-save::before { content: "💾"; }
+    .fa-edit::before, .fa-pen::before { content: "✏️"; }
+    .fa-trash::before, .fa-trash-alt::before { content: "🗑️"; }
+    .fa-times::before, .fa-close::before { content: "✕"; }
+    .fa-check::before { content: "✓"; }
+    .fa-plus::before { content: "➕"; }
+    .fa-minus::before { content: "➖"; }
+    .fa-search::before { content: "🔍"; }
+    .fa-filter::before { content: "🔽"; }
+    .fa-sort::before { content: "⇅"; }
+    .fa-info-circle::before, .fa-info::before { content: "ℹ️"; }
+    .fa-exclamation-triangle::before, .fa-warning::before { content: "⚠️"; }
+    .fa-exclamation-circle::before { content: "❗"; }
+    .fa-question-circle::before { content: "❓"; }
+    
+    /* Contact and communication */
+    .fa-phone::before { content: "📞"; }
+    .fa-envelope::before, .fa-email::before { content: "✉️"; }
+    .fa-birthday-cake::before { content: "🎂"; }
+    .fa-hand-sparkles::before { content: "✨"; }
+    .fa-sticky-note::before { content: "📝"; }
+    .fa-clock::before, .fa-time::before { content: "🕐"; }
+    .fa-bell::before { content: "🔔"; }
+    
+    /* Actions */
+    .fa-chevron-left::before { content: "‹"; }
+    .fa-chevron-right::before { content: "›"; }
+    .fa-chevron-up::before { content: "^"; }
+    .fa-chevron-down::before { content: "v"; }
+    .fa-arrow-left::before { content: "←"; }
+    .fa-arrow-right::before { content: "→"; }
+    .fa-arrow-up::before { content: "↑"; }
+    .fa-arrow-down::before { content: "↓"; }
+    
+    /* Status and indicators */
+    .fa-spinner::before { content: "⟳"; animation: spin 1s linear infinite; }
+    .fa-circle::before { content: "●"; }
+    .fa-dot-circle::before { content: "◉"; }
+    .fa-star::before { content: "★"; }
+    .fa-heart::before { content: "♥"; }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
     * {
         margin: 0;
         padding: 0;
@@ -59,7 +137,7 @@
     }
 
     body {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
         background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
         color: var(--light);
         line-height: 1.7;
@@ -157,7 +235,7 @@ body.sidebar-collapsed .app-container {
 }
 
     .logo {
-        font-family: 'Permanent Marker', cursive;
+        font-family: 'Permanent Marker', 'Comic Sans MS', cursive, fantasy;
         color: var(--primary);
         font-size: 2rem;
         display: flex;
