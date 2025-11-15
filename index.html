@@ -59,6 +59,7 @@
     }
     
     /* Navigation and common icons - Simple professional symbols */
+    .fa-home::before { content: "⌂"; }
     .fa-tachometer-alt::before, .fa-dashboard::before { content: "■"; }
     .fa-users::before, .fa-user::before { content: "⚉"; }
     .fa-user-plus::before { content: "+⚉"; }
@@ -1325,53 +1326,73 @@ body.sidebar-collapsed .app-container {
             position: relative;
         }
 
+        /* Mobile App-like Header */
         .app-header {
-            padding: 16px;
-            margin-bottom: 20px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 0;
+            min-height: auto;
+            background: var(--dark);
+            border: none;
+            box-shadow: none;
         }
-
+        
+        .app-header::before {
+            display: none; /* Hide decorative gradient line on mobile */
+        }
+        
+        /* Hide tagline on mobile for app-like appearance */
+        .tagline {
+            display: none;
+        }
+        
+        /* Hide install button on mobile - use PWA prompt instead */
+        .install-btn {
+            display: none !important;
+        }
+        
+        /* Compact header for mobile */
         .app-header-top {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
         }
-
+        
+        /* Language selector in mobile header - make it compact */
+        .header-actions .language-selector {
+            display: none; /* Hide language selector from header on mobile - move to settings */
+        }
+        
+        /* Mobile hamburger menu button - make it prominent */
+        #sidebarToggle {
+            display: inline-flex !important;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        
+        /* Show logo in header-left on mobile */
         .header-left {
-            justify-content: space-between;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             width: 100%;
-            flex-wrap: wrap;
+        }
+        
+        /* Keep the InkManager Pro logo visible on mobile */
+        .header-left .logo {
+            display: flex !important;
+            font-size: 1.3rem;
+            flex: 1;
         }
 
         .header-actions {
-            width: 100%;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .header-actions .language-selector {
-            flex: 1;
-            max-width: 180px;
-        }
-
-        .header-actions .language-selector {
-            background: rgba(0, 188, 212, 0.1);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--primary);
-        }
-
-        .header-actions .language-selector label {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .header-actions .language-selector select {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 0.9rem;
-            border: 1px solid var(--primary);
-            background: var(--dark);
+            display: none; /* Hide all header actions on mobile for clean app look */
         }
 
         .icon-btn {
