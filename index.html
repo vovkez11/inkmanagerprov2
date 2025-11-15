@@ -44,60 +44,60 @@
         --danger: #f44336;
         --border-radius: 16px;
         --shadow: 0 12px 40px rgba(0,0,0,0.4);
-        --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --transition: all 0.2s ease;
     }
 
     /* Fallback icons when Font Awesome is not loaded */
-    /* These use Unicode symbols to provide visual cues even without the icon font */
+    /* These use simple text symbols for a clean, professional look */
     .fas:not([class*="fa-"])::before,
     .far:not([class*="fa-"])::before,
     .fab:not([class*="fa-"])::before {
         font-family: Arial, sans-serif;
-        font-weight: normal;
+        font-weight: bold;
         font-style: normal;
     }
     
-    /* Navigation and common icons */
-    .fa-tachometer-alt::before, .fa-dashboard::before { content: "📊"; }
-    .fa-users::before, .fa-user::before { content: "👥"; }
-    .fa-user-plus::before { content: "➕👤"; }
-    .fa-user-edit::before { content: "✏️👤"; }
-    .fa-calendar-check::before, .fa-calendar::before { content: "📅"; }
-    .fa-calendar-plus::before { content: "➕📅"; }
-    .fa-calendar-day::before { content: "📆"; }
-    .fa-calendar-times::before { content: "❌📅"; }
-    .fa-boxes::before, .fa-box::before { content: "📦"; }
-    .fa-box-open::before { content: "📭"; }
-    .fa-chart-bar::before, .fa-chart::before { content: "📈"; }
-    .fa-cog::before, .fa-settings::before { content: "⚙️"; }
-    .fa-dragon::before { content: "🐲"; }
+    /* Navigation and common icons - Simple professional symbols */
+    .fa-tachometer-alt::before, .fa-dashboard::before { content: "■"; }
+    .fa-users::before, .fa-user::before { content: "⚉"; }
+    .fa-user-plus::before { content: "+⚉"; }
+    .fa-user-edit::before { content: "✎⚉"; }
+    .fa-calendar-check::before, .fa-calendar::before { content: "▦"; }
+    .fa-calendar-plus::before { content: "+▦"; }
+    .fa-calendar-day::before { content: "▦"; }
+    .fa-calendar-times::before { content: "✕▦"; }
+    .fa-boxes::before, .fa-box::before { content: "▣"; }
+    .fa-box-open::before { content: "▢"; }
+    .fa-chart-bar::before, .fa-chart::before { content: "▤"; }
+    .fa-cog::before, .fa-settings::before { content: "⚙"; }
+    .fa-dragon::before { content: "⚡"; }
     .fa-bars::before, .fa-menu::before { content: "☰"; }
-    .fa-globe::before { content: "🌍"; }
-    .fa-download::before { content: "⬇️"; }
-    .fa-upload::before { content: "⬆️"; }
-    .fa-save::before { content: "💾"; }
-    .fa-edit::before, .fa-pen::before { content: "✏️"; }
-    .fa-trash::before, .fa-trash-alt::before { content: "🗑️"; }
+    .fa-globe::before { content: "◉"; }
+    .fa-download::before { content: "↓"; }
+    .fa-upload::before { content: "↑"; }
+    .fa-save::before { content: "▣"; }
+    .fa-edit::before, .fa-pen::before { content: "✎"; }
+    .fa-trash::before, .fa-trash-alt::before { content: "✕"; }
     .fa-times::before, .fa-close::before { content: "✕"; }
     .fa-check::before { content: "✓"; }
-    .fa-plus::before { content: "➕"; }
-    .fa-minus::before { content: "➖"; }
-    .fa-search::before { content: "🔍"; }
-    .fa-filter::before { content: "🔽"; }
+    .fa-plus::before { content: "+"; }
+    .fa-minus::before { content: "−"; }
+    .fa-search::before { content: "⌕"; }
+    .fa-filter::before { content: "▼"; }
     .fa-sort::before { content: "⇅"; }
-    .fa-info-circle::before, .fa-info::before { content: "ℹ️"; }
-    .fa-exclamation-triangle::before, .fa-warning::before { content: "⚠️"; }
-    .fa-exclamation-circle::before { content: "❗"; }
-    .fa-question-circle::before { content: "❓"; }
+    .fa-info-circle::before, .fa-info::before { content: "i"; }
+    .fa-exclamation-triangle::before, .fa-warning::before { content: "⚠"; }
+    .fa-exclamation-circle::before { content: "!"; }
+    .fa-question-circle::before { content: "?"; }
     
     /* Contact and communication */
-    .fa-phone::before { content: "📞"; }
-    .fa-envelope::before, .fa-email::before { content: "✉️"; }
-    .fa-birthday-cake::before { content: "🎂"; }
-    .fa-hand-sparkles::before { content: "✨"; }
-    .fa-sticky-note::before { content: "📝"; }
-    .fa-clock::before, .fa-time::before { content: "🕐"; }
-    .fa-bell::before { content: "🔔"; }
+    .fa-phone::before { content: "☎"; }
+    .fa-envelope::before, .fa-email::before { content: "✉"; }
+    .fa-birthday-cake::before { content: "★"; }
+    .fa-hand-sparkles::before { content: "✦"; }
+    .fa-sticky-note::before { content: "▤"; }
+    .fa-clock::before, .fa-time::before { content: "◷"; }
+    .fa-bell::before { content: "◔"; }
     
     /* Actions */
     .fa-chevron-left::before { content: "‹"; }
@@ -405,7 +405,7 @@ body.sidebar-collapsed .app-container {
 
     .icon-btn:active {
         background: rgba(0,188,212,0.25);
-        transform: scale(0.95);
+        opacity: 0.8;
     }
 
     /* Mobile menu button - visible on all screen sizes */
@@ -473,13 +473,12 @@ body.sidebar-collapsed .app-container {
     }
 
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+        0% { opacity: 1; }
+        50% { opacity: 0.9; }
+        100% { opacity: 1; }
     }
 
     .install-btn:hover {
-        transform: none;
         box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
     }
 
@@ -668,8 +667,8 @@ body.sidebar-collapsed .app-container {
     }
 
     .btn:active {
-        transform: scale(0.95);
-        transition: transform 0.1s;
+        opacity: 0.8;
+        transition: opacity 0.1s;
     }
 
     /* Form Dropdown Styling */
@@ -842,17 +841,15 @@ body.sidebar-collapsed .app-container {
 
     .stat-card:hover::after {
         opacity: 0.7;
-        transform: translateX(3px);
     }
 
     .stat-card:hover {
-        transform: none;
         box-shadow: var(--shadow);
         border-left-color: var(--secondary);
     }
 
     .stat-card:active {
-        transform: translateY(-4px) scale(1.01);
+        opacity: 0.9;
     }
 
     .stat-value {
@@ -1834,7 +1831,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .mobile-nav-item:active {
-        transform: scale(0.95);
+        opacity: 0.7;
     }
 
     body.theme-light .mobile-bottom-nav {
