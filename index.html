@@ -1744,9 +1744,46 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
-    /* Inventory Tabs - Default styling for all viewports */
+    /* Inventory Tabs - Default styling */
     #inventoryTabs {
-        flex-wrap: wrap;
+        /* Mobile-first: horizontal scroll by default */
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
+    }
+    
+    #inventoryTabs::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    #inventoryTabs::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+    }
+    
+    #inventoryTabs::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 2px;
+    }
+    
+    #inventoryTabs button {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+    
+    /* Desktop: allow wrapping */
+    @media (min-width: 769px) {
+        #inventoryTabs {
+            flex-wrap: wrap;
+            overflow-x: visible;
+        }
+        
+        #inventoryTabs button {
+            flex-shrink: 1;
+            white-space: normal;
+        }
     }
 
     /* Mobile Bottom Navigation */
@@ -1774,34 +1811,6 @@ body.sidebar-collapsed .app-container {
         .app-container {
             padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* Space for bottom nav + safe area */
         }
-
-        /* Make inventory tabs horizontally scrollable on mobile */
-        #inventoryTabs {
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
-        }
-
-        #inventoryTabs::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        #inventoryTabs::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-        }
-
-        #inventoryTabs::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        #inventoryTabs button {
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
     }
 
     /* Ensure mobile bottom nav is always visible in portrait orientation on mobile devices */
@@ -1814,19 +1823,6 @@ body.sidebar-collapsed .app-container {
 
         .app-container {
             padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-        }
-
-        /* Ensure inventory tabs are scrollable in portrait orientation */
-        #inventoryTabs {
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch;
-            display: flex !important;
-        }
-
-        #inventoryTabs button {
-            flex-shrink: 0 !important;
-            white-space: nowrap !important;
         }
     }
 
