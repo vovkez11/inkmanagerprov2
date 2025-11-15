@@ -43,6 +43,9 @@
 - 📱 **Touch-Optimized** - All buttons and interactions are touch-friendly
 - 🔄 **Adaptive Layout** - Automatically adjusts to screen size
 - 💫 **Smooth Animations** - Polished transitions and effects
+- 📍 **Bottom Tab Navigation** - Quick access to main sections on mobile (≤768px)
+- 🔒 **Safe Area Support** - Respects device notches and safe areas on iOS/Android
+- 📏 **Dynamic Viewport Units** - Uses `100dvh` for proper mobile browser chrome handling
 
 ## Technical Details
 - **Client-Side Only** - No backend required, runs entirely in the browser
@@ -69,6 +72,50 @@ This app stores all data locally on your device. **No data is sent to servers or
 - ✅ Mobile browsers (iOS Safari, Chrome Android)
 
 **Note:** Notification features require browser permission and may not be available in all browsers or configurations.
+
+## Responsive Layout & Mobile Design
+
+### Mobile-First Approach
+InkManager Pro uses a mobile-first responsive design that adapts seamlessly to different screen sizes:
+
+- **Mobile (≤768px)**: Bottom tab navigation with off-canvas sidebar
+- **Desktop (>768px)**: Side navigation with collapsible sidebar option
+
+### Key Responsive Features
+
+#### Dynamic Viewport Heights
+- Uses `100dvh` (dynamic viewport height) with `100vh` fallback
+- Handles mobile browser chrome (address bar) appearing/disappearing on iOS Safari and Chrome Android
+- Prevents content from being pushed below viewport when browser chrome changes
+
+#### Bottom Tab Bar
+- Fixed position at viewport bottom with `z-index: 1100`
+- Height managed by CSS variable `--tab-bar-height: 64px`
+- Safe-area inset padding: `padding-bottom: max(env(safe-area-inset-bottom), 8px)`
+- Prevents overlap with content via calculated padding on `.app-container`
+
+#### Z-Index Hierarchy
+Layer stacking ensures proper element visibility:
+- Sidebar: `1000`
+- Mobile sidebar overlay: `1000`
+- Mobile sidebar (when open): `1001`
+- Bottom tab navigation: `1100`
+- Install prompt / Update banner: `1150`
+- Modals: `1200`
+
+#### Safe Area Support
+- Respects iOS notches and Android navigation gestures
+- Uses `env(safe-area-inset-*)` for proper padding
+- Viewport meta tag includes `viewport-fit=cover`
+
+#### Testing Viewports
+The app is tested and optimized for these common mobile widths:
+- 360px (small Android phones)
+- 375px (iPhone SE, iPhone 12/13 mini)
+- 390px (iPhone 12/13/14)
+- 414px (iPhone Plus models)
+- 430px (iPhone 14 Pro Max)
+- Landscape orientations
 
 ## Storage Versioning
 
