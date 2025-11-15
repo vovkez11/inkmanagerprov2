@@ -1821,12 +1821,35 @@ body.sidebar-collapsed .app-container {
         white-space: nowrap;
     }
     
+    /* Mobile: Add scroll fade indicators */
+    @media (max-width: 768px) {
+        /* Allow horizontal scrolling for inventory tabs on mobile */
+        #inventorySection .card {
+            overflow-x: visible;
+        }
+        
+        #inventoryTabs {
+            /* Extend tabs beyond card padding for full-width scrolling */
+            margin-left: -16px;
+            margin-right: -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            /* Gradient fade to indicate scrollability */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
+            mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
+        }
+    }
+
     /* Desktop: horizontal wrapping layout without scrolling */
     @media (min-width: 769px) {
         #inventoryTabs {
             flex-wrap: wrap;
             overflow-x: visible;
             overflow-y: visible;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 
