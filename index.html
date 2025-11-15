@@ -479,13 +479,18 @@ body.sidebar-collapsed .app-container {
     }
 
     .install-btn.pulse {
-        animation: pulse 2s infinite;
+        animation: pulse 2s infinite, glow 2s infinite;
     }
 
     @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.9; }
-        100% { opacity: 1; }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); }
+        50% { box-shadow: 0 6px 20px rgba(76, 175, 80, 0.7); }
     }
 
     .install-btn:hover {
@@ -1193,10 +1198,16 @@ body.sidebar-collapsed .app-container {
             text-align: center;
             width: calc(100% - 40px);
             padding: 16px 20px;
+            top: -150px; /* Start higher off-screen */
+        }
+        
+        .update-banner.show {
+            top: 20px; /* Keep it near the top, away from bottom nav */
         }
         
         .update-banner button {
             width: 100%;
+            min-height: 48px;
         }
     }
 
@@ -1405,13 +1416,23 @@ body.sidebar-collapsed .app-container {
         .header-actions .install-btn {
             display: none; /* Will be shown by JavaScript when install is available */
             position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 1100;
-            padding: 10px 16px;
-            min-height: 44px;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            top: 16px;
+            right: 16px;
+            z-index: 1150;
+            padding: 12px 20px;
+            min-height: 48px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        /* Make install button even more visible on mobile */
+        @media (max-width: 768px) {
+            .install-btn[style*="display: inline-flex"],
+            .install-btn.visible {
+                display: inline-flex !important;
+            }
         }
 
         .icon-btn {
