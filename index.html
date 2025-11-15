@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>InkManager Pro - Professional Tattoo Studio Management</title>
     <meta name="description" content="Complete tattoo studio management system for professional artists">
     <meta name="theme-color" content="#00bcd4">
@@ -1604,6 +1604,11 @@ body.sidebar-collapsed .app-container {
             max-width: 100% !important;
             width: 100% !important;
         }
+
+        /* Ensure mobile bottom nav is visible in landscape */
+        .mobile-bottom-nav {
+            display: flex !important;
+        }
     }
 
     /* Mobile Touch Optimizations */
@@ -1763,6 +1768,19 @@ body.sidebar-collapsed .app-container {
 
         .app-container {
             padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* Space for bottom nav + safe area */
+        }
+    }
+
+    /* Ensure mobile bottom nav is always visible in portrait orientation on mobile devices */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .mobile-bottom-nav {
+            display: flex !important;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .app-container {
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
         }
     }
 
