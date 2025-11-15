@@ -1744,6 +1744,11 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
+    /* Inventory Tabs - Default styling for all viewports */
+    #inventoryTabs {
+        flex-wrap: wrap;
+    }
+
     /* Mobile Bottom Navigation */
     .mobile-bottom-nav {
         display: none;
@@ -1809,6 +1814,19 @@ body.sidebar-collapsed .app-container {
 
         .app-container {
             padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+        }
+
+        /* Ensure inventory tabs are scrollable in portrait orientation */
+        #inventoryTabs {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            display: flex !important;
+        }
+
+        #inventoryTabs button {
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
         }
     }
 
@@ -2146,7 +2164,7 @@ body.sidebar-collapsed .app-container {
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
-                <div id="inventoryTabs" style="display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px;">
+                <div id="inventoryTabs" style="display: flex; gap: 8px; margin: 8px 0 12px;">
                     <button class="btn btn-primary" data-filter="all"><span data-i18n="all">All</span></button>
                     <button class="btn btn-outline" data-filter="needle"><span data-i18n="needle">Needle</span></button>
                     <button class="btn btn-outline" data-filter="ink"><span data-i18n="ink">Ink</span></button>
