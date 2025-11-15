@@ -1150,6 +1150,48 @@ body.sidebar-collapsed .app-container {
         }
     }
 
+    /* Update Banner */
+    .update-banner {
+        position: fixed;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 20px 30px;
+        border-radius: var(--border-radius);
+        z-index: 1002;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        max-width: 90%;
+        width: 600px;
+        transition: top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .update-banner.show {
+        top: 20px;
+    }
+
+    .update-banner button {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+        .update-banner {
+            flex-direction: column;
+            text-align: center;
+            width: calc(100% - 40px);
+            padding: 16px 20px;
+        }
+        
+        .update-banner button {
+            width: 100%;
+        }
+    }
+
     /* Today's Sessions Special Styling */
     .todays-session-item {
         background: linear-gradient(135deg, rgba(0,188,212,0.15) 0%, rgba(255,64,129,0.1) 100%);

@@ -18,7 +18,13 @@ import { showToast, debounce } from './modules/ui.js';
                 this.inventorySort = Storage.loadData('inkmanager_inventorySort', {key: 'name', dir: 'asc'});
                 this.inventorySearchQuery = '';
                 this.selectedInventory = new Set();
-                this.sidebarCollapsed = Storage.getItem('inkmanager_sidebarCollapsed', 'false') === 'true';
+                
+                // On mobile, always start with sidebar closed (true)
+                // On desktop, use saved preference
+                const isMobile = window.innerWidth < 768;
+                const savedState = Storage.getItem('inkmanager_sidebarCollapsed', 'false') === 'true';
+                this.sidebarCollapsed = isMobile ? true : savedState;
+                
                 this.lastDeletedInventory = null;
                 this.undoDeleteTimer = null;
                 this.currentMonth = new Date().getMonth();
@@ -228,31 +234,50 @@ import { showToast, debounce } from './modules/ui.js';
                 const isMobile = window.innerWidth < 768;
                 
                 if (isMobile) {
-                    // On mobile, toggle mobile-open class to slide sidebar in/out
-                    document.body.classList.toggle('mobile-open', this.sidebarCollapsed);
+                    // On mobile, use mobile-open class to slide sidebar in/out
+                    // When sidebarCollapsed is false, we want the menu OPEN
+                    // When sidebarCollapsed is true, we want the menu CLOSED
+                    document.body.classList.toggle('mobile-open', !this.sidebarCollapsed);
+                    // Remove desktop sidebar-collapsed class on mobile
+                    document.body.classList.remove('sidebar-collapsed');
                 } else {
                     // On desktop, toggle sidebar-collapsed class to expand/collapse sidebar
                     document.body.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
+                    // Remove mobile-open class on desktop
+                    document.body.classList.remove('mobile-open');
                 }
                 
                 const toggleBtn = document.getElementById('sidebarToggle');
                 if (toggleBtn) {
                     const icon = toggleBtn.querySelector('i');
                     if (icon) {
-                        icon.className = this.sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+                        // On mobile, show bars icon when closed, times icon when open
+                        if (isMobile) {
+                            // sidebarCollapsed = true → closed → show bars
+                            // sidebarCollapsed = false → open → show times (X)
+                            icon.className = this.sidebarCollapsed ? 'fas fa-bars' : 'fas fa-times';
+                        } else {
+                            icon.className = this.sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+                        }
                     }
-                    const label = this.sidebarCollapsed
-                        ? (this.translate('expand_sidebar') || 'Expand Sidebar')
-                        : (this.translate('collapse_sidebar') || 'Collapse Sidebar');
+                    const label = isMobile
+                        ? (this.sidebarCollapsed ? 'Open Menu' : 'Close Menu')
+                        : (this.sidebarCollapsed
+                            ? (this.translate('expand_sidebar') || 'Expand Sidebar')
+                            : (this.translate('collapse_sidebar') || 'Collapse Sidebar'));
                     toggleBtn.title = label;
                     toggleBtn.setAttribute('aria-label', label);
-                    toggleBtn.setAttribute('aria-pressed', this.sidebarCollapsed ? 'true' : 'false');
+                    toggleBtn.setAttribute('aria-pressed', this.sidebarCollapsed ? 'false' : 'true');
                 }
             }
 
             toggleSidebar() {
                 this.sidebarCollapsed = !this.sidebarCollapsed;
-                localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                // Only save state on desktop, not on mobile
+                const isMobile = window.innerWidth < 768;
+                if (!isMobile) {
+                    localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                }
                 this.applySidebarState();
             }
 
@@ -325,10 +350,37 @@ import { showToast, debounce } from './modules/ui.js';
                     navigator.serviceWorker.register('./sw.js')
                         .then(registration => {
                             console.log('✅ Service Worker registered:', registration);
+                            
+                            // Check for service worker updates
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                console.log('🔄 Service Worker update found');
+                                
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        // New service worker available, prompt user to update
+                                        console.log('✨ New version available');
+                                        this.showUpdatePrompt();
+                                    }
+                                });
+                            });
+                            
+                            // Check for updates periodically (every hour)
+                            setInterval(() => {
+                                registration.update();
+                            }, 60 * 60 * 1000);
                         })
                         .catch(error => {
                             console.log('❌ Service Worker registration failed:', error);
                         });
+                    
+                    // Listen for messages from service worker
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data && event.data.type === 'SW_UPDATED') {
+                            console.log('📢 Service Worker updated:', event.data.version);
+                            this.showUpdatePrompt();
+                        }
+                    });
                 }
 
                 let deferredPrompt;
@@ -2218,6 +2270,47 @@ import { showToast, debounce } from './modules/ui.js';
 
             showNotification(message) {
                 showToast(message);
+            }
+
+            showUpdatePrompt() {
+                // Create update notification banner
+                const updateBanner = document.createElement('div');
+                updateBanner.className = 'update-banner';
+                updateBanner.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <i class="fas fa-sync-alt" style="font-size: 1.5em; color: var(--primary);"></i>
+                        <div>
+                            <strong>🆕 Update Available</strong>
+                            <p style="margin: 5px 0 0; font-size: 0.9em; opacity: 0.9;">A new version is ready. Refresh to update.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="updateAppBtn">
+                        <i class="fas fa-redo"></i> Update Now
+                    </button>
+                `;
+                
+                // Add to DOM if not already present
+                if (!document.querySelector('.update-banner')) {
+                    document.body.appendChild(updateBanner);
+                    
+                    // Animate in
+                    setTimeout(() => {
+                        updateBanner.classList.add('show');
+                    }, 100);
+                    
+                    // Handle update button click
+                    const updateBtn = document.getElementById('updateAppBtn');
+                    if (updateBtn) {
+                        updateBtn.addEventListener('click', () => {
+                            // Tell the service worker to skip waiting
+                            if (navigator.serviceWorker.controller) {
+                                navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                            // Reload the page
+                            window.location.reload();
+                        });
+                    }
+                }
             }
 
             safeSaveData(immediate = false) {
