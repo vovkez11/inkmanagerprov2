@@ -1744,45 +1744,28 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
-    /* Inventory Tabs - Default styling */
+    /* Inventory Tabs - Mobile-first: vertical stacking */
     #inventoryTabs {
-        /* Mobile-first: horizontal scroll by default */
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
-    }
-    
-    #inventoryTabs::-webkit-scrollbar {
-        height: 4px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 2px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 2px;
+        flex-direction: column;
+        align-items: stretch;
     }
     
     #inventoryTabs button {
-        flex-shrink: 0;
-        white-space: nowrap;
+        width: 100%;
+        justify-content: center;
     }
     
-    /* Desktop: allow wrapping */
+    /* Desktop: horizontal wrapping layout */
     @media (min-width: 769px) {
         #inventoryTabs {
+            flex-direction: row;
             flex-wrap: wrap;
-            overflow-x: visible;
+            align-items: center;
         }
         
         #inventoryTabs button {
+            width: auto;
             flex-shrink: 1;
-            white-space: normal;
         }
     }
 
