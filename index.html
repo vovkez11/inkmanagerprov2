@@ -1773,48 +1773,68 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
-    /* Inventory Tabs - Horizontal scrolling on all screen sizes */
+    /* Inventory Tabs - Vertical on mobile, horizontal on desktop */
     #inventoryTabs {
-        flex-direction: row;
-        align-items: center;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) rgba(255,255,255,0.1);
-        padding-bottom: 4px;
-    }
-    
-    /* Hide scrollbar on WebKit browsers but keep functionality */
-    #inventoryTabs::-webkit-scrollbar {
-        height: 6px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.05);
-        border-radius: 3px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 3px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-light);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
     
     #inventoryTabs button {
-        flex-shrink: 0;
-        white-space: nowrap;
+        width: auto;
+        min-width: 100px;
+        justify-content: flex-start;
+        text-align: left;
     }
     
-    /* Desktop: allow wrapping if desired */
+    /* Desktop and landscape: horizontal wrapping layout */
     @media (min-width: 769px) {
         #inventoryTabs {
+            flex-direction: row;
             flex-wrap: wrap;
-            overflow-x: visible;
+            align-items: center;
+        }
+        
+        #inventoryTabs button {
+            width: auto;
+        }
+    }
+    
+    /* Landscape mobile: horizontal scrolling */
+    @media (max-width: 768px) and (orientation: landscape) {
+        #inventoryTabs {
+            flex-direction: row;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+        
+        /* Hide scrollbar on WebKit browsers but keep functionality */
+        #inventoryTabs::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        #inventoryTabs::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+        
+        #inventoryTabs::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        #inventoryTabs::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+        
+        #inventoryTabs button {
+            flex-shrink: 0;
+            white-space: nowrap;
         }
     }
 
