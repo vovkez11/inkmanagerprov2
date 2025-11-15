@@ -18,7 +18,13 @@ import { showToast, debounce } from './modules/ui.js';
                 this.inventorySort = Storage.loadData('inkmanager_inventorySort', {key: 'name', dir: 'asc'});
                 this.inventorySearchQuery = '';
                 this.selectedInventory = new Set();
-                this.sidebarCollapsed = Storage.getItem('inkmanager_sidebarCollapsed', 'false') === 'true';
+                
+                // On mobile, always start with sidebar closed (true)
+                // On desktop, use saved preference
+                const isMobile = window.innerWidth < 768;
+                const savedState = Storage.getItem('inkmanager_sidebarCollapsed', 'false') === 'true';
+                this.sidebarCollapsed = isMobile ? true : savedState;
+                
                 this.lastDeletedInventory = null;
                 this.undoDeleteTimer = null;
                 this.currentMonth = new Date().getMonth();
@@ -228,12 +234,17 @@ import { showToast, debounce } from './modules/ui.js';
                 const isMobile = window.innerWidth < 768;
                 
                 if (isMobile) {
-                    // On mobile, toggle mobile-open class to slide sidebar in/out
-                    // When sidebar is NOT collapsed, it should be open (mobile-open = true)
+                    // On mobile, use mobile-open class to slide sidebar in/out
+                    // When sidebarCollapsed is false, we want the menu OPEN
+                    // When sidebarCollapsed is true, we want the menu CLOSED
                     document.body.classList.toggle('mobile-open', !this.sidebarCollapsed);
+                    // Remove desktop sidebar-collapsed class on mobile
+                    document.body.classList.remove('sidebar-collapsed');
                 } else {
                     // On desktop, toggle sidebar-collapsed class to expand/collapse sidebar
                     document.body.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
+                    // Remove mobile-open class on desktop
+                    document.body.classList.remove('mobile-open');
                 }
                 
                 const toggleBtn = document.getElementById('sidebarToggle');
@@ -242,23 +253,31 @@ import { showToast, debounce } from './modules/ui.js';
                     if (icon) {
                         // On mobile, show bars icon when closed, times icon when open
                         if (isMobile) {
+                            // sidebarCollapsed = true → closed → show bars
+                            // sidebarCollapsed = false → open → show times (X)
                             icon.className = this.sidebarCollapsed ? 'fas fa-bars' : 'fas fa-times';
                         } else {
                             icon.className = this.sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
                         }
                     }
-                    const label = this.sidebarCollapsed
-                        ? (this.translate('expand_sidebar') || 'Expand Sidebar')
-                        : (this.translate('collapse_sidebar') || 'Collapse Sidebar');
+                    const label = isMobile
+                        ? (this.sidebarCollapsed ? 'Open Menu' : 'Close Menu')
+                        : (this.sidebarCollapsed
+                            ? (this.translate('expand_sidebar') || 'Expand Sidebar')
+                            : (this.translate('collapse_sidebar') || 'Collapse Sidebar'));
                     toggleBtn.title = label;
                     toggleBtn.setAttribute('aria-label', label);
-                    toggleBtn.setAttribute('aria-pressed', this.sidebarCollapsed ? 'true' : 'false');
+                    toggleBtn.setAttribute('aria-pressed', this.sidebarCollapsed ? 'false' : 'true');
                 }
             }
 
             toggleSidebar() {
                 this.sidebarCollapsed = !this.sidebarCollapsed;
-                localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                // Only save state on desktop, not on mobile
+                const isMobile = window.innerWidth < 768;
+                if (!isMobile) {
+                    localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                }
                 this.applySidebarState();
             }
 
