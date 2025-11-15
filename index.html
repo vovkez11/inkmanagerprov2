@@ -1337,8 +1337,8 @@ body.sidebar-collapsed .app-container {
 
         /* Mobile App-like Header */
         .app-header {
-            padding: 8px 12px;
-            margin-bottom: 8px;
+            padding: 4px 8px;
+            margin-bottom: 4px;
             border-radius: 0;
             min-height: auto;
             background: var(--dark);
@@ -1364,8 +1364,8 @@ body.sidebar-collapsed .app-container {
         .app-header-top {
             flex-direction: row;
             align-items: center;
-            gap: 8px;
-            min-height: 44px;
+            gap: 6px;
+            min-height: 40px;
         }
         
         /* Language selector in mobile header - make it compact */
@@ -1379,24 +1379,24 @@ body.sidebar-collapsed .app-container {
             background: transparent;
             border: none;
             color: var(--primary);
-            font-size: 1.5rem;
-            padding: 8px;
-            min-width: 44px;
-            min-height: 44px;
+            font-size: 1.3rem;
+            padding: 6px;
+            min-width: 40px;
+            min-height: 40px;
         }
         
         /* Show logo in header-left on mobile */
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             width: 100%;
         }
         
         /* Keep the InkManager Pro logo visible on mobile */
         .header-left .logo {
             display: flex !important;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             flex: 1;
         }
 
@@ -1405,28 +1405,38 @@ body.sidebar-collapsed .app-container {
         }
 
         .icon-btn {
-            padding: 12px;
-            min-width: 48px;
-            min-height: 48px;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .btn {
-            padding: 12px 20px;
-            min-height: 48px;
-            font-size: 0.95rem;
+            padding: 10px 16px;
+            min-height: 44px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+        }
+        
+        .todays-session-item {
+            padding: 12px;
+            margin-bottom: 8px;
         }
 
         .stats-grid {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
 
         .stat-card {
-            padding: 18px;
+            padding: 12px;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
         }
 
         .calendar-grid {
@@ -1441,21 +1451,40 @@ body.sidebar-collapsed .app-container {
 
         .client-item, .session-item, .inventory-item {
             flex-direction: column;
-            gap: 12px;
-            padding: 15px;
+            gap: 10px;
+            padding: 12px;
         }
 
         .item-actions {
             opacity: 1;
             width: 100%;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 8px;
         }
 
         .action-btn {
-            min-width: 48px;
-            min-height: 48px;
-            padding: 12px;
+            min-width: 44px;
+            min-height: 44px;
+            padding: 10px;
+        }
+        
+        .empty-state {
+            padding: 30px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            font-size: 0.9em;
+            margin-bottom: 16px;
         }
 
         .modal-content {
@@ -1471,11 +1500,11 @@ body.sidebar-collapsed .app-container {
         .install-prompt {
             flex-direction: column;
             text-align: center;
-            padding: 10px 12px;
-            font-size: 0.8rem;
+            padding: 8px 10px;
+            font-size: 0.75rem;
             max-width: 80%;
-            gap: 8px;
-            bottom: calc(var(--tab-bar-height) + 10px + env(safe-area-inset-bottom));
+            gap: 6px;
+            bottom: calc(56px + 10px + env(safe-area-inset-bottom));
         }
         
         .install-prompt button {
@@ -1485,13 +1514,19 @@ body.sidebar-collapsed .app-container {
         }
 
         .card {
-            padding: 16px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
         }
 
         .card-title {
-            font-size: 1.3em;
-            padding: 6px 12px;
+            font-size: 1.1em;
+            padding: 4px 8px;
+        }
+        
+        .card-header {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
         }
 
         .materials-grid {
@@ -1523,7 +1558,7 @@ body.sidebar-collapsed .app-container {
     /* Extra Small to Medium Phones - Single column for stats */
     @media (max-width: 600px) {
         .app-container {
-            padding: 10px;
+            padding: 6px;
             max-width: 100% !important;
             width: 100% !important;
         }
@@ -1535,24 +1570,29 @@ body.sidebar-collapsed .app-container {
         }
 
         .stats-grid {
-            grid-template-columns: 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
         }
 
         .stat-card {
-            padding: 16px;
+            padding: 10px;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
         }
 
         .card {
-            padding: 14px 12px;
+            padding: 10px;
+            margin-bottom: 8px;
         }
 
         .card-title {
-            font-size: 1.2em;
+            font-size: 1.05em;
         }
 
         .calendar-day {
@@ -1574,8 +1614,8 @@ body.sidebar-collapsed .app-container {
         }
 
         .btn {
-            padding: 11px 16px;
-            font-size: 0.9rem;
+            padding: 9px 14px;
+            font-size: 0.85rem;
         }
 
         .modal-content {
@@ -1633,7 +1673,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            padding-bottom: calc(var(--tab-bar-height) + 10px);
+            padding-bottom: calc(56px + 10px);
             max-width: 100% !important;
             width: 100% !important;
         }
@@ -1839,10 +1879,10 @@ body.sidebar-collapsed .app-container {
         right: 0;
         background: linear-gradient(180deg, var(--dark-gray) 0%, var(--darker) 100%);
         border-top: 1px solid #30363d;
-        padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+        padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
         z-index: 1100;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
-        min-height: var(--tab-bar-height);
+        min-height: 56px;
     }
 
     @media (max-width: 768px) {
@@ -1850,11 +1890,11 @@ body.sidebar-collapsed .app-container {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding-bottom: max(env(safe-area-inset-bottom), 8px);
+            padding-bottom: max(env(safe-area-inset-bottom), 6px);
         }
 
         .app-container {
-            padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)); /* Space for bottom nav + padding + safe area */
+            padding-bottom: calc(56px + 16px + env(safe-area-inset-bottom)); /* Space for bottom nav + padding + safe area */
         }
     }
 
@@ -1867,7 +1907,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)) !important;
+            padding-bottom: calc(56px + 16px + env(safe-area-inset-bottom)) !important;
         }
     }
 
@@ -1875,19 +1915,19 @@ body.sidebar-collapsed .app-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
-        padding: 8px 12px;
+        gap: 2px;
+        padding: 6px 8px;
         color: var(--light);
         text-decoration: none;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         transition: var(--transition);
         border-radius: 8px;
-        min-width: 60px;
+        min-width: 52px;
         cursor: pointer;
     }
 
     .mobile-nav-item i {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 
     .mobile-nav-item.active {
