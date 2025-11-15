@@ -1387,7 +1387,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
         }
 
@@ -1482,8 +1482,8 @@ body.sidebar-collapsed .app-container {
         }
     }
 
-    /* Extra Small Phones */
-    @media (max-width: 480px) {
+    /* Extra Small to Medium Phones - Single column for stats */
+    @media (max-width: 600px) {
         .app-container {
             padding: 10px;
             max-width: 100% !important;
