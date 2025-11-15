@@ -45,6 +45,7 @@
         --border-radius: 16px;
         --shadow: 0 12px 40px rgba(0,0,0,0.4);
         --transition: all 0.2s ease;
+        --tab-bar-height: 64px;
     }
 
     /* Fallback icons when Font Awesome is not loaded */
@@ -142,7 +143,8 @@
         color: var(--light);
         line-height: 1.7;
         min-height: 100%;
-        height: 100vh;
+        height: 100vh; /* Fallback for browsers without dvh support */
+        height: 100dvh;
         width: 100%;
         max-width: 100%;
         padding: 0;
@@ -187,8 +189,8 @@
         flex-direction: column;
         position: sticky;
         top: 0;
-        height: 100vh;
-        height: 100%;
+        height: 100vh; /* Fallback for browsers without dvh support */
+        height: 100dvh;
         box-shadow: 2px 0 20px rgba(0,0,0,0.6);
         z-index: 1000;
         overflow-y: auto;
@@ -326,8 +328,8 @@ body.sidebar-collapsed .app-container {
         width: calc(100% - 280px);
         max-width: calc(100% - 280px);
         min-width: 0;
-        height: 100vh;
-        height: 100%;
+        height: 100vh; /* Fallback for browsers without dvh support */
+        height: 100dvh;
         padding: 20px;
         overflow-y: auto;
         overflow-x: hidden;
@@ -493,7 +495,7 @@ body.sidebar-collapsed .app-container {
         padding: 20px 25px;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        z-index: 1000;
+        z-index: 1150;
         display: none;
         gap: 20px;
         align-items: center;
@@ -1046,7 +1048,7 @@ body.sidebar-collapsed .app-container {
         width: 100%;
         height: 100%;
         background: rgba(0,0,0,0.95);
-        z-index: 1000;
+        z-index: 1200;
         backdrop-filter: blur(15px);
         animation: fadeIn 0.4s ease;
         padding: 10px;
@@ -1157,7 +1159,7 @@ body.sidebar-collapsed .app-container {
         color: white;
         padding: 20px 30px;
         border-radius: var(--border-radius);
-        z-index: 1002;
+        z-index: 1150;
         box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         display: flex;
         align-items: center;
@@ -1228,7 +1230,8 @@ body.sidebar-collapsed .app-container {
             width: 280px;
             min-width: 280px;
             max-width: 280px;
-            height: 100vh;
+            height: 100vh; /* Fallback for browsers without dvh support */
+            height: 100dvh;
             transition: left 0.3s ease, transform 0.3s ease;
             z-index: 1001;
             transform: translateX(0);
@@ -1440,6 +1443,7 @@ body.sidebar-collapsed .app-container {
             text-align: center;
             padding: 16px;
             font-size: 0.9rem;
+            bottom: calc(var(--tab-bar-height) + 10px + env(safe-area-inset-bottom));
         }
 
         .card {
@@ -1591,7 +1595,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            padding-bottom: 70px;
+            padding-bottom: calc(var(--tab-bar-height) + 10px);
             max-width: 100% !important;
             width: 100% !important;
         }
@@ -1776,8 +1780,9 @@ body.sidebar-collapsed .app-container {
         background: linear-gradient(180deg, var(--dark-gray) 0%, var(--darker) 100%);
         border-top: 1px solid #30363d;
         padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
-        z-index: 1000;
+        z-index: 1100;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+        min-height: var(--tab-bar-height);
     }
 
     @media (max-width: 768px) {
@@ -1789,7 +1794,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* Space for bottom nav + safe area */
+            padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)); /* Space for bottom nav + padding + safe area */
         }
     }
 
@@ -1802,7 +1807,7 @@ body.sidebar-collapsed .app-container {
         }
 
         .app-container {
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+            padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)) !important;
         }
     }
 
