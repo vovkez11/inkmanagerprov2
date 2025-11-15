@@ -5,7 +5,7 @@
 
 import { translations, currencyConfig, formatCurrency as formatCurrencyUtil, translate as translateUtil, updateDOMTranslations } from './modules/i18n.js';
 import * as Storage from './modules/storage.js';
-import { showToast, debounce } from './modules/ui.js';
+import { showToast, debounce, escapeHtml } from './modules/ui.js';
 
 // INKMANAGER PRO - COMPLETE REWRITTEN VERSION WITH PERFECT MULTI-LANGUAGE & CURRENCY SUPPORT
         class InkManagerPro {
@@ -276,9 +276,18 @@ import { showToast, debounce } from './modules/ui.js';
                 // Only save state on desktop, not on mobile
                 const isMobile = window.innerWidth < 768;
                 if (!isMobile) {
-                    localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                    try {
+                        localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
+                    } catch (error) {
+                        console.error('Failed to save sidebar state:', error);
+                    }
                 }
                 this.applySidebarState();
+            }
+
+            // Helper method to escape HTML and prevent XSS attacks
+            escapeHtml(text) {
+                return escapeHtml(text);
             }
 
             // Debounce utility for search inputs - prevents excessive re-renders
@@ -316,9 +325,16 @@ import { showToast, debounce } from './modules/ui.js';
 
             setLanguage(lang) {
                 this.currentLanguage = lang;
-                localStorage.setItem('inkmanager_language', lang);
+                try {
+                    localStorage.setItem('inkmanager_language', lang);
+                } catch (error) {
+                    console.error('Failed to save language preference:', error);
+                }
                 
-                document.getElementById('languageSelect').value = lang;
+                const languageSelect = document.getElementById('languageSelect');
+                if (languageSelect) {
+                    languageSelect.value = lang;
+                }
                 
                 // Cache translation elements on first access
                 if (!this.domCache.i18nElements) {
@@ -657,7 +673,11 @@ import { showToast, debounce } from './modules/ui.js';
 
             setInventoryFilter(filter) {
                 this.inventoryFilter = filter || 'all';
-                localStorage.setItem('inkmanager_inventoryFilter', this.inventoryFilter);
+                try {
+                    localStorage.setItem('inkmanager_inventoryFilter', this.inventoryFilter);
+                } catch (error) {
+                    console.error('Failed to save inventory filter:', error);
+                }
                 this.updateInventoryTabsUI();
                 this.refreshInventory();
             }
@@ -698,7 +718,11 @@ import { showToast, debounce } from './modules/ui.js';
 
             setInventorySort(key, dir) {
                 this.inventorySort = { key: key || 'name', dir: dir || 'asc' };
-                localStorage.setItem('inkmanager_inventorySort', JSON.stringify(this.inventorySort));
+                try {
+                    localStorage.setItem('inkmanager_inventorySort', JSON.stringify(this.inventorySort));
+                } catch (error) {
+                    console.error('Failed to save inventory sort:', error);
+                }
                 this.syncInventorySortUI();
                 this.refreshInventory();
             }
@@ -1260,26 +1284,26 @@ import { showToast, debounce } from './modules/ui.js';
                         <div class="client-item">
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
-                                    <i class="fas fa-user"></i> ${client.name}
+                                    <i class="fas fa-user"></i> ${this.escapeHtml(client.name)}
                                     ${stats.count > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
-                                    ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
-                                    ${client.email ? `<div><i class="fas fa-envelope"></i> ${client.email}</div>` : ''}
+                                    ${client.phone ? `<div><i class="fas fa-phone"></i> ${this.escapeHtml(client.phone)}</div>` : ''}
+                                    ${client.email ? `<div><i class="fas fa-envelope"></i> ${this.escapeHtml(client.email)}</div>` : ''}
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
-                                    ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
-                                    ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
+                                    ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${this.escapeHtml(client.skinType)} skin</div>` : ''}
+                                    ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${this.escapeHtml(client.emergencyContact)}</div>` : ''}
                                     <div><i class="fas fa-calendar"></i> ${stats.count} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(stats.totalSpent)}</div>
                                     ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
-                                    ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
+                                    ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${this.escapeHtml(client.notes)}</div>` : ''}
                                     ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
-                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openClientModal('${client.id}')" title="Edit Client">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openClientModal('${this.escapeHtml(client.id)}')" title="Edit Client">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteClient('${client.id}')" title="Delete Client">
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteClient('${this.escapeHtml(client.id)}')" title="Delete Client">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1302,12 +1326,12 @@ import { showToast, debounce } from './modules/ui.js';
                 }
 
                 container.innerHTML = filteredClients.map(client => `
-                    <div class="client-item" onclick="app.openClientModal('${client.id}')">
+                    <div class="client-item" onclick="app.openClientModal('${this.escapeHtml(client.id)}')">
                         <div class="item-content">
-                            <div class="item-title">${client.name}</div>
+                            <div class="item-title">${this.escapeHtml(client.name)}</div>
                             <div class="item-meta">
-                                ${client.phone ? `<i class="fas fa-phone"></i> ${client.phone}<br>` : ''}
-                                ${client.email ? `<i class="fas fa-envelope"></i> ${client.email}` : ''}
+                                ${client.phone ? `<i class="fas fa-phone"></i> ${this.escapeHtml(client.phone)}<br>` : ''}
+                                ${client.email ? `<i class="fas fa-envelope"></i> ${this.escapeHtml(client.email)}` : ''}
                             </div>
                         </div>
                     </div>
@@ -1496,23 +1520,23 @@ import { showToast, debounce } from './modules/ui.js';
                     return `
                         <div class="session-item">
                             <div class="item-content" onclick="app.showSection('sessions')">
-                                <div class="item-title">${session.title}</div>
+                                <div class="item-title">${this.escapeHtml(session.title)}</div>
                                 <div class="item-meta">
-                                    <strong>${this.translate('client') || 'Client'}:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>${this.translate('client') || 'Client'}:</strong> ${this.escapeHtml(this.getClientName(session.clientId))}<br>
                                     <strong>${this.translate('date_time') || 'When'}:</strong> ${sessionDate.toLocaleString()}<br>
                                     <strong>${this.translate('duration_hours') || 'Duration'}:</strong> ${session.duration} hours<br>
                                     <strong>${this.translate('status') || 'Status'}:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
                                     ${session.price ? `<strong>${this.translate('price') || 'Price'}:</strong> ${this.formatCurrency(session.price)}` : ''}
                                     ${materialsText}
-                                    ${session.notes ? `<br><strong>${this.translate('session_notes') || 'Notes'}:</strong> ${session.notes}` : ''}
+                                    ${session.notes ? `<br><strong>${this.translate('session_notes') || 'Notes'}:</strong> ${this.escapeHtml(session.notes)}` : ''}
                                     ${session.updatedAt ? `<br><small style='opacity: 0.7;'>${this.translate('last_updated') || 'Last updated'}: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
-                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openSessionModal('${session.id}')" title="Edit Session">
+                                <button class="action-btn btn-primary" onclick="event.stopPropagation(); app.openSessionModal('${this.escapeHtml(session.id)}')" title="Edit Session">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${session.id}')" title="Delete Session">
+                                <button class="action-btn btn-danger" onclick="event.stopPropagation(); app.deleteSession('${this.escapeHtml(session.id)}')" title="Delete Session">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -2435,7 +2459,16 @@ import { showToast, debounce } from './modules/ui.js';
 
                 const reminderTime = parseInt(localStorage.getItem('inkmanager_reminderTime')) || 2; // Default 2 hours
                 const now = new Date();
-                const notifiedSessions = JSON.parse(localStorage.getItem('inkmanager_notifiedSessions')) || [];
+                let notifiedSessions = [];
+                
+                // Safely parse notified sessions with try-catch
+                try {
+                    const stored = localStorage.getItem('inkmanager_notifiedSessions');
+                    notifiedSessions = stored ? JSON.parse(stored) : [];
+                } catch (error) {
+                    console.error('Error parsing notified sessions:', error);
+                    notifiedSessions = [];
+                }
                 
                 this.sessions.forEach(session => {
                     const sessionDate = new Date(session.dateTime);

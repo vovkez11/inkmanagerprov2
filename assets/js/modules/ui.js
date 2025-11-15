@@ -277,6 +277,18 @@ export function setText(elementId, text) {
 }
 
 /**
+ * Escape HTML special characters to prevent XSS attacks
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text safe for HTML insertion
+ */
+export function escapeHtml(text) {
+    if (text == null) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
  * Show confirmation dialog
  * @param {string} message - Confirmation message
  * @returns {boolean} User confirmation result
