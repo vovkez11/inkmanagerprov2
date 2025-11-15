@@ -1234,6 +1234,17 @@ body.sidebar-collapsed .app-container {
             transform: translateX(0);
         }
 
+        /* Hide logo text in mobile sidebar to prevent cutoff */
+        #sidebar .logo-text {
+            display: none;
+        }
+
+        /* Center and enlarge the icon when text is hidden on mobile */
+        #sidebar .logo {
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
         body.mobile-open #sidebar {
             left: 0;
             transform: translateX(0);
@@ -1337,6 +1348,16 @@ body.sidebar-collapsed .app-container {
             justify-content: space-between;
             width: 100%;
             flex-wrap: wrap;
+        }
+
+        /* Hide logo text in mobile header to prevent cutoff */
+        .header-left .logo-text {
+            display: none;
+        }
+
+        /* Adjust logo icon size in header on mobile */
+        .header-left .logo {
+            font-size: 1.8rem;
         }
 
         .header-actions {
