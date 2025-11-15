@@ -1851,6 +1851,7 @@ body.sidebar-collapsed .app-container {
 
     /* Inventory Tabs - Horizontal scrolling on mobile, wrapping on desktop */
     #inventoryTabs {
+        display: flex;
         flex-direction: row;
         align-items: center;
         overflow-x: auto;
@@ -1861,6 +1862,8 @@ body.sidebar-collapsed .app-container {
         scrollbar-color: var(--primary) rgba(255,255,255,0.1);
         padding-bottom: 4px;
         gap: 8px;
+        margin-top: 8px;
+        margin-bottom: 12px;
     }
     
     /* Scrollbar styling for WebKit browsers */
@@ -1890,7 +1893,7 @@ body.sidebar-collapsed .app-container {
     /* Mobile: Add scroll fade indicators */
     @media (max-width: 768px) {
         /* Allow horizontal scrolling for inventory tabs on mobile */
-        #inventorySection .card {
+        #inventory .card {
             overflow-x: visible;
         }
         
@@ -2346,7 +2349,7 @@ body.sidebar-collapsed .app-container {
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
-                <div id="inventoryTabs" style="display: flex; gap: 8px; margin: 8px 0 12px;">
+                <div id="inventoryTabs">
                     <button class="btn btn-primary" data-filter="all"><span data-i18n="all">All</span></button>
                     <button class="btn btn-outline" data-filter="needle"><span data-i18n="needle">Needle</span></button>
                     <button class="btn btn-outline" data-filter="ink"><span data-i18n="ink">Ink</span></button>
