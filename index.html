@@ -248,6 +248,13 @@ body.sidebar-collapsed .app-container {
         letter-spacing: 1.5px;
     }
 
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.5));
+    }
+
     .logo-text {
         white-space: nowrap;
     }
@@ -1766,28 +1773,48 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
-    /* Inventory Tabs - Mobile-first: vertical stacking */
+    /* Inventory Tabs - Horizontal scrolling on all screen sizes */
     #inventoryTabs {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) rgba(255,255,255,0.1);
+        padding-bottom: 4px;
+    }
+    
+    /* Hide scrollbar on WebKit browsers but keep functionality */
+    #inventoryTabs::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    #inventoryTabs::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+        border-radius: 3px;
+    }
+    
+    #inventoryTabs::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 3px;
+    }
+    
+    #inventoryTabs::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-light);
     }
     
     #inventoryTabs button {
-        width: 100%;
-        justify-content: center;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
     
-    /* Desktop: horizontal wrapping layout */
+    /* Desktop: allow wrapping if desired */
     @media (min-width: 769px) {
         #inventoryTabs {
-            flex-direction: row;
             flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        #inventoryTabs button {
-            width: auto;
-            flex-shrink: 1;
+            overflow-x: visible;
         }
     }
 
@@ -1956,7 +1983,7 @@ body.sidebar-collapsed .app-container {
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
         <div class="logo">
-            <i class="fas fa-dragon"></i>
+            <img src="icons/icon-192.png" alt="InkManager Pro" class="logo-icon">
             <span class="logo-text">InkManager Pro</span>
         </div>
         
@@ -2009,7 +2036,7 @@ body.sidebar-collapsed .app-container {
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="logo">
-                        <i class="fas fa-dragon"></i>
+                        <img src="icons/icon-192.png" alt="InkManager Pro" class="logo-icon">
                         <span class="logo-text">InkManager Pro</span>
                     </div>
                 </div>
