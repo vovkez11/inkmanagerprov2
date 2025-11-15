@@ -516,7 +516,6 @@ body.sidebar-collapsed .app-container {
         font-weight: 600;
         font-size: 0.85rem;
     }
-    }
 
     .install-prompt.show {
         display: flex;
@@ -1355,10 +1354,8 @@ body.sidebar-collapsed .app-container {
             display: none;
         }
         
-        /* Hide install button on mobile - use PWA prompt instead */
-        .install-btn {
-            display: none !important;
-        }
+        /* Show install button on mobile when PWA install is available */
+        /* Removed display: none !important to allow JavaScript to control visibility */
         
         /* Compact header for mobile */
         .app-header-top {
@@ -1402,6 +1399,19 @@ body.sidebar-collapsed .app-container {
 
         .header-actions {
             display: none; /* Hide all header actions on mobile for clean app look */
+        }
+        
+        /* Show only install button when available on mobile */
+        .header-actions .install-btn {
+            display: none; /* Will be shown by JavaScript when install is available */
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 1100;
+            padding: 10px 16px;
+            min-height: 44px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
         }
 
         .icon-btn {
