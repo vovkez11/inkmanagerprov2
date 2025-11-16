@@ -498,47 +498,79 @@ import { showToast, debounce } from './modules/ui.js';
                     this.openInventoryModal();
                 });
 
-                document.getElementById('languageSelect').addEventListener('change', (e) => {
-                    this.setLanguage(e.target.value);
-                });
+                const languageSelect = document.getElementById('languageSelect');
+                if (languageSelect) {
+                    languageSelect.addEventListener('change', (e) => {
+                        this.setLanguage(e.target.value);
+                    });
+                }
 
-                document.getElementById('addClientBtn').addEventListener('click', () => this.openClientModal());
-                document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
-                document.getElementById('closeClientModalBtn').addEventListener('click', () => this.closeClientModal());
-                document.getElementById('cancelClientBtn').addEventListener('click', () => this.closeClientModal());
-                document.getElementById('clientForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.saveClient();
-                });
+                const addClientBtn = document.getElementById('addClientBtn');
+                if (addClientBtn) addClientBtn.addEventListener('click', () => this.openClientModal());
+                const addFirstClient = document.getElementById('addFirstClient');
+                if (addFirstClient) addFirstClient.addEventListener('click', () => this.openClientModal());
+                const closeClientModalBtn = document.getElementById('closeClientModalBtn');
+                if (closeClientModalBtn) closeClientModalBtn.addEventListener('click', () => this.closeClientModal());
+                const cancelClientBtn = document.getElementById('cancelClientBtn');
+                if (cancelClientBtn) cancelClientBtn.addEventListener('click', () => this.closeClientModal());
+                const clientForm = document.getElementById('clientForm');
+                if (clientForm) {
+                    clientForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.saveClient();
+                    });
+                }
 
-                document.getElementById('addSessionBtn').addEventListener('click', () => this.openSessionModal());
-                document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
-                document.getElementById('addCalendarSessionBtn').addEventListener('click', () => this.openSessionModal());
-                document.getElementById('closeSessionModalBtn').addEventListener('click', () => this.closeSessionModal());
-                document.getElementById('sessionForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.saveSession();
-                });
+                const addSessionBtn = document.getElementById('addSessionBtn');
+                if (addSessionBtn) addSessionBtn.addEventListener('click', () => this.openSessionModal());
+                const addFirstSession = document.getElementById('addFirstSession');
+                if (addFirstSession) addFirstSession.addEventListener('click', () => this.openSessionModal());
+                const addCalendarSessionBtn = document.getElementById('addCalendarSessionBtn');
+                if (addCalendarSessionBtn) addCalendarSessionBtn.addEventListener('click', () => this.openSessionModal());
+                const closeSessionModalBtn = document.getElementById('closeSessionModalBtn');
+                if (closeSessionModalBtn) closeSessionModalBtn.addEventListener('click', () => this.closeSessionModal());
+                const sessionForm = document.getElementById('sessionForm');
+                if (sessionForm) {
+                    sessionForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.saveSession();
+                    });
+                }
 
-                document.getElementById('addMaterialBtn').addEventListener('click', () => this.addMaterialToSession());
-                document.getElementById('materialItem').addEventListener('change', (e) => {
-                    this.updateMaterialMaxQuantity(e.target.value);
-                });
+                const addMaterialBtn = document.getElementById('addMaterialBtn');
+                if (addMaterialBtn) addMaterialBtn.addEventListener('click', () => this.addMaterialToSession());
+                const materialItem = document.getElementById('materialItem');
+                if (materialItem) {
+                    materialItem.addEventListener('change', (e) => {
+                        this.updateMaterialMaxQuantity(e.target.value);
+                    });
+                }
 
-                document.getElementById('addInventoryBtn').addEventListener('click', () => this.openInventoryModal());
-                document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
-                document.getElementById('closeInventoryModalBtn').addEventListener('click', () => this.closeInventoryModal());
-                document.getElementById('cancelInventoryBtn').addEventListener('click', () => this.closeInventoryModal());
-                document.getElementById('inventoryForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.saveInventoryItem();
-                });
+                const addInventoryBtn = document.getElementById('addInventoryBtn');
+                if (addInventoryBtn) addInventoryBtn.addEventListener('click', () => this.openInventoryModal());
+                const addFirstItem = document.getElementById('addFirstItem');
+                if (addFirstItem) addFirstItem.addEventListener('click', () => this.openInventoryModal());
+                const closeInventoryModalBtn = document.getElementById('closeInventoryModalBtn');
+                if (closeInventoryModalBtn) closeInventoryModalBtn.addEventListener('click', () => this.closeInventoryModal());
+                const cancelInventoryBtn = document.getElementById('cancelInventoryBtn');
+                if (cancelInventoryBtn) cancelInventoryBtn.addEventListener('click', () => this.closeInventoryModal());
+                const inventoryForm = document.getElementById('inventoryForm');
+                if (inventoryForm) {
+                    inventoryForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.saveInventoryItem();
+                    });
+                }
 
-                document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
-                document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
+                const prevMonthBtn = document.getElementById('prevMonthBtn');
+                if (prevMonthBtn) prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+                const nextMonthBtn = document.getElementById('nextMonthBtn');
+                if (nextMonthBtn) nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
 
-                document.getElementById('clientSearch').addEventListener('input', this.debounce((e) => this.searchClients(e.target.value), 250));
-                document.getElementById('inventorySearch').addEventListener('input', this.debounce((e) => this.searchInventory(e.target.value), 250));
+                const clientSearch = document.getElementById('clientSearch');
+                if (clientSearch) clientSearch.addEventListener('input', this.debounce((e) => this.searchClients(e.target.value), 250));
+                const inventorySearch = document.getElementById('inventorySearch');
+                if (inventorySearch) inventorySearch.addEventListener('input', this.debounce((e) => this.searchInventory(e.target.value), 250));
 
                 // Inventory filter tabs (desktop)
                 const inventoryTabButtons = document.querySelectorAll('#inventoryTabs [data-filter]');
@@ -595,10 +627,13 @@ import { showToast, debounce } from './modules/ui.js';
                 if (bulkDeleteBtn) bulkDeleteBtn.addEventListener('click', () => this.bulkDeleteInventory());
                 if (bulkExportBtn) bulkExportBtn.addEventListener('click', () => this.bulkExportInventory());
 
-                const nextHour = new Date();
-                nextHour.setHours(nextHour.getHours() + 1);
-                nextHour.setMinutes(0);
-                document.getElementById('sessionDateTime').value = this.formatDateTime(nextHour);
+                const sessionDateTime = document.getElementById('sessionDateTime');
+                if (sessionDateTime) {
+                    const nextHour = new Date();
+                    nextHour.setHours(nextHour.getHours() + 1);
+                    nextHour.setMinutes(0);
+                    sessionDateTime.value = this.formatDateTime(nextHour);
+                }
 
                 // Setup mobile bottom navigation
                 this.setupMobileBottomNav();
