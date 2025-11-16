@@ -1510,8 +1510,6 @@ body.sidebar-collapsed .app-container {
         .client-item, .session-item, .inventory-item {
             flex-direction: column;
             gap: 14px;
-            padding: 16px;
-            border-radius: 12px;
         }
 
         .item-actions {
@@ -1920,6 +1918,12 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Inventory Filter - Dropdown on mobile, tabs on desktop */
+    #inventoryTabs button {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
     
     /* Mobile: Show dropdown, hide tabs */
     @media (max-width: 1024px) {
@@ -1945,13 +1949,6 @@ body.sidebar-collapsed .app-container {
             gap: 8px;
             margin-top: 8px;
             margin-bottom: 12px;
-        }
-        
-        #inventoryTabs button {
-            flex-shrink: 0;
-            white-space: nowrap;
-            font-size: 0.85rem;
-            padding: 8px 16px;
         }
     }
 
