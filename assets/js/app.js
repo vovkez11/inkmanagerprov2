@@ -109,6 +109,105 @@ function setViewportHeight() {
 }
 
 /**
+ * Sidebar Drawer Controller for Mobile/Tablet
+ * Handles slide-in drawer behavior and backdrop
+ */
+class SidebarDrawerController {
+    constructor() {
+        this.sidebar = document.getElementById('sidebar');
+        this.sidebarToggle = document.getElementById('sidebarToggle');
+        this.backdrop = document.querySelector('.sidebar-backdrop');
+        this.isMobile = window.innerWidth <= 1024;
+        
+        this.init();
+    }
+    
+    init() {
+        // Handle sidebar toggle button
+        if (this.sidebarToggle) {
+            this.sidebarToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggle();
+            });
+            
+            // ARIA attributes for accessibility
+            this.sidebarToggle.setAttribute('aria-controls', 'sidebar');
+            this.sidebarToggle.setAttribute('aria-expanded', 'false');
+        }
+        
+        // Handle backdrop click to close
+        if (this.backdrop) {
+            this.backdrop.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.close();
+            });
+        }
+        
+        // Handle nav link clicks - auto-close on mobile
+        const navLinks = document.querySelectorAll('.nav-link[data-section]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // On mobile, close drawer after selection
+                if (this.isMobile) {
+                    this.close();
+                }
+            });
+        });
+        
+        // Update mobile state on resize
+        window.addEventListener('resize', () => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 1024;
+            
+            // If switching from mobile to desktop, ensure sidebar is closed
+            if (wasMobile && !this.isMobile) {
+                this.close();
+            }
+        });
+        
+        // Set initial ARIA state on sidebar
+        if (this.sidebar) {
+            this.sidebar.setAttribute('aria-hidden', 'true');
+        }
+    }
+    
+    toggle() {
+        const isOpen = document.body.classList.contains('mobile-open');
+        if (isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+    
+    open() {
+        document.body.classList.add('mobile-open');
+        
+        // Update ARIA attributes
+        if (this.sidebarToggle) {
+            this.sidebarToggle.setAttribute('aria-expanded', 'true');
+        }
+        if (this.sidebar) {
+            this.sidebar.setAttribute('aria-hidden', 'false');
+        }
+    }
+    
+    close() {
+        document.body.classList.remove('mobile-open');
+        
+        // Update ARIA attributes
+        if (this.sidebarToggle) {
+            this.sidebarToggle.setAttribute('aria-expanded', 'false');
+        }
+        if (this.sidebar) {
+            this.sidebar.setAttribute('aria-hidden', 'true');
+        }
+    }
+}
+
+/**
  * Initialize the application
  */
 function initializeApp() {
@@ -116,6 +215,9 @@ function initializeApp() {
     
     // Create and initialize the app
     window.app = new InkManagerPro();
+    
+    // Initialize sidebar drawer controller
+    window.sidebarDrawer = new SidebarDrawerController();
     
     // Set viewport height for mobile
     setViewportHeight();

@@ -21,7 +21,7 @@ import { showToast, debounce } from './modules/ui.js';
                 
                 // On mobile, always start with sidebar closed (true)
                 // On desktop, use saved preference
-                const isMobile = window.innerWidth < 768;
+                const isMobile = window.innerWidth <= 1024;
                 const savedState = Storage.getItem('inkmanager_sidebarCollapsed', 'false') === 'true';
                 this.sidebarCollapsed = isMobile ? true : savedState;
                 
@@ -125,7 +125,7 @@ import { showToast, debounce } from './modules/ui.js';
                 }
 
                 // Swipe gestures for navigation (mobile only)
-                if (window.innerWidth <= 768) {
+                if (window.innerWidth <= 1024) {
                     let touchStartX = 0;
                     let touchStartTime = 0;
                     const swipeLeftIndicator = document.getElementById('swipeLeft');
@@ -201,7 +201,7 @@ import { showToast, debounce } from './modules/ui.js';
                 document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
                     // Auto-scroll to input when focused on mobile
                     input.addEventListener('focus', () => {
-                        if (window.innerWidth <= 768) {
+                        if (window.innerWidth <= 1024) {
                             setTimeout(() => {
                                 input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }, 300);
@@ -215,7 +215,7 @@ import { showToast, debounce } from './modules/ui.js';
                 }
 
                 // Optimize performance for mobile
-                if (window.innerWidth <= 768) {
+                if (window.innerWidth <= 1024) {
                     // Reduce animation complexity on mobile
                     document.documentElement.style.setProperty('--transition', 'all 0.2s ease');
                 }
@@ -231,7 +231,7 @@ import { showToast, debounce } from './modules/ui.js';
 
             applySidebarState() {
                 // Check if on mobile (screen width < 768px)
-                const isMobile = window.innerWidth < 768;
+                const isMobile = window.innerWidth <= 1024;
                 
                 if (isMobile) {
                     // On mobile, use mobile-open class to slide sidebar in/out
@@ -274,7 +274,7 @@ import { showToast, debounce } from './modules/ui.js';
             toggleSidebar() {
                 this.sidebarCollapsed = !this.sidebarCollapsed;
                 // Only save state on desktop, not on mobile
-                const isMobile = window.innerWidth < 768;
+                const isMobile = window.innerWidth <= 1024;
                 if (!isMobile) {
                     localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
                 }
@@ -464,15 +464,12 @@ import { showToast, debounce } from './modules/ui.js';
                     });
                 });
 
-                const sidebarToggle = document.getElementById('sidebarToggle');
-                if (sidebarToggle) sidebarToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.toggleSidebar();
-                });
+                // Sidebar toggle is now handled by SidebarDrawerController in app.js
+                // No longer setting up the event listener here to avoid conflicts
 
                 // Close mobile sidebar when clicking outside of it
                 document.addEventListener('click', (e) => {
-                    const isMobile = window.innerWidth < 768;
+                    const isMobile = window.innerWidth <= 1024;
                     const sidebar = document.getElementById('sidebar');
                     const isOpen = document.body.classList.contains('mobile-open');
                     

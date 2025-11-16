@@ -265,11 +265,11 @@ body.sidebar-collapsed .app-container {
 
     .nav-section-title {
         color: var(--primary);
-        font-size: 0.9rem;
+        font-size: clamp(0.75rem, 2vw, 0.85rem);
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding: 0 2rem;
-        margin-bottom: 1rem;
+        padding: 0 1.5rem;
+        margin-bottom: 0.75rem;
         opacity: 0.7;
         font-weight: 600;
     }
@@ -277,14 +277,26 @@ body.sidebar-collapsed .app-container {
     .nav-link {
         display: flex;
         align-items: center;
-        padding: 1rem 2rem;
+        padding: 0.75rem 1.5rem;
         color: var(--light);
         text-decoration: none;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
         font-weight: 600;
         transition: var(--transition);
         border-left: 4px solid transparent;
         margin: 0.15rem 0;
         cursor: pointer;
+    }
+
+    .nav-link:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
+    }
+
+    .nav-link:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.2);
     }
 
     .nav-link:hover {
@@ -338,7 +350,7 @@ body.sidebar-collapsed .app-container {
         min-width: 0;
         height: 100vh; /* Fallback for browsers without dvh support */
         height: 100dvh;
-        padding: 20px;
+        padding: 16px;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
@@ -348,10 +360,10 @@ body.sidebar-collapsed .app-container {
     /* Header */
     .app-header {
         background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
-        padding: 25px;
+        padding: 18px 20px;
         text-align: center;
         border-radius: var(--border-radius);
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255,255,255,0.1);
         position: relative;
@@ -433,7 +445,7 @@ body.sidebar-collapsed .app-container {
         content: "\f0c9"; /* hamburger menu icon */
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         body.mobile-open #sidebarToggle {
             background: rgba(0,188,212,0.2);
             border-color: var(--primary);
@@ -551,7 +563,7 @@ body.sidebar-collapsed .app-container {
     .card {
         background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
         border-radius: var(--border-radius);
-        padding: 25px;
+        padding: 20px;
         margin-bottom: 20px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255,255,255,0.08);
@@ -613,7 +625,7 @@ body.sidebar-collapsed .app-container {
 
     /* Buttons */
     .btn {
-        padding: 14px 24px;
+        padding: 12px 20px;
         border: none;
         border-radius: var(--border-radius);
         cursor: pointer;
@@ -729,7 +741,7 @@ body.sidebar-collapsed .app-container {
 
     .form-control {
         width: 100%;
-        padding: 16px;
+        padding: 14px;
         border: 2px solid rgba(255,255,255,0.1);
         border-radius: var(--border-radius);
         background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
@@ -737,7 +749,7 @@ body.sidebar-collapsed .app-container {
         font-size: 16px;
         transition: var(--transition);
         font-family: inherit;
-        min-height: 50px;
+        min-height: 48px;
     }
 
     .form-control:focus {
@@ -816,7 +828,7 @@ body.sidebar-collapsed .app-container {
 
     .stat-card {
         background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
-        padding: 25px;
+        padding: 20px;
         text-align: center;
         border-radius: var(--border-radius);
         border-left: 5px solid var(--primary);
@@ -869,7 +881,7 @@ body.sidebar-collapsed .app-container {
     }
 
     .stat-value {
-        font-size: 2.5em;
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
         font-weight: bold;
         color: var(--primary);
         margin-bottom: 8px;
@@ -1192,7 +1204,7 @@ body.sidebar-collapsed .app-container {
         flex-shrink: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .update-banner {
             flex-direction: column;
             text-align: center;
@@ -1239,8 +1251,8 @@ body.sidebar-collapsed .app-container {
         opacity: 0.8;
     }
 
-    /* Mobile Menu Styles */
-    @media (max-width: 768px) {
+    /* Mobile Menu Styles - Updated to 1024px breakpoint */
+    @media (max-width: 1024px) {
         body {
             flex-direction: column;
         }
@@ -1265,19 +1277,6 @@ body.sidebar-collapsed .app-container {
             box-shadow: 2px 0 40px rgba(0,0,0,0.8);
         }
 
-        body.mobile-open::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1050;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-        }
-
         /* Reset sidebar-collapsed on mobile */
         body.sidebar-collapsed #sidebar {
             width: 280px;
@@ -1295,7 +1294,7 @@ body.sidebar-collapsed .app-container {
 
         body.sidebar-collapsed .nav-link {
             justify-content: flex-start;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
         }
 
         body.sidebar-collapsed .nav-link i {
@@ -1319,7 +1318,7 @@ body.sidebar-collapsed .app-container {
 
         .nav-link {
             justify-content: flex-start;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
         }
 
         .nav-link i {
@@ -1327,8 +1326,36 @@ body.sidebar-collapsed .app-container {
         }
     }
 
+    /* Sidebar Backdrop - Dedicated element instead of ::before pseudo-element */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 1050;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    body.mobile-open .sidebar-backdrop {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
     /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         
         /* Keep essential transitions but simplify them */
         * {
@@ -1430,7 +1457,7 @@ body.sidebar-collapsed .app-container {
         }
         
         /* Make install button even more visible on mobile */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .install-btn[style*="display: inline-flex"],
             .install-btn.visible {
                 display: inline-flex !important;
@@ -1707,7 +1734,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Landscape orientation optimizations */
-    @media (max-width: 768px) and (orientation: landscape) {
+    @media (max-width: 1024px) and (orientation: landscape) {
         #sidebar {
             max-height: 60px;
             padding: 0.3rem 0;
@@ -1889,7 +1916,7 @@ body.sidebar-collapsed .app-container {
     /* Inventory Filter - Dropdown on mobile, tabs on desktop */
     
     /* Mobile: Show dropdown, hide tabs */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         #inventoryFilterDropdown {
             display: block;
             margin-bottom: 12px;
@@ -1937,7 +1964,7 @@ body.sidebar-collapsed .app-container {
         user-select: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .mobile-bottom-nav {
             display: flex;
             justify-content: space-around;
@@ -1951,7 +1978,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Ensure mobile bottom nav is always visible in portrait orientation on mobile devices */
-    @media (max-width: 768px) and (orientation: portrait) {
+    @media (max-width: 1024px) and (orientation: portrait) {
         .mobile-bottom-nav {
             display: flex !important;
             justify-content: space-around;
@@ -2068,7 +2095,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Enhanced Mobile Scrolling */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         * {
             -webkit-overflow-scrolling: touch;
         }
@@ -2181,6 +2208,9 @@ body.sidebar-collapsed .app-container {
             </a>
         </div>
     </nav>
+
+    <!-- Sidebar Backdrop for mobile drawer -->
+    <div class="sidebar-backdrop"></div>
 
     <!-- Main Content Area -->
     <div class="app-container">
