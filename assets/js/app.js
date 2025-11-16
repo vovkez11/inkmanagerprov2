@@ -1,6 +1,6 @@
 /**
  * InkManager Pro - Main Application Entry Point
- * Initializes the application and handles PWA setup
+ * Initializes the application and handles PWA setup, sidebar drawer, and routing
  */
 
 import InkManagerPro from './inkmanager.js';
