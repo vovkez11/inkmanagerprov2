@@ -479,13 +479,18 @@ body.sidebar-collapsed .app-container {
     }
 
     .install-btn.pulse {
-        animation: pulse 2s infinite;
+        animation: pulse 2s infinite, glow 2s infinite;
     }
 
     @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.9; }
-        100% { opacity: 1; }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); }
+        50% { box-shadow: 0 6px 20px rgba(76, 175, 80, 0.7); }
     }
 
     .install-btn:hover {
@@ -1193,10 +1198,17 @@ body.sidebar-collapsed .app-container {
             text-align: center;
             width: calc(100% - 40px);
             padding: 16px 20px;
+            top: -150px; /* Start higher off-screen */
+            z-index: 1040; /* Below hamburger menu and install button */
+        }
+        
+        .update-banner.show {
+            top: 70px; /* Below the header on mobile */
         }
         
         .update-banner button {
             width: 100%;
+            min-height: 48px;
         }
     }
 
@@ -1241,9 +1253,10 @@ body.sidebar-collapsed .app-container {
             max-width: 280px;
             height: 100vh; /* Fallback for browsers without dvh support */
             height: 100dvh;
-            transition: left 0.3s ease, transform 0.3s ease;
-            z-index: 1001;
+            transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1100;
             transform: translateX(0);
+            will-change: left;
         }
 
         body.mobile-open #sidebar {
@@ -1260,7 +1273,7 @@ body.sidebar-collapsed .app-container {
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.6);
-            z-index: 1000;
+            z-index: 1050;
             backdrop-filter: blur(4px);
             animation: fadeIn 0.3s ease;
         }
@@ -1405,13 +1418,23 @@ body.sidebar-collapsed .app-container {
         .header-actions .install-btn {
             display: none; /* Will be shown by JavaScript when install is available */
             position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 1100;
-            padding: 10px 16px;
-            min-height: 44px;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            top: 16px;
+            right: 16px;
+            z-index: 1150;
+            padding: 12px 20px;
+            min-height: 48px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        /* Make install button even more visible on mobile */
+        @media (max-width: 768px) {
+            .install-btn[style*="display: inline-flex"],
+            .install-btn.visible {
+                display: inline-flex !important;
+            }
         }
 
         .icon-btn {
@@ -1477,12 +1500,16 @@ body.sidebar-collapsed .app-container {
             width: 94%;
             max-width: 500px;
             padding: 20px 16px;
-            max-height: 80vh;
+            max-height: 85vh;
+            max-height: 85dvh;
             border-radius: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal {
             padding: 8px;
+            overflow-y: auto;
         }
 
         /* Modal header */
@@ -1945,6 +1972,8 @@ body.sidebar-collapsed .app-container {
         z-index: 1100;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
         min-height: var(--tab-bar-height);
+        -webkit-user-select: none;
+        user-select: none;
     }
 
     @media (max-width: 768px) {
