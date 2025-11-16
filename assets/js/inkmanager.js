@@ -543,6 +543,7 @@ import { showToast, debounce } from './modules/ui.js';
                 document.getElementById('clientSearch').addEventListener('input', this.debounce((e) => this.searchClients(e.target.value), 250));
                 document.getElementById('inventorySearch').addEventListener('input', this.debounce((e) => this.searchInventory(e.target.value), 250));
 
+                // Inventory filter tabs (desktop)
                 const inventoryTabButtons = document.querySelectorAll('#inventoryTabs [data-filter]');
                 inventoryTabButtons.forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -550,6 +551,14 @@ import { showToast, debounce } from './modules/ui.js';
                         this.setInventoryFilter(filter);
                     });
                 });
+
+                // Inventory filter dropdown (mobile)
+                const inventoryFilterSelect = document.getElementById('inventoryFilterSelect');
+                if (inventoryFilterSelect) {
+                    inventoryFilterSelect.addEventListener('change', (e) => {
+                        this.setInventoryFilter(e.target.value);
+                    });
+                }
 
                 const sortKeyEl = document.getElementById('inventorySortKey');
                 const sortDirBtn = document.getElementById('inventorySortDirBtn');
@@ -663,12 +672,19 @@ import { showToast, debounce } from './modules/ui.js';
             }
 
             updateInventoryTabsUI() {
+                // Update tab buttons (desktop)
                 const tabs = document.querySelectorAll('#inventoryTabs [data-filter]');
                 tabs.forEach(tab => {
                     const isActive = tab.getAttribute('data-filter') === this.inventoryFilter;
                     tab.classList.toggle('btn-primary', isActive);
                     tab.classList.toggle('btn-outline', !isActive);
                 });
+                
+                // Update dropdown (mobile)
+                const dropdown = document.getElementById('inventoryFilterSelect');
+                if (dropdown) {
+                    dropdown.value = this.inventoryFilter;
+                }
             }
 
             updateBulkActionsUI() {

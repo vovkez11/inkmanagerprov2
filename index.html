@@ -1886,76 +1886,37 @@ body.sidebar-collapsed .app-container {
         color: var(--primary);
     }
 
-    /* Inventory Tabs - Horizontal scrolling on mobile, wrapping on desktop */
-    #inventoryTabs {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) rgba(255,255,255,0.1);
-        padding-bottom: 4px;
-        gap: 8px;
-        margin-top: 8px;
-        margin-bottom: 12px;
-    }
+    /* Inventory Filter - Dropdown on mobile, tabs on desktop */
     
-    /* Scrollbar styling for WebKit browsers */
-    #inventoryTabs::-webkit-scrollbar {
-        height: 6px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.05);
-        border-radius: 3px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 3px;
-    }
-    
-    #inventoryTabs::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-light);
-    }
-    
-    #inventoryTabs button {
-        flex-shrink: 0;
-        white-space: nowrap;
-    }
-    
-    /* Mobile: Add scroll fade indicators */
+    /* Mobile: Show dropdown, hide tabs */
     @media (max-width: 768px) {
-        /* Allow horizontal scrolling for inventory tabs on mobile */
-        #inventory .card {
-            overflow-x: visible;
+        #inventoryFilterDropdown {
+            display: block;
+            margin-bottom: 12px;
         }
         
         #inventoryTabs {
-            /* Extend tabs beyond card padding for full-width scrolling */
-            margin-left: -16px;
-            margin-right: -16px;
-            padding-left: 16px;
-            padding-right: 16px;
-            /* Gradient fade to indicate scrollability */
-            -webkit-mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
-            mask-image: linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent);
+            display: none;
         }
     }
 
-    /* Desktop: horizontal wrapping layout without scrolling */
+    /* Desktop: Show tabs, hide dropdown */
     @media (min-width: 769px) {
+        #inventoryFilterDropdown {
+            display: none;
+        }
+        
         #inventoryTabs {
+            display: flex;
             flex-wrap: wrap;
-            overflow-x: visible;
-            overflow-y: visible;
-            margin-left: 0;
-            margin-right: 0;
-            padding-left: 0;
-            padding-right: 0;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+        
+        #inventoryTabs button {
+            flex-shrink: 0;
+            white-space: nowrap;
         }
     }
 
@@ -2388,6 +2349,21 @@ body.sidebar-collapsed .app-container {
                            placeholder="🔍 Search inventory items..." data-i18n-placeholder="search_inventory">
                 </div>
 
+                <!-- Mobile: Dropdown Filter -->
+                <div class="form-group" id="inventoryFilterDropdown">
+                    <label class="form-label" data-i18n="filter_by_type">Filter by Type</label>
+                    <select class="form-control" id="inventoryFilterSelect">
+                        <option value="all" data-i18n="all">All</option>
+                        <option value="needle" data-i18n="needle">Needle</option>
+                        <option value="ink" data-i18n="ink">Ink</option>
+                        <option value="machine" data-i18n="machine">Machine</option>
+                        <option value="supply" data-i18n="supply">Supply</option>
+                        <option value="aftercare" data-i18n="aftercare">Aftercare</option>
+                        <option value="safety" data-i18n="safety">Safety Equipment</option>
+                    </select>
+                </div>
+
+                <!-- Desktop: Tab Buttons -->
                 <div id="inventoryTabs">
                     <button class="btn btn-primary" data-filter="all"><span data-i18n="all">All</span></button>
                     <button class="btn btn-outline" data-filter="needle"><span data-i18n="needle">Needle</span></button>
@@ -2395,7 +2371,7 @@ body.sidebar-collapsed .app-container {
                     <button class="btn btn-outline" data-filter="machine"><span data-i18n="machine">Machine</span></button>
                     <button class="btn btn-outline" data-filter="supply"><span data-i18n="supply">Supply</span></button>
                     <button class="btn btn-outline" data-filter="aftercare"><span data-i18n="aftercare">Aftercare</span></button>
-                    <button class="btn btn-outline" data-filter="safety"><span data-i18n="safety">Safety</span></button>
+                    <button class="btn btn-outline" data-filter="safety"><span data-i18n="safety">Safety Equipment</span></button>
                 </div>
 
                 <div id="inventorySortBar" style="display: flex; gap: 8px; align-items: center; margin: 6px 0 14px; flex-wrap: wrap;">
