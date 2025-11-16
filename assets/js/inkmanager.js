@@ -1734,18 +1734,15 @@ import { showToast, debounce } from './modules/ui.js';
                 if (lowStock.length > 0) {
                     alertsContainer.innerHTML = `
                         <div class="card" style="border-left: 5px solid var(--warning); background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                                 <div>
                                     <h4 style="color: var(--warning); margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
                                         <i class="fas fa-exclamation-triangle"></i> ${this.translate('low_stock_alerts') || 'Low Stock Alerts'}
                                     </h4>
                                     <p style="margin: 0; color: rgba(255,255,255,0.8);">
-                                        ${lowStock.length} ${this.translate('items_need_restocking') || 'item(s) need restocking'}
+                                        ${lowStock.map(item => item.name).join(', ')}
                                     </p>
                                 </div>
-                                <button class="btn btn-warning" onclick="app.showSection('inventory')">
-                                    <i class="fas fa-boxes"></i> ${this.translate('manage_inventory') || 'Manage Inventory'}
-                                </button>
                             </div>
                         </div>
                     `;
