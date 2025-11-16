@@ -464,11 +464,8 @@ import { showToast, debounce } from './modules/ui.js';
                     });
                 });
 
-                const sidebarToggle = document.getElementById('sidebarToggle');
-                if (sidebarToggle) sidebarToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.toggleSidebar();
-                });
+                // Sidebar toggle is now handled by SidebarDrawerController in app.js
+                // No longer setting up the event listener here to avoid conflicts
 
                 // Close mobile sidebar when clicking outside of it
                 document.addEventListener('click', (e) => {
