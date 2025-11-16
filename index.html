@@ -280,6 +280,7 @@ body.sidebar-collapsed .app-container {
         padding: 0.75rem 1.5rem;
         color: var(--light);
         text-decoration: none;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
         font-weight: 600;
         font-size: clamp(0.85rem, 2vw, 0.95rem);
         transition: var(--transition);
@@ -291,6 +292,17 @@ body.sidebar-collapsed .app-container {
     .nav-link:focus {
         outline: 2px solid var(--primary);
         outline-offset: -2px;
+    }
+
+    .nav-link:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
+    }
+
+    .nav-link:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.2);
     }
 
     .nav-link:hover {
@@ -344,7 +356,7 @@ body.sidebar-collapsed .app-container {
         min-width: 0;
         height: 100vh; /* Fallback for browsers without dvh support */
         height: 100dvh;
-        padding: 20px;
+        padding: 16px;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
@@ -354,7 +366,7 @@ body.sidebar-collapsed .app-container {
     /* Header */
     .app-header {
         background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
-        padding: 20px;
+        padding: 18px 20px;
         text-align: center;
         border-radius: var(--border-radius);
         margin-bottom: 20px;
@@ -439,7 +451,7 @@ body.sidebar-collapsed .app-container {
         content: "\f0c9"; /* hamburger menu icon */
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         body.mobile-open #sidebarToggle {
             background: rgba(0,188,212,0.2);
             border-color: var(--primary);
@@ -558,7 +570,7 @@ body.sidebar-collapsed .app-container {
         background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
         border-radius: var(--border-radius);
         padding: 20px;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255,255,255,0.08);
         transition: var(--transition);
@@ -822,7 +834,7 @@ body.sidebar-collapsed .app-container {
 
     .stat-card {
         background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
-        padding: 25px;
+        padding: 20px;
         text-align: center;
         border-radius: var(--border-radius);
         border-left: 5px solid var(--primary);
@@ -1198,7 +1210,7 @@ body.sidebar-collapsed .app-container {
         flex-shrink: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .update-banner {
             flex-direction: column;
             text-align: center;
@@ -1245,27 +1257,7 @@ body.sidebar-collapsed .app-container {
         opacity: 0.8;
     }
 
-    /* Sidebar Backdrop */
-    .sidebar-backdrop {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.6);
-        z-index: 1050;
-        backdrop-filter: blur(4px);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .sidebar-backdrop.show {
-        display: block;
-        opacity: 1;
-    }
-
-    /* Mobile/Tablet Drawer Styles - Active at <=1024px */
+    /* Mobile Menu Styles - Updated to 1024px breakpoint */
     @media (max-width: 1024px) {
         body {
             flex-direction: column;
@@ -1291,7 +1283,7 @@ body.sidebar-collapsed .app-container {
             box-shadow: 2px 0 40px rgba(0,0,0,0.8);
         }
 
-        /* Reset sidebar-collapsed on mobile/tablet */
+        /* Reset sidebar-collapsed on mobile */
         body.sidebar-collapsed #sidebar {
             width: 280px;
             min-width: 280px;
@@ -1340,8 +1332,36 @@ body.sidebar-collapsed .app-container {
         }
     }
 
-    /* Mobile Menu Styles - Keep old media query for backward compat */
-    @media (max-width: 768px) {
+    /* Sidebar Backdrop - Dedicated element instead of ::before pseudo-element */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 1050;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    body.mobile-open .sidebar-backdrop {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
         
         /* Keep essential transitions but simplify them */
         * {
@@ -1443,7 +1463,7 @@ body.sidebar-collapsed .app-container {
         }
         
         /* Make install button even more visible on mobile */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .install-btn[style*="display: inline-flex"],
             .install-btn.visible {
                 display: inline-flex !important;
@@ -1720,7 +1740,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Landscape orientation optimizations */
-    @media (max-width: 768px) and (orientation: landscape) {
+    @media (max-width: 1024px) and (orientation: landscape) {
         #sidebar {
             max-height: 60px;
             padding: 0.3rem 0;
@@ -1902,7 +1922,7 @@ body.sidebar-collapsed .app-container {
     /* Inventory Filter - Dropdown on mobile, tabs on desktop */
     
     /* Mobile: Show dropdown, hide tabs */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         #inventoryFilterDropdown {
             display: block;
             margin-bottom: 12px;
@@ -1950,7 +1970,7 @@ body.sidebar-collapsed .app-container {
         user-select: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .mobile-bottom-nav {
             display: flex;
             justify-content: space-around;
@@ -1964,7 +1984,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Ensure mobile bottom nav is always visible in portrait orientation on mobile devices */
-    @media (max-width: 768px) and (orientation: portrait) {
+    @media (max-width: 1024px) and (orientation: portrait) {
         .mobile-bottom-nav {
             display: flex !important;
             justify-content: space-around;
@@ -2081,7 +2101,7 @@ body.sidebar-collapsed .app-container {
     }
 
     /* Enhanced Mobile Scrolling */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         * {
             -webkit-overflow-scrolling: touch;
         }
@@ -2195,8 +2215,8 @@ body.sidebar-collapsed .app-container {
         </div>
     </nav>
 
-    <!-- Sidebar Backdrop -->
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <!-- Sidebar Backdrop for mobile drawer -->
+    <div class="sidebar-backdrop"></div>
 
     <!-- Main Content Area -->
     <div class="app-container">
