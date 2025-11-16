@@ -1199,10 +1199,11 @@ body.sidebar-collapsed .app-container {
             width: calc(100% - 40px);
             padding: 16px 20px;
             top: -150px; /* Start higher off-screen */
+            z-index: 1040; /* Below hamburger menu and install button */
         }
         
         .update-banner.show {
-            top: 20px; /* Keep it near the top, away from bottom nav */
+            top: 70px; /* Below the header on mobile */
         }
         
         .update-banner button {
@@ -1252,9 +1253,10 @@ body.sidebar-collapsed .app-container {
             max-width: 280px;
             height: 100vh; /* Fallback for browsers without dvh support */
             height: 100dvh;
-            transition: left 0.3s ease, transform 0.3s ease;
-            z-index: 1001;
+            transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1100;
             transform: translateX(0);
+            will-change: left;
         }
 
         body.mobile-open #sidebar {
@@ -1271,7 +1273,7 @@ body.sidebar-collapsed .app-container {
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.6);
-            z-index: 1000;
+            z-index: 1050;
             backdrop-filter: blur(4px);
             animation: fadeIn 0.3s ease;
         }
@@ -1498,12 +1500,16 @@ body.sidebar-collapsed .app-container {
             width: 94%;
             max-width: 500px;
             padding: 20px 16px;
-            max-height: 80vh;
+            max-height: 85vh;
+            max-height: 85dvh;
             border-radius: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal {
             padding: 8px;
+            overflow-y: auto;
         }
 
         /* Modal header */
@@ -1966,6 +1972,8 @@ body.sidebar-collapsed .app-container {
         z-index: 1100;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
         min-height: var(--tab-bar-height);
+        -webkit-user-select: none;
+        user-select: none;
     }
 
     @media (max-width: 768px) {
