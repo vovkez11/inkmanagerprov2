@@ -3,8 +3,8 @@
  * Provides offline functionality and caching for PWA
  */
 
-const CACHE_NAME = 'inkmanager-pro-v2.5-mobile-optimized';
-const RUNTIME_CACHE = 'inkmanager-runtime-v2.5';
+const CACHE_NAME = 'inkmanager-pro-v2.6-compact-drawer-routing';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.6';
 const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install

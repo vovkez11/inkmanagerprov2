@@ -265,11 +265,11 @@ body.sidebar-collapsed .app-container {
 
     .nav-section-title {
         color: var(--primary);
-        font-size: 0.9rem;
+        font-size: clamp(0.75rem, 2vw, 0.85rem);
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding: 0 2rem;
-        margin-bottom: 1rem;
+        padding: 0 1.5rem;
+        margin-bottom: 0.75rem;
         opacity: 0.7;
         font-weight: 600;
     }
@@ -277,14 +277,20 @@ body.sidebar-collapsed .app-container {
     .nav-link {
         display: flex;
         align-items: center;
-        padding: 1rem 2rem;
+        padding: 0.75rem 1.5rem;
         color: var(--light);
         text-decoration: none;
         font-weight: 600;
+        font-size: clamp(0.85rem, 2vw, 0.95rem);
         transition: var(--transition);
         border-left: 4px solid transparent;
-        margin: 0.15rem 0;
+        margin: 0.1rem 0;
         cursor: pointer;
+    }
+    
+    .nav-link:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
     }
 
     .nav-link:hover {
@@ -348,10 +354,10 @@ body.sidebar-collapsed .app-container {
     /* Header */
     .app-header {
         background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
-        padding: 25px;
+        padding: 20px;
         text-align: center;
         border-radius: var(--border-radius);
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255,255,255,0.1);
         position: relative;
@@ -551,8 +557,8 @@ body.sidebar-collapsed .app-container {
     .card {
         background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
         border-radius: var(--border-radius);
-        padding: 25px;
-        margin-bottom: 20px;
+        padding: 20px;
+        margin-bottom: 18px;
         box-shadow: var(--shadow);
         border: 1px solid rgba(255,255,255,0.08);
         transition: var(--transition);
@@ -613,7 +619,7 @@ body.sidebar-collapsed .app-container {
 
     /* Buttons */
     .btn {
-        padding: 14px 24px;
+        padding: 12px 20px;
         border: none;
         border-radius: var(--border-radius);
         cursor: pointer;
@@ -622,7 +628,7 @@ body.sidebar-collapsed .app-container {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        font-size: 1em;
+        font-size: clamp(0.9rem, 2vw, 1rem);
         position: relative;
         overflow: hidden;
         min-height: 44px;
@@ -729,7 +735,7 @@ body.sidebar-collapsed .app-container {
 
     .form-control {
         width: 100%;
-        padding: 16px;
+        padding: 14px;
         border: 2px solid rgba(255,255,255,0.1);
         border-radius: var(--border-radius);
         background: linear-gradient(135deg, var(--dark) 0%, #222 100%);
@@ -737,7 +743,7 @@ body.sidebar-collapsed .app-container {
         font-size: 16px;
         transition: var(--transition);
         font-family: inherit;
-        min-height: 50px;
+        min-height: 48px;
     }
 
     .form-control:focus {
@@ -869,10 +875,10 @@ body.sidebar-collapsed .app-container {
     }
 
     .stat-value {
-        font-size: 2.5em;
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
         font-weight: bold;
         color: var(--primary);
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         line-height: 1;
         text-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
     }
@@ -880,7 +886,7 @@ body.sidebar-collapsed .app-container {
     .stat-label {
         color: var(--light);
         opacity: 0.9;
-        font-size: 0.95em;
+        font-size: clamp(0.85rem, 2vw, 0.95rem);
         font-weight: 600;
     }
 
@@ -1239,8 +1245,28 @@ body.sidebar-collapsed .app-container {
         opacity: 0.8;
     }
 
-    /* Mobile Menu Styles */
-    @media (max-width: 768px) {
+    /* Sidebar Backdrop */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 1050;
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Mobile/Tablet Drawer Styles - Active at <=1024px */
+    @media (max-width: 1024px) {
         body {
             flex-direction: column;
         }
@@ -1259,26 +1285,13 @@ body.sidebar-collapsed .app-container {
             will-change: left;
         }
 
-        body.mobile-open #sidebar {
+        #sidebar[aria-hidden="false"] {
             left: 0;
             transform: translateX(0);
             box-shadow: 2px 0 40px rgba(0,0,0,0.8);
         }
 
-        body.mobile-open::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1050;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Reset sidebar-collapsed on mobile */
+        /* Reset sidebar-collapsed on mobile/tablet */
         body.sidebar-collapsed #sidebar {
             width: 280px;
             min-width: 280px;
@@ -1295,7 +1308,7 @@ body.sidebar-collapsed .app-container {
 
         body.sidebar-collapsed .nav-link {
             justify-content: flex-start;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
         }
 
         body.sidebar-collapsed .nav-link i {
@@ -1307,7 +1320,7 @@ body.sidebar-collapsed .app-container {
             width: 100% !important;
         }
 
-        /* Override desktop sidebar-collapsed state on mobile */
+        /* Override desktop sidebar-collapsed state on mobile/tablet */
         body.sidebar-collapsed .app-container {
             max-width: 100% !important;
             width: 100% !important;
@@ -1319,7 +1332,7 @@ body.sidebar-collapsed .app-container {
 
         .nav-link {
             justify-content: flex-start;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
         }
 
         .nav-link i {
@@ -1327,7 +1340,7 @@ body.sidebar-collapsed .app-container {
         }
     }
 
-    /* Responsive Design */
+    /* Mobile Menu Styles - Keep old media query for backward compat */
     @media (max-width: 768px) {
         
         /* Keep essential transitions but simplify them */
@@ -2181,6 +2194,9 @@ body.sidebar-collapsed .app-container {
             </a>
         </div>
     </nav>
+
+    <!-- Sidebar Backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <!-- Main Content Area -->
     <div class="app-container">
