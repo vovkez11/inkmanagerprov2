@@ -161,9 +161,19 @@ class SidebarDrawerController {
             const wasMobile = this.isMobile;
             this.isMobile = window.innerWidth <= 1024;
             
-            // If switching from mobile to desktop, ensure sidebar is closed
+            // If switching from mobile to desktop, ensure mobile drawer is closed
+            // and reapply sidebar state for desktop
             if (wasMobile && !this.isMobile) {
                 this.close();
+                if (window.app && typeof window.app.applySidebarState === 'function') {
+                    window.app.applySidebarState();
+                }
+            }
+            // If switching from desktop to mobile, reapply sidebar state for mobile
+            if (!wasMobile && this.isMobile) {
+                if (window.app && typeof window.app.applySidebarState === 'function') {
+                    window.app.applySidebarState();
+                }
             }
         });
         
@@ -174,11 +184,17 @@ class SidebarDrawerController {
     }
     
     toggle() {
-        const isOpen = document.body.classList.contains('mobile-open');
-        if (isOpen) {
-            this.close();
+        // On desktop, use the app's toggleSidebar method for collapse functionality
+        // On mobile, use drawer open/close
+        if (!this.isMobile && window.app && typeof window.app.toggleSidebar === 'function') {
+            window.app.toggleSidebar();
         } else {
-            this.open();
+            const isOpen = document.body.classList.contains('mobile-open');
+            if (isOpen) {
+                this.close();
+            } else {
+                this.open();
+            }
         }
     }
     

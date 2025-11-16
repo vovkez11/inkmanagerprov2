@@ -442,16 +442,27 @@ body.sidebar-collapsed .app-container {
         font-size: 1.2rem;
     }
 
-    /* Sidebar toggle indicator */
-    body.sidebar-collapsed #sidebarToggle i::before {
-        content: "\f0c9"; /* hamburger menu icon */
+    /* Sidebar toggle indicator - On desktop, show chevron icons based on collapsed state */
+    @media (min-width: 1025px) {
+        body.sidebar-collapsed #sidebarToggle i::before {
+            content: "\f054"; /* chevron-right icon */
+        }
+
+        body:not(.sidebar-collapsed) #sidebarToggle i::before {
+            content: "\f053"; /* chevron-left icon */
+        }
     }
 
-    body:not(.sidebar-collapsed) #sidebarToggle i::before {
-        content: "\f0c9"; /* hamburger menu icon */
-    }
-
+    /* On mobile, show hamburger/times based on mobile-open state */
     @media (max-width: 1024px) {
+        #sidebarToggle i::before {
+            content: "\f0c9"; /* hamburger menu icon */
+        }
+        
+        body.mobile-open #sidebarToggle i::before {
+            content: "\f00d"; /* times (X) icon */
+        }
+        
         body.mobile-open #sidebarToggle {
             background: rgba(0,188,212,0.2);
             border-color: var(--primary);
