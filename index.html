@@ -265,7 +265,7 @@ body.sidebar-collapsed .app-container {
 
     .nav-section-title {
         color: var(--primary);
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 1px;
         padding: 0 2rem;
@@ -1253,7 +1253,7 @@ body.sidebar-collapsed .app-container {
             max-width: 280px;
             height: 100vh; /* Fallback for browsers without dvh support */
             height: 100dvh;
-            transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transition: left 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 1100;
             transform: translateX(0);
             will-change: left;
@@ -1272,10 +1272,9 @@ body.sidebar-collapsed .app-container {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             z-index: 1050;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.2s ease;
         }
 
         /* Reset sidebar-collapsed on mobile */
