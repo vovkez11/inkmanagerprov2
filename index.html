@@ -2054,6 +2054,11 @@ body.sidebar-collapsed .app-container {
         .app-container {
             padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)); /* Space for bottom nav + padding + safe area */
         }
+
+        /* Ensure empty state buttons aren't covered by mobile bottom nav */
+        .empty-state {
+            padding-bottom: 80px;
+        }
     }
 
     /* Ensure mobile bottom nav is always visible in portrait orientation on mobile devices */
@@ -2066,6 +2071,11 @@ body.sidebar-collapsed .app-container {
 
         .app-container {
             padding-bottom: calc(var(--tab-bar-height) + 20px + env(safe-area-inset-bottom)) !important;
+        }
+
+        /* Ensure empty state buttons aren't covered by mobile bottom nav */
+        .empty-state {
+            padding-bottom: 80px !important;
         }
     }
 
