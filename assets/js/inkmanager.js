@@ -707,7 +707,9 @@ import { showToast, debounce } from './modules/ui.js';
                 // Update tab buttons (desktop)
                 const tabs = document.querySelectorAll('#inventoryTabs [data-filter]');
                 tabs.forEach(tab => {
-                    const isActive = tab.getAttribute('data-filter') === this.inventoryFilter;
+                    const filterValue = tab.getAttribute('data-filter');
+                    // For low-stock filter, highlight the "All" tab
+                    const isActive = (this.inventoryFilter === 'low-stock' && filterValue === 'all') || filterValue === this.inventoryFilter;
                     tab.classList.toggle('btn-primary', isActive);
                     tab.classList.toggle('btn-outline', !isActive);
                 });
@@ -715,7 +717,8 @@ import { showToast, debounce } from './modules/ui.js';
                 // Update dropdown (mobile)
                 const dropdown = document.getElementById('inventoryFilterSelect');
                 if (dropdown) {
-                    dropdown.value = this.inventoryFilter;
+                    // For low-stock filter, set dropdown to "all" since there's no low-stock option
+                    dropdown.value = this.inventoryFilter === 'low-stock' ? 'all' : this.inventoryFilter;
                 }
             }
 
@@ -825,7 +828,10 @@ import { showToast, debounce } from './modules/ui.js';
 
             getFilteredInventory() {
                 let items = [...this.inventory];
-                if (this.inventoryFilter !== 'all') {
+                if (this.inventoryFilter === 'low-stock') {
+                    // Special filter for low stock items
+                    items = items.filter(i => i.qty <= i.alert);
+                } else if (this.inventoryFilter !== 'all') {
                     items = items.filter(i => i.type === this.inventoryFilter);
                 }
                 if (this.inventorySearchQuery) {
@@ -1778,6 +1784,9 @@ import { showToast, debounce } from './modules/ui.js';
                                         ${lowStock.map(item => item.name).join(', ')}
                                     </p>
                                 </div>
+                                <button class="btn btn-warning" onclick="app.showLowStockItems()" style="white-space: nowrap;">
+                                    <i class="fas fa-boxes"></i> <span data-i18n="view_low_stock">${this.translate('view_low_stock') || 'View Low Stock Items'}</span>
+                                </button>
                             </div>
                         </div>
                     `;
@@ -1789,6 +1798,31 @@ import { showToast, debounce } from './modules/ui.js';
             searchInventory(query) {
                 this.inventorySearchQuery = query || '';
                 this.refreshInventory();
+            }
+
+            showLowStockItems() {
+                // Set filter to show low stock items
+                this.inventoryFilter = 'low-stock';
+                
+                // Clear any search query
+                this.inventorySearchQuery = '';
+                const inventorySearch = document.getElementById('inventorySearch');
+                if (inventorySearch) inventorySearch.value = '';
+                
+                // Update filter tabs/dropdown UI
+                this.updateInventoryTabsUI();
+                
+                // Scroll to top of inventory section
+                const inventorySection = document.getElementById('inventory');
+                if (inventorySection) {
+                    inventorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                // Refresh to show only low stock items
+                this.refreshInventory();
+                
+                // Show a notification
+                this.showNotification('📦 Showing low stock items');
             }
 
             deleteInventoryItem(itemId) {
