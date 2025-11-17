@@ -676,6 +676,31 @@ import { showToast, debounce } from './modules/ui.js';
 
                 // Prevent back button from closing app - navigate to dashboard instead
                 window.addEventListener('popstate', (event) => {
+                    // Check if any modal is open and close it
+                    const modals = ['clientModal', 'sessionModal', 'inventoryModal'];
+                    for (const modalId of modals) {
+                        const modal = document.getElementById(modalId);
+                        if (modal && modal.style.display === 'block') {
+                            // Close the modal
+                            if (modalId === 'clientModal') this.closeClientModal();
+                            else if (modalId === 'sessionModal') this.closeSessionModal();
+                            else if (modalId === 'inventoryModal') this.closeInventoryModal();
+                            // Add history entry back to prevent going back in history
+                            history.pushState(event.state, '', window.location.href);
+                            return;
+                        }
+                    }
+                    
+                    // Check if mobile sidebar is open and close it
+                    if (document.body.classList.contains('mobile-open')) {
+                        if (window.sidebarDrawer && typeof window.sidebarDrawer.close === 'function') {
+                            window.sidebarDrawer.close();
+                        }
+                        // Add history entry back to prevent going back in history
+                        history.pushState(event.state, '', window.location.href);
+                        return;
+                    }
+                    
                     const stateSection = event.state?.section;
                     const hashSection = (window.location.hash || '').replace('#', '');
                     
@@ -1801,6 +1826,9 @@ import { showToast, debounce } from './modules/ui.js';
             }
 
             showLowStockItems() {
+                // First, navigate to inventory section
+                this.showSection('inventory');
+                
                 // Set filter to show low stock items
                 this.inventoryFilter = 'low-stock';
                 
@@ -1811,12 +1839,6 @@ import { showToast, debounce } from './modules/ui.js';
                 
                 // Update filter tabs/dropdown UI
                 this.updateInventoryTabsUI();
-                
-                // Scroll to top of inventory section
-                const inventorySection = document.getElementById('inventory');
-                if (inventorySection) {
-                    inventorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
                 
                 // Refresh to show only low stock items
                 this.refreshInventory();
