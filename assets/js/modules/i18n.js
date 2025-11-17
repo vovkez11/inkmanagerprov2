@@ -85,6 +85,8 @@ export const translations = {
                         "update_item": "Update Item",
                         "low_stock": "Low Stock",
                         "manage_inventory": "Manage Inventory",
+                        "view_low_stock": "View Low Stock Items",
+                        "low_stock_alerts": "Low Stock Alerts",
                         
                         // Calendar
                         "studio_calendar": "Studio Calendar",
@@ -285,6 +287,8 @@ export const translations = {
                         "update_item": "Actualizar Artículo",
                         "low_stock": "Stock Bajo",
                         "manage_inventory": "Gestionar Inventario",
+                        "view_low_stock": "Ver Artículos en Stock Bajo",
+                        "low_stock_alerts": "Alertas de Stock Bajo",
                         
                         // Calendar
                         "studio_calendar": "Calendario del Estudio",
@@ -446,6 +450,8 @@ export const translations = {
                         "update_item": "Обновить предмет",
                         "low_stock": "Низкий запас",
                         "manage_inventory": "Управление инвентарем",
+                        "view_low_stock": "Показать товары с низким запасом",
+                        "low_stock_alerts": "Оповещения о низком запасе",
                         
                         // Calendar
                         "studio_calendar": "Календарь студии",
@@ -607,6 +613,8 @@ export const translations = {
                         "update_item": "עדכן פריט",
                         "low_stock": "מלאי נמוך",
                         "manage_inventory": "נהל מלאי",
+                        "view_low_stock": "הצג פריטים במלאי נמוך",
+                        "low_stock_alerts": "התראות מלאי נמוך",
                         
                         // Calendar
                         "studio_calendar": "לוח שנה של הסטודיו",
