@@ -1096,6 +1096,16 @@ import { showToast, debounce } from './modules/ui.js';
                 }
             }
 
+            // Navigate to dashboard and close mobile sidebar if open
+            goToDashboard() {
+                // Close mobile sidebar if open
+                if (window.sidebarDrawer && window.innerWidth <= 1024) {
+                    window.sidebarDrawer.close();
+                }
+                // Navigate to dashboard
+                this.showSection('dashboard');
+            }
+
             refreshSection(sectionId) {
                 switch(sectionId) {
                     case 'dashboard': this.refreshDashboard(); break;
