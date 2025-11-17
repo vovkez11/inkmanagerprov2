@@ -1037,6 +1037,8 @@ import { showToast, debounce } from './modules/ui.js';
                 if (!sectionEl) return;
 
                 if (this.currentSection === sectionId && !force) {
+                    // If already on this section, scroll to top for better UX
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
                 }
 
