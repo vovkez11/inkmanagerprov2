@@ -151,6 +151,7 @@ export const translations = {
                         "session_notes_placeholder": "Design details, placement, special requests, aftercare instructions...",
                         "save_session": "Save Session",
                         "materials": "Materials",
+                        "status": "Status",
                         
                         // Inventory Modal
                         "new_inventory_item": "New Inventory Item",
@@ -213,7 +214,29 @@ export const translations = {
                         "settings_saved": "Settings saved successfully!",
                         "settings_reset": "Settings reset to defaults",
                         "confirm_clear_data": "Are you sure you want to clear all data? This cannot be undone!",
-                        "data_cleared": "All data has been cleared"
+                        "data_cleared": "All data has been cleared",
+                        
+                        // Sorting and filtering
+                        "sort_by": "Sort by:",
+                        "name": "Name",
+                        "sort_name": "Name",
+                        "sort_type": "Type",
+                        "sort_quantity": "Quantity",
+                        "sort_last_updated": "Last Updated",
+                        "asc": "Asc ↑",
+                        "desc": "Desc ↓",
+                        "select_all": "Select All",
+                        "clear": "Clear",
+                        "clear_selection": "Clear Selection",
+                        "selected": "selected",
+                        "delete_selected": "Delete Selected",
+                        "export_selected": "Export Selected",
+                        "confirm_delete_selected": "Delete {count} selected item(s)?",
+                        "no_items_selected": "No items selected",
+                        "no_items_match_filters": "No items match your filters",
+                        "per_unit": "per unit",
+                        "in": "In",
+                        "hours_short": "h"
                     },
                     es: {
                         // Navigation
@@ -353,6 +376,7 @@ export const translations = {
                         "session_notes_placeholder": "Detalles del diseño, ubicación, solicitudes especiales, instrucciones de cuidado posterior...",
                         "save_session": "Guardar Sesión",
                         "materials": "Materiales",
+                        "status": "Estado",
                         
                         // Inventory Modal
                         "new_inventory_item": "Nuevo Artículo de Inventario",
@@ -376,7 +400,29 @@ export const translations = {
                         // Additional UI elements
                         "last_visit": "Última visita",
                         "total_sessions": "Total de sesiones",
-                        "last_updated": "Actualizado"
+                        "last_updated": "Actualizado",
+                        
+                        // Sorting and filtering
+                        "sort_by": "Ordenar por:",
+                        "name": "Nombre",
+                        "sort_name": "Nombre",
+                        "sort_type": "Tipo",
+                        "sort_quantity": "Cantidad",
+                        "sort_last_updated": "Última Actualización",
+                        "asc": "Asc ↑",
+                        "desc": "Desc ↓",
+                        "select_all": "Seleccionar Todo",
+                        "clear": "Limpiar",
+                        "clear_selection": "Limpiar Selección",
+                        "selected": "seleccionado",
+                        "delete_selected": "Eliminar Seleccionados",
+                        "export_selected": "Exportar Seleccionados",
+                        "confirm_delete_selected": "¿Eliminar {count} artículo(s) seleccionado(s)?",
+                        "no_items_selected": "No hay artículos seleccionados",
+                        "no_items_match_filters": "No hay artículos que coincidan con los filtros",
+                        "per_unit": "por unidad",
+                        "in": "En",
+                        "hours_short": "h"
                     },
                     ru: {
                         // Navigation
@@ -516,6 +562,7 @@ export const translations = {
                         "session_notes_placeholder": "Детали дизайна, расположение, особые пожелания, инструкции по уходу...",
                         "save_session": "Сохранить сеанс",
                         "materials": "Материалы",
+                        "status": "Статус",
                         
                         // Inventory Modal
                         "new_inventory_item": "Новый предмет инвентаря",
@@ -539,7 +586,29 @@ export const translations = {
                         // Additional UI elements
                         "last_visit": "Последний визит",
                         "total_sessions": "Всего сеансов",
-                        "last_updated": "Обновлено"
+                        "last_updated": "Обновлено",
+                        
+                        // Sorting and filtering
+                        "sort_by": "Сортировать по:",
+                        "name": "Название",
+                        "sort_name": "Название",
+                        "sort_type": "Тип",
+                        "sort_quantity": "Количество",
+                        "sort_last_updated": "Последнее обновление",
+                        "asc": "Возр ↑",
+                        "desc": "Убыв ↓",
+                        "select_all": "Выбрать все",
+                        "clear": "Очистить",
+                        "clear_selection": "Очистить выбор",
+                        "selected": "выбрано",
+                        "delete_selected": "Удалить выбранные",
+                        "export_selected": "Экспортировать выбранные",
+                        "confirm_delete_selected": "Удалить {count} выбранных предметов?",
+                        "no_items_selected": "Нет выбранных предметов",
+                        "no_items_match_filters": "Нет предметов, соответствующих фильтрам",
+                        "per_unit": "за единицу",
+                        "in": "Через",
+                        "hours_short": "ч"
                     },
                     he: {
                         // Navigation
@@ -679,6 +748,7 @@ export const translations = {
                         "session_notes_placeholder": "פרטי עיצוב, מיקום, בקשות מיוחדות, הוראות טיפול לאחר...",
                         "save_session": "שמור פגישה",
                         "materials": "חומרים",
+                        "status": "סטטוס",
                         
                         // Inventory Modal
                         "new_inventory_item": "פריט מלאי חדש",
@@ -702,7 +772,29 @@ export const translations = {
                         // Additional UI elements
                         "last_visit": "ביקור אחרון",
                         "total_sessions": "סך הפגישות",
-                        "last_updated": "עודכן"
+                        "last_updated": "עודכן",
+                        
+                        // Sorting and filtering
+                        "sort_by": "מיין לפי:",
+                        "name": "שם",
+                        "sort_name": "שם",
+                        "sort_type": "סוג",
+                        "sort_quantity": "כמות",
+                        "sort_last_updated": "עדכון אחרון",
+                        "asc": "עולה ↑",
+                        "desc": "יורד ↓",
+                        "select_all": "בחר הכל",
+                        "clear": "נקה",
+                        "clear_selection": "נקה בחירה",
+                        "selected": "נבחר",
+                        "delete_selected": "מחק נבחרים",
+                        "export_selected": "ייצא נבחרים",
+                        "confirm_delete_selected": "למחוק {count} פריטים נבחרים?",
+                        "no_items_selected": "לא נבחרו פריטים",
+                        "no_items_match_filters": "אין פריטים שתואמים לסינון",
+                        "per_unit": "ליחידה",
+                        "in": "בעוד",
+                        "hours_short": "ש"
                     }
                 };
 
