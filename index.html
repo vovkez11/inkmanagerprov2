@@ -246,6 +246,13 @@ body.sidebar-collapsed .app-container {
         gap: 10px;
         text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
         letter-spacing: 1.5px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .logo:hover {
+        transform: scale(1.05);
+        text-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
     }
 
     .logo-icon {
@@ -2237,7 +2244,7 @@ body.sidebar-collapsed .app-container {
 <body>
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
-        <div class="logo">
+        <div class="logo" onclick="app.showSection('dashboard')" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' ') app.showSection('dashboard')" aria-label="Go to Dashboard">
             <img src="icons/icon-192.png" alt="InkManager Pro" class="logo-icon">
             <span class="logo-text">InkManager Pro</span>
         </div>
@@ -2299,7 +2306,7 @@ body.sidebar-collapsed .app-container {
                     <button class="icon-btn" id="sidebarToggle" title="Toggle sidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <div class="logo">
+                    <div class="logo" onclick="app.showSection('dashboard')" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' ') app.showSection('dashboard')" aria-label="Go to Dashboard">
                         <img src="icons/icon-192.png" alt="InkManager Pro" class="logo-icon">
                         <span class="logo-text">InkManager Pro</span>
                     </div>
