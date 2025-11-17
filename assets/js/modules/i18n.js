@@ -84,6 +84,7 @@ export const translations = {
                         "edit_inventory_item": "Edit Inventory Item",
                         "update_item": "Update Item",
                         "low_stock": "Low Stock",
+                        "manage_inventory": "Manage Inventory",
                         
                         // Calendar
                         "studio_calendar": "Studio Calendar",
@@ -283,6 +284,7 @@ export const translations = {
                         "edit_inventory_item": "Editar Artículo de Inventario",
                         "update_item": "Actualizar Artículo",
                         "low_stock": "Stock Bajo",
+                        "manage_inventory": "Gestionar Inventario",
                         
                         // Calendar
                         "studio_calendar": "Calendario del Estudio",
@@ -443,6 +445,7 @@ export const translations = {
                         "edit_inventory_item": "Редактировать предмет инвентаря",
                         "update_item": "Обновить предмет",
                         "low_stock": "Низкий запас",
+                        "manage_inventory": "Управление инвентарем",
                         
                         // Calendar
                         "studio_calendar": "Календарь студии",
@@ -603,6 +606,7 @@ export const translations = {
                         "edit_inventory_item": "ערוך פריט מלאי",
                         "update_item": "עדכן פריט",
                         "low_stock": "מלאי נמוך",
+                        "manage_inventory": "נהל מלאי",
                         
                         // Calendar
                         "studio_calendar": "לוח שנה של הסטודיו",
