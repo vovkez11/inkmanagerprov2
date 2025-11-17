@@ -2500,20 +2500,20 @@ body.sidebar-collapsed .app-container {
                 </div>
 
                 <div id="inventorySortBar" style="display: flex; gap: 8px; align-items: center; margin: 6px 0 14px; flex-wrap: wrap;">
-                    <span style="opacity:0.8;">Sort by:</span>
+                    <span style="opacity:0.8;" data-i18n="sort_by">Sort by:</span>
                     <select class="form-control" id="inventorySortKey" style="max-width: 180px;">
-                        <option value="name">Name</option>
-                        <option value="type">Type</option>
-                        <option value="qty">Quantity</option>
-                        <option value="updatedAt">Last Updated</option>
+                        <option value="name" data-i18n="sort_name">Name</option>
+                        <option value="type" data-i18n="sort_type">Type</option>
+                        <option value="qty" data-i18n="sort_quantity">Quantity</option>
+                        <option value="updatedAt" data-i18n="sort_last_updated">Last Updated</option>
                     </select>
-                    <button class="btn btn-outline" id="inventorySortDirBtn" title="Toggle order">Asc ↑</button>
-                    <button class="btn btn-outline" id="inventorySelectAllBtn">Select All</button>
-                    <button class="btn btn-outline" id="inventoryClearSelectionBtn">Clear</button>
+                    <button class="btn btn-outline" id="inventorySortDirBtn" title="Toggle order" data-i18n="asc">Asc ↑</button>
+                    <button class="btn btn-outline" id="inventorySelectAllBtn" data-i18n="select_all">Select All</button>
+                    <button class="btn btn-outline" id="inventoryClearSelectionBtn" data-i18n="clear">Clear</button>
                 </div>
 
                 <div id="inventoryBulkActions" style="display:none; align-items:center; justify-content:space-between; gap:12px; background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-                    <div style="font-weight:600;"><span id="inventorySelectedCount">0</span> selected</div>
+                    <div style="font-weight:600;"><span id="inventorySelectedCount">0</span> <span data-i18n="selected">selected</span></div>
                     <div style="display:flex; gap:10px; flex-wrap: wrap; align-items:center;">
                         <div style="display:flex; align-items:center; gap:6px;">
                             <label for="inventoryBulkTypeSelect" style="opacity:0.7; font-size:0.85rem;" data-i18n="type">Type</label>
@@ -2528,8 +2528,8 @@ body.sidebar-collapsed .app-container {
                             </select>
                             <button class="btn btn-outline" id="inventoryBulkTypeApplyBtn" data-i18n="apply" disabled>Apply</button>
                         </div>
-                        <button class="btn btn-danger" id="inventoryBulkDeleteBtn">Delete Selected</button>
-                        <button class="btn btn-outline" id="inventoryBulkExportBtn">Export Selected</button>
+                        <button class="btn btn-danger" id="inventoryBulkDeleteBtn" data-i18n="delete_selected">Delete Selected</button>
+                        <button class="btn btn-outline" id="inventoryBulkExportBtn" data-i18n="export_selected">Export Selected</button>
                     </div>
                 </div>
 

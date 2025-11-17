@@ -778,7 +778,7 @@ import { showToast, debounce } from './modules/ui.js';
                 const sortKeyEl = document.getElementById('inventorySortKey');
                 const sortDirBtn = document.getElementById('inventorySortDirBtn');
                 if (sortKeyEl) sortKeyEl.value = this.inventorySort.key || 'name';
-                if (sortDirBtn) sortDirBtn.textContent = this.inventorySort.dir === 'desc' ? 'Desc ↓' : 'Asc ↑';
+                if (sortDirBtn) sortDirBtn.textContent = this.inventorySort.dir === 'desc' ? this.translate('desc') : this.translate('asc');
             }
 
             setInventorySort(key, dir) {
@@ -902,10 +902,11 @@ import { showToast, debounce } from './modules/ui.js';
             bulkDeleteInventory() {
                 const ids = Array.from(this.selectedInventory);
                 if (ids.length === 0) {
-                    this.showNotification('ℹ️ No items selected');
+                    this.showNotification('ℹ️ ' + this.translate('no_items_selected'));
                     return;
                 }
-                if (!confirm(`Delete ${ids.length} selected item(s)?`)) return;
+                const confirmMsg = this.translate('confirm_delete_selected').replace('{count}', ids.length);
+                if (!confirm(confirmMsg)) return;
 
                 const deletedItems = this.inventory.filter(item => ids.includes(item.id));
                 this.inventory = this.inventory.filter(item => !ids.includes(item.id));
@@ -921,7 +922,7 @@ import { showToast, debounce } from './modules/ui.js';
             bulkExportInventory() {
                 const ids = Array.from(this.selectedInventory);
                 if (ids.length === 0) {
-                    this.showNotification('ℹ️ No items selected');
+                    this.showNotification('ℹ️ ' + this.translate('no_items_selected'));
                     return;
                 }
                 const items = this.inventory.filter(item => ids.includes(item.id));
@@ -940,7 +941,7 @@ import { showToast, debounce } from './modules/ui.js';
             bulkChangeInventoryType(newType) {
                 const ids = Array.from(this.selectedInventory);
                 if (ids.length === 0) {
-                    this.showNotification('ℹ️ No items selected');
+                    this.showNotification('ℹ️ ' + this.translate('no_items_selected'));
                     return;
                 }
                 if (!newType) {
@@ -1361,7 +1362,7 @@ import { showToast, debounce } from './modules/ui.js';
                             <div class="item-content" onclick="app.showSection('clients')">
                                 <div class="item-title">
                                     <i class="fas fa-user"></i> ${client.name}
-                                    ${stats.count > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + (this.translate('regular_client') || 'Regular') + '</span>' : ''}
+                                    ${stats.count > 0 ? '<span style="background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 10px;">' + this.translate('regular_client') + '</span>' : ''}
                                 </div>
                                 <div class="item-meta">
                                     ${client.phone ? `<div><i class="fas fa-phone"></i> ${client.phone}</div>` : ''}
@@ -1369,10 +1370,10 @@ import { showToast, debounce } from './modules/ui.js';
                                     ${client.birthDate ? `<div><i class="fas fa-birthday-cake"></i> ${new Date(client.birthDate).toLocaleDateString()}</div>` : ''}
                                     ${client.skinType ? `<div><i class="fas fa-hand-sparkles"></i> ${client.skinType} skin</div>` : ''}
                                     ${client.emergencyContact ? `<div><i class="fas fa-exclamation-triangle"></i> ${client.emergencyContact}</div>` : ''}
-                                    <div><i class="fas fa-calendar"></i> ${stats.count} ${this.translate('total_sessions') || 'sessions'} | ${this.formatCurrency(stats.totalSpent)}</div>
-                                    ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit') || 'Last visit'}: ${lastSession.toLocaleDateString()}</div>` : ''}
+                                    <div><i class="fas fa-calendar"></i> ${stats.count} ${this.translate('total_sessions')} | ${this.formatCurrency(stats.totalSpent)}</div>
+                                    ${lastSession ? `<div><i class="fas fa-clock"></i> ${this.translate('last_visit')}: ${lastSession.toLocaleDateString()}</div>` : ''}
                                     ${client.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;"><i class="fas fa-sticky-note"></i> ${client.notes}</div>` : ''}
-                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
+                                    ${client.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated')}: ${new Date(client.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -1590,7 +1591,7 @@ import { showToast, debounce } from './modules/ui.js';
                     const statusColor = isPast ? 'var(--success)' : (isToday ? 'var(--warning)' : 'var(--primary)');
                     
                     const materialsText = session.materialsUsed && session.materialsUsed.length > 0 
-                        ? `<br><strong>${this.translate('materials') || 'Materials'}:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
+                        ? `<br><strong>${this.translate('materials')}:</strong> ${session.materialsUsed.map(m => `${m.itemName} (${m.quantity})`).join(', ')}`
                         : '';
                     
                     return `
@@ -1598,14 +1599,14 @@ import { showToast, debounce } from './modules/ui.js';
                             <div class="item-content" onclick="app.showSection('sessions')">
                                 <div class="item-title">${session.title}</div>
                                 <div class="item-meta">
-                                    <strong>${this.translate('client') || 'Client'}:</strong> ${this.getClientName(session.clientId)}<br>
-                                    <strong>${this.translate('date_time') || 'When'}:</strong> ${sessionDate.toLocaleString()}<br>
-                                    <strong>${this.translate('duration_hours') || 'Duration'}:</strong> ${session.duration} hours<br>
-                                    <strong>${this.translate('status') || 'Status'}:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
-                                    ${session.price ? `<strong>${this.translate('price') || 'Price'}:</strong> ${this.formatCurrency(session.price)}` : ''}
+                                    <strong>${this.translate('client')}:</strong> ${this.getClientName(session.clientId)}<br>
+                                    <strong>${this.translate('date_time')}:</strong> ${sessionDate.toLocaleString()}<br>
+                                    <strong>${this.translate('duration_hours')}:</strong> ${session.duration} hours<br>
+                                    <strong>${this.translate('status')}:</strong> <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span><br>
+                                    ${session.price ? `<strong>${this.translate('price')}:</strong> ${this.formatCurrency(session.price)}` : ''}
                                     ${materialsText}
-                                    ${session.notes ? `<br><strong>${this.translate('session_notes') || 'Notes'}:</strong> ${session.notes}` : ''}
-                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>${this.translate('last_updated') || 'Last updated'}: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
+                                    ${session.notes ? `<br><strong>${this.translate('session_notes')}:</strong> ${session.notes}` : ''}
+                                    ${session.updatedAt ? `<br><small style='opacity: 0.7;'>${this.translate('last_updated')}: ${new Date(session.updatedAt).toLocaleDateString()}</small>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -1752,7 +1753,7 @@ import { showToast, debounce } from './modules/ui.js';
                 const itemsToRender = this.sortInventory(filtered);
 
                 if (itemsToRender.length === 0) {
-                    container.innerHTML = `<div class="empty-state">No items match your filters</div>`;
+                    container.innerHTML = `<div class="empty-state">${this.translate('no_items_match_filters')}</div>`;
                     alertsContainer.innerHTML = '';
                     this.updateBulkActionsUI();
                     return;
@@ -1799,10 +1800,10 @@ import { showToast, debounce } from './modules/ui.js';
                                             <span>💲</span>
                                             <input type="number" min="0" step="0.01" value="${item.price ?? ''}" style="width:110px;" onclick="event.stopPropagation();" onblur="event.stopPropagation(); app.updateInventoryItemField('${item.id}', 'price', this.value)">
                                         </label>
-                                        ${item.price ? `<span style="opacity:0.8;">${this.formatCurrency(item.price)} ${this.translate('price_per_unit') || 'per unit'}</span>` : ''}
+                                        ${item.price ? `<span style="opacity:0.8;">${this.formatCurrency(item.price)} ${this.translate('per_unit')}</span>` : ''}
                                     </div>
                                     ${item.notes ? `<div style="margin-top: 6px; padding: 6px; background: rgba(255,255,255,0.05); border-radius: 6px;">📝 ${item.notes}</div>` : ''}
-                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated') || 'Updated'}: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
+                                    ${item.updatedAt ? `<div style="margin-top: 4px; font-size: 0.8em; opacity: 0.7;">${this.translate('last_updated')}: ${new Date(item.updatedAt).toLocaleDateString()}</div>` : ''}
                                 </div>
                             </div>
                             <div class="item-actions">
@@ -1960,16 +1961,16 @@ import { showToast, debounce } from './modules/ui.js';
                             
                             let statusClass = '';
                             let statusIcon = '🕒';
-                            let statusText = `${this.translate('in') || 'In'} ${hoursUntil}h`;
+                            let statusText = `${this.translate('in')} ${hoursUntil}${this.translate('hours_short')}`;
                             
                             if (isUrgent) {
                                 statusClass = 'urgent';
                                 statusIcon = '⚠️';
-                                statusText = this.translate('starting_soon') || 'Starting soon!';
+                                statusText = this.translate('starting_soon');
                             } else if (isCompleted) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
-                                statusText = this.translate('session_completed') || 'Completed';
+                                statusText = this.translate('session_completed');
                             } else if (hoursUntil < 0) {
                                 statusClass = 'completed';
                                 statusIcon = '✅';
