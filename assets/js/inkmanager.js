@@ -1808,6 +1808,8 @@ import { showToast, debounce } from './modules/ui.js';
                 }).join('');
 
                 const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                const isMobile = window.innerWidth <= 768;
+                
                 if (lowStock.length > 0) {
                     alertsContainer.innerHTML = `
                         <div class="card" style="border-left: 5px solid var(--warning); background: linear-gradient(135deg, rgba(255,152,0,0.15) 0%, rgba(255,64,129,0.1) 100%);">
@@ -1825,6 +1827,18 @@ import { showToast, debounce } from './modules/ui.js';
                                 </button>
                             </div>
                         </div>
+                        ${isMobile ? `
+                        <button class="btn btn-primary" onclick="app.scrollToInventoryControls()" style="width: 100%; margin-top: 16px;">
+                            <i class="fas fa-sliders-h"></i> <span data-i18n="manage_inventory">${this.translate('manage_inventory') || 'Manage Inventory'}</span>
+                        </button>
+                        ` : ''}
+                    `;
+                } else if (isMobile && this.inventory.length > 0) {
+                    // Show manage button even when no low stock alerts, on mobile only
+                    alertsContainer.innerHTML = `
+                        <button class="btn btn-primary" onclick="app.scrollToInventoryControls()" style="width: 100%; margin-top: 16px;">
+                            <i class="fas fa-sliders-h"></i> <span data-i18n="manage_inventory">${this.translate('manage_inventory') || 'Manage Inventory'}</span>
+                        </button>
                     `;
                 } else {
                     alertsContainer.innerHTML = '';
@@ -1856,6 +1870,14 @@ import { showToast, debounce } from './modules/ui.js';
                 
                 // Show a notification
                 this.showNotification('📦 Showing low stock items');
+            }
+
+            scrollToInventoryControls() {
+                // Scroll to the sort/filter controls at the top of the inventory section
+                const inventorySortBar = document.getElementById('inventorySortBar');
+                if (inventorySortBar) {
+                    inventorySortBar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
 
             deleteInventoryItem(itemId) {
