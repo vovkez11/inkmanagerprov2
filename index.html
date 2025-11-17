@@ -324,6 +324,62 @@ body.sidebar-collapsed .app-container {
         text-align: center;
     }
 
+    /* Sidebar Collapse Button */
+    .sidebar-collapse-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin: auto 1rem 1rem;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.1) 0%, rgba(0, 188, 212, 0.05) 100%);
+        border: 1px solid rgba(0, 188, 212, 0.3);
+        border-radius: 10px;
+        color: var(--primary);
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.9rem;
+        font-weight: 600;
+        min-height: 44px;
+    }
+
+    .sidebar-collapse-btn:hover {
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.2) 0%, rgba(0, 188, 212, 0.1) 100%);
+        border-color: var(--primary);
+        transform: translateX(-2px);
+    }
+
+    .sidebar-collapse-btn:active {
+        opacity: 0.8;
+    }
+
+    .sidebar-collapse-btn i {
+        font-size: 1.2rem;
+        transition: var(--transition);
+    }
+
+    /* Hide collapse button on mobile */
+    @media (max-width: 1024px) {
+        .sidebar-collapse-btn {
+            display: none;
+        }
+    }
+
+    /* Update icon when sidebar is collapsed */
+    body.sidebar-collapsed .sidebar-collapse-btn i {
+        transform: rotate(180deg);
+    }
+
+    body.sidebar-collapsed .sidebar-collapse-btn span {
+        display: none;
+    }
+
+    body.sidebar-collapsed .sidebar-collapse-btn {
+        justify-content: center;
+        padding: 0.75rem;
+        margin: auto 0.75rem 1rem;
+    }
+
     /* Language Selector */
     .language-selector {
         display: flex;
@@ -2223,6 +2279,12 @@ body.sidebar-collapsed .app-container {
                 <i class="fas fa-box-open"></i> <span data-i18n="add_inventory">Add Inventory</span>
             </a>
         </div>
+
+        <!-- Sidebar Collapse Button -->
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar">
+            <i class="fas fa-chevron-left"></i>
+            <span data-i18n="collapse_sidebar">Collapse</span>
+        </button>
     </nav>
 
     <!-- Sidebar Backdrop for mobile drawer -->

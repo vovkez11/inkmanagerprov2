@@ -498,6 +498,15 @@ import { showToast, debounce } from './modules/ui.js';
                     this.openInventoryModal();
                 });
 
+                // Sidebar collapse button
+                const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
+                if (sidebarCollapseBtn) {
+                    sidebarCollapseBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.toggleSidebar();
+                    });
+                }
+
                 const languageSelect = document.getElementById('languageSelect');
                 if (languageSelect) {
                     languageSelect.addEventListener('change', (e) => {
