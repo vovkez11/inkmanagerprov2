@@ -198,16 +198,20 @@ import { showToast, debounce } from './modules/ui.js';
                 }, { passive: false });
 
                 // Add mobile-specific keyboard handling
-                document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
-                    // Auto-scroll to input when focused on mobile
-                    input.addEventListener('focus', () => {
-                        if (window.innerWidth <= 1024) {
-                            setTimeout(() => {
-                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }, 300);
-                        }
+                // Note: Only apply on non-iOS devices as iOS Safari handles this natively
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (!isIOS) {
+                    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
+                        // Auto-scroll to input when focused on mobile
+                        input.addEventListener('focus', () => {
+                            if (window.innerWidth <= 1024) {
+                                setTimeout(() => {
+                                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }, 300);
+                            }
+                        });
                     });
-                });
+                }
 
                 // Better touch feedback
                 if ('ontouchstart' in window) {
@@ -465,22 +469,8 @@ import { showToast, debounce } from './modules/ui.js';
                 });
 
                 // Sidebar toggle is now handled by SidebarDrawerController in app.js
-                // No longer setting up the event listener here to avoid conflicts
-
-                // Close mobile sidebar when clicking outside of it
-                document.addEventListener('click', (e) => {
-                    const isMobile = window.innerWidth <= 1024;
-                    const sidebar = document.getElementById('sidebar');
-                    const isOpen = document.body.classList.contains('mobile-open');
-                    
-                    // Only handle if on mobile and sidebar is open
-                    if (isMobile && isOpen) {
-                        // Check if click is outside sidebar and not the toggle button
-                        if (sidebar && !sidebar.contains(e.target) && e.target.id !== 'sidebarToggle' && !e.target.closest('#sidebarToggle')) {
-                            this.toggleSidebar();
-                        }
-                    }
-                });
+                // Sidebar closing on outside click is also handled by SidebarDrawerController backdrop
+                // No longer setting up duplicate event listeners here to avoid conflicts
 
                 const quickAddClient = document.getElementById('quickAddClient');
                 if (quickAddClient) quickAddClient.addEventListener('click', (e) => {
@@ -715,7 +705,6 @@ import { showToast, debounce } from './modules/ui.js';
                     
                     // If user is on dashboard and presses back, stay on dashboard
                     if (this.currentSection === 'dashboard' && !stateSection && !hashSection) {
-                        event.preventDefault();
                         history.pushState({ section: 'dashboard' }, '', '#dashboard');
                         return;
                     }
