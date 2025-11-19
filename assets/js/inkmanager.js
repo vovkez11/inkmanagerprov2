@@ -6,6 +6,10 @@
 import { translations, currencyConfig, formatCurrency as formatCurrencyUtil, translate as translateUtil, updateDOMTranslations } from './modules/i18n.js';
 import * as Storage from './modules/storage.js';
 import { showToast, debounce } from './modules/ui.js';
+import * as Inventory from './modules/inventory.js';
+import * as Analytics from './modules/analytics.js';
+import * as Notifications from './modules/notifications.js';
+import * as DataManager from './modules/data-manager.js';
 
 // INKMANAGER PRO - COMPLETE REWRITTEN VERSION WITH PERFECT MULTI-LANGUAGE & CURRENCY SUPPORT
         class InkManagerPro {
