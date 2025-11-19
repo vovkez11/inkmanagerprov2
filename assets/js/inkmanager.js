@@ -361,6 +361,8 @@ import { showToast, debounce } from './modules/ui.js';
                                 console.log('🔄 Service Worker update found');
                                 
                                 newWorker.addEventListener('statechange', () => {
+                                    // Only show update notification when newWorker is installed
+                                    // and there's an existing controller (not first install)
                                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                         // New service worker available, prompt user to update
                                         console.log('✨ New version available');
@@ -369,10 +371,12 @@ import { showToast, debounce } from './modules/ui.js';
                                 });
                             });
                             
-                            // Check for updates periodically (every hour)
+                            // Check for updates periodically (once per hour to reduce server load)
                             setInterval(() => {
-                                registration.update();
-                            }, 60 * 60 * 1000);
+                                if (registration) {
+                                    registration.update();
+                                }
+                            }, 3600000); // Check every hour (3600000ms)
                         })
                         .catch(error => {
                             console.log('❌ Service Worker registration failed:', error);
@@ -380,6 +384,7 @@ import { showToast, debounce } from './modules/ui.js';
                     
                     // Listen for messages from service worker
                     navigator.serviceWorker.addEventListener('message', (event) => {
+                        // Defensive check to ensure event.data exists
                         if (event.data && event.data.type === 'SW_UPDATED') {
                             console.log('📢 Service Worker updated:', event.data.version);
                             this.showUpdatePrompt();
@@ -2599,6 +2604,19 @@ import { showToast, debounce } from './modules/ui.js';
              * Send a notification for an upcoming session
              */
             sendSessionNotification(session, hoursUntil) {
+                // Check if notifications are supported
+                if (!('Notification' in window)) {
+                    console.warn('⚠️ Notifications are not supported in this browser');
+                    return;
+                }
+
+                // Check if permission is granted before sending
+                if (Notification.permission !== 'granted') {
+                    console.warn('⚠️ Notification permission not granted');
+                    this.showNotification('⚠️ Please enable notifications in settings');
+                    return;
+                }
+
                 const clientName = this.getClientName(session.clientId);
                 const sessionTime = new Date(session.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
@@ -2618,7 +2636,7 @@ import { showToast, debounce } from './modules/ui.js';
                 const title = `📅 Upcoming Session: ${session.title}`;
                 const body = `Client: ${clientName}\nTime: ${sessionTime}\nStarting ${timeText}`;
                 
-                // Try to use service worker notification if available
+                // Try to use service worker notification if available (preferred method)
                 if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                     navigator.serviceWorker.ready.then(registration => {
                         registration.showNotification(title, {
@@ -2632,19 +2650,40 @@ import { showToast, debounce } from './modules/ui.js';
                                 sessionId: session.id,
                                 url: './index.html#sessions'
                             }
+                        }).catch(error => {
+                            console.error('❌ Service worker notification failed:', error);
+                            // Fallback to basic notification
+                            this.sendBasicNotification(title, body, `session-${session.id}`);
                         });
+                    }).catch(error => {
+                        console.error('❌ Service worker not ready:', error);
+                        // Fallback to basic notification
+                        this.sendBasicNotification(title, body, `session-${session.id}`);
                     });
                 } else {
                     // Fallback to regular notification
-                    new Notification(title, {
-                        body: body,
-                        icon: './icon.png',
-                        tag: `session-${session.id}`,
-                        requireInteraction: false
-                    });
+                    this.sendBasicNotification(title, body, `session-${session.id}`);
                 }
                 
                 console.log(`🔔 Notification sent for session: ${session.title}`);
+            }
+
+            /**
+             * Send a basic notification (fallback method)
+             * Wrapped in try/catch to handle browsers that throw on Notification constructor
+             */
+            sendBasicNotification(title, body, tag) {
+                try {
+                    new Notification(title, {
+                        body: body,
+                        icon: './icon.png',
+                        tag: tag,
+                        requireInteraction: false
+                    });
+                } catch (error) {
+                    console.error('❌ Failed to create notification:', error);
+                    this.showNotification('⚠️ Notification failed to send');
+                }
             }
 
             /**
@@ -2666,9 +2705,24 @@ import { showToast, debounce } from './modules/ui.js';
              * Send a test notification
              */
             sendTestNotification() {
+                // Check if notifications are supported
+                if (!('Notification' in window)) {
+                    console.warn('⚠️ Notifications are not supported in this browser');
+                    this.showNotification('⚠️ Notifications not supported in this browser');
+                    return;
+                }
+
+                // Check if permission is granted before sending
+                if (Notification.permission !== 'granted') {
+                    console.warn('⚠️ Notification permission not granted');
+                    this.showNotification('⚠️ Please enable notifications in settings');
+                    return;
+                }
+
                 const title = '🔔 InkManager Pro';
                 const body = 'Test notification - Your notifications are working correctly!';
                 
+                // Try to use service worker notification if available (preferred method)
                 if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                     navigator.serviceWorker.ready.then(registration => {
                         registration.showNotification(title, {
@@ -2678,15 +2732,19 @@ import { showToast, debounce } from './modules/ui.js';
                             tag: 'test-notification',
                             requireInteraction: false,
                             vibrate: [200, 100, 200]
+                        }).catch(error => {
+                            console.error('❌ Service worker notification failed:', error);
+                            // Fallback to basic notification
+                            this.sendBasicNotification(title, body, 'test-notification');
                         });
+                    }).catch(error => {
+                        console.error('❌ Service worker not ready:', error);
+                        // Fallback to basic notification
+                        this.sendBasicNotification(title, body, 'test-notification');
                     });
                 } else {
-                    new Notification(title, {
-                        body: body,
-                        icon: './icon.png',
-                        tag: 'test-notification',
-                        requireInteraction: false
-                    });
+                    // Fallback to regular notification
+                    this.sendBasicNotification(title, body, 'test-notification');
                 }
                 
                 this.showNotification('✅ Test notification sent!');

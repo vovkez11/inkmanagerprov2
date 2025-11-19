@@ -98,11 +98,14 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(request)
         .then(response => {
-          // Clone and cache the response
-          const responseClone = response.clone();
-          caches.open(RUNTIME_CACHE).then(cache => {
-            cache.put(request, responseClone);
-          });
+          // Only cache successful responses (status 200)
+          if (response && response.ok) {
+            // Clone and cache the response
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+          }
           return response;
         })
         .catch(() => {
@@ -112,18 +115,20 @@ self.addEventListener('fetch', event => {
               if (response) {
                 return response;
               }
-              // Try to serve the main app page
-              return caches.match('/inkmanagerprov2/index.html')
-                .then(indexResponse => {
-                  if (indexResponse) {
-                    return indexResponse;
-                  }
-                  // Last resort: offline page
-                  return caches.match(OFFLINE_PAGE).then(offlineResponse => {
-                    if (offlineResponse) {
-                      return offlineResponse;
+              // Try offline page first
+              return caches.match(OFFLINE_PAGE).then(offlineResponse => {
+                if (offlineResponse) {
+                  return offlineResponse;
+                }
+                // Use scope-robust relative resolution for index.html fallback
+                // This works regardless of the installation path or repo path
+                const indexPath = new URL('./index.html', self.location).pathname;
+                return caches.match(indexPath)
+                  .then(indexResponse => {
+                    if (indexResponse) {
+                      return indexResponse;
                     }
-                    // If no offline page cached, return a basic response
+                    // If no offline page or index cached, return a basic response
                     return new Response(
                       '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>You are offline</h1><p>Please check your internet connection.</p></body></html>',
                       {
@@ -135,7 +140,7 @@ self.addEventListener('fetch', event => {
                       }
                     );
                   });
-                });
+              });
             });
         })
     );
