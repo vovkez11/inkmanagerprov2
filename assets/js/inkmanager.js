@@ -512,6 +512,14 @@ import * as DataManager from './modules/data-manager.js';
                     });
                 }
 
+                // Settings page language dropdown
+                const settingsLanguageSelect = document.getElementById('settingsLanguage');
+                if (settingsLanguageSelect) {
+                    settingsLanguageSelect.addEventListener('change', (e) => {
+                        this.setLanguage(e.target.value);
+                    });
+                }
+
                 const addClientBtn = document.getElementById('addClientBtn');
                 if (addClientBtn) addClientBtn.addEventListener('click', () => this.openClientModal());
                 const addFirstClient = document.getElementById('addFirstClient');
