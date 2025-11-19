@@ -787,31 +787,8 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             sortInventory(items) {
-                const { key, dir } = this.inventorySort || { key: 'name', dir: 'asc' };
-                
-                // Create cache key based on items length, sort params, and filter
-                const cacheKey = `${items.length}-${key}-${dir}-${this.inventoryFilter}-${this.inventorySearchQuery}`;
-                
-                // Return cached result if data hasn't changed
-                if (this.sortedInventoryCache && this.sortedInventoryCacheKey === cacheKey) {
-                    return this.sortedInventoryCache;
-                }
-                
-                // Perform sort
-                const mult = dir === 'desc' ? -1 : 1;
-                const sorted = [...items].sort((a, b) => {
-                    const av = a[key] ?? '';
-                    const bv = b[key] ?? '';
-                    if (key === 'qty') return (Number(av) - Number(bv)) * mult;
-                    if (key === 'updatedAt') return ((new Date(av || 0)) - (new Date(bv || 0))) * mult;
-                    return String(av).localeCompare(String(bv)) * mult;
-                });
-                
-                // Cache the result
-                this.sortedInventoryCache = sorted;
-                this.sortedInventoryCacheKey = cacheKey;
-                
-                return sorted;
+                // Use inventory module for sorting
+                return Inventory.sortInventory(items, this.inventorySort || { key: 'name', dir: 'asc' });
             }
             
             // Invalidate inventory sort cache when data changes
@@ -821,12 +798,9 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             adjustInventoryQty(itemId, delta) {
-                const item = this.inventory.find(i => i.id === itemId);
+                const item = Inventory.adjustQuantity(this.inventory, itemId, delta);
                 if (!item) return;
-                const nextQty = Math.max(0, (Number(item.qty) || 0) + delta);
-                if (nextQty === item.qty) return;
-                item.qty = nextQty;
-                item.updatedAt = Date.now();
+                
                 this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
@@ -835,22 +809,9 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             updateInventoryItemField(itemId, field, value) {
-                const item = this.inventory.find(i => i.id === itemId);
+                const item = Inventory.updateItemField(this.inventory, itemId, field, value);
                 if (!item) return;
 
-                if (field === 'alert') {
-                    const parsed = Math.max(0, parseInt(value, 10) || 0);
-                    item.alert = parsed;
-                } else if (field === 'price') {
-                    const parsed = parseFloat(value);
-                    if (isNaN(parsed)) {
-                        item.price = '';
-                    } else {
-                        item.price = Math.max(0, parseFloat(parsed.toFixed(2)));
-                    }
-                }
-
-                item.updatedAt = Date.now();
                 this.invalidateInventoryCache();
                 this.safeSaveData();
                 this.refreshInventory();
@@ -859,22 +820,8 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             getFilteredInventory() {
-                let items = [...this.inventory];
-                if (this.inventoryFilter === 'low-stock') {
-                    // Special filter for low stock items
-                    items = items.filter(i => i.qty <= i.alert);
-                } else if (this.inventoryFilter !== 'all') {
-                    items = items.filter(i => i.type === this.inventoryFilter);
-                }
-                if (this.inventorySearchQuery) {
-                    const query = this.inventorySearchQuery.toLowerCase();
-                    items = items.filter(item =>
-                        item.name.toLowerCase().includes(query) ||
-                        item.type.toLowerCase().includes(query) ||
-                        (item.notes && item.notes.toLowerCase().includes(query))
-                    );
-                }
-                return items;
+                // Use inventory module for filtering
+                return Inventory.filterInventory(this.inventory, this.inventoryFilter, this.inventorySearchQuery);
             }
 
             selectAllInventory() {
@@ -1679,25 +1626,18 @@ import * as DataManager from './modules/data-manager.js';
                 const price = parseFloat(document.getElementById('itemPrice').value) || 0;
                 const notes = document.getElementById('itemNotes').value.trim();
 
-                if (!name || !type) {
-                    this.showNotification('Please fill all required fields');
+                const itemData = { name, type, qty, alert, price, notes };
+                
+                // Validate item data
+                const validation = Inventory.validateItemData(itemData);
+                if (!validation.valid) {
+                    this.showNotification('❌ ' + validation.errors.join(', '));
                     return;
                 }
 
                 if (this.editingItemId) {
-                    const itemIndex = this.inventory.findIndex(i => i.id === this.editingItemId);
-                    if (itemIndex !== -1) {
-                        this.inventory[itemIndex] = {
-                            ...this.inventory[itemIndex],
-                            name: name,
-                            type: type,
-                            qty: qty,
-                            alert: alert,
-                            price: price,
-                            notes: notes,
-                            updatedAt: new Date().toISOString()
-                        };
-                        
+                    const item = Inventory.updateItem(this.inventory, this.editingItemId, itemData);
+                    if (item) {
                         this.invalidateInventoryCache();
                         this.safeSaveData();
                         this.closeInventoryModal();
@@ -1706,17 +1646,7 @@ import * as DataManager from './modules/data-manager.js';
                         this.showNotification('✅ Item updated successfully!');
                     }
                 } else {
-                    const item = {
-                        id: 'item-' + Date.now(),
-                        name: name,
-                        type: type,
-                        qty: qty,
-                        alert: alert,
-                        price: price,
-                        notes: notes,
-                        createdAt: new Date().toISOString()
-                    };
-                    
+                    const item = Inventory.createItem(itemData);
                     this.inventory.push(item);
                     this.invalidateInventoryCache();
                     this.safeSaveData();
@@ -1758,17 +1688,9 @@ import * as DataManager from './modules/data-manager.js';
                 }
 
                 container.innerHTML = itemsToRender.map(item => {
-                    const isLowStock = item.qty <= item.alert;
+                    const isLowStock = Inventory.isLowStock(item);
                     const stockStyle = isLowStock ? 'style="color: var(--warning); font-weight: 600;"' : '';
-                    const typeIcons = {
-                        'needle': '🪡',
-                        'ink': '🎨',
-                        'machine': '⚡',
-                        'supply': '📦',
-                        'aftercare': '🧴',
-                        'safety': '🧤'
-                    };
-                    const icon = typeIcons[item.type] || '📋';
+                    const icon = Inventory.getTypeIcon(item.type);
                     
                     return `
                         <div class="inventory-item">
@@ -1816,7 +1738,7 @@ import * as DataManager from './modules/data-manager.js';
                     `;
                 }).join('');
 
-                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
+                const lowStock = Inventory.getLowStockItems(this.inventory);
                 const isMobile = window.innerWidth <= 768;
                 
                 if (lowStock.length > 0) {
@@ -1905,30 +1827,19 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             refreshDashboard() {
-                document.getElementById('totalClients').textContent = this.clients.length;
+                // Use Analytics module for dashboard statistics
+                const stats = Analytics.getDashboardStats({
+                    clients: this.clients,
+                    sessions: this.sessions,
+                    inventory: this.inventory
+                });
                 
-                const upcomingSessions = this.sessions.filter(s => new Date(s.dateTime) > new Date());
-                document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
+                document.getElementById('totalClients').textContent = stats.totalClients;
+                document.getElementById('upcomingSessions').textContent = stats.upcomingSessions;
+                document.getElementById('monthlyRevenue').textContent = this.formatCurrency(stats.monthlyRevenue);
+                document.getElementById('lowStockItems').textContent = stats.lowStockItems;
 
-                const currentMonth = new Date().getMonth();
-                const currentYear = new Date().getFullYear();
-                const monthlyRevenue = this.sessions
-                    .filter(s => {
-                        const sessionDate = new Date(s.dateTime);
-                        return sessionDate.getMonth() === currentMonth && 
-                               sessionDate.getFullYear() === currentYear;
-                    })
-                    .reduce((sum, session) => sum + (session.price || 0), 0);
-                document.getElementById('monthlyRevenue').textContent = this.formatCurrency(monthlyRevenue);
-
-                const lowStock = this.inventory.filter(item => item.qty <= item.alert);
-                document.getElementById('lowStockItems').textContent = lowStock.length;
-
-                const today = new Date().toDateString();
-                const todaysSessions = this.sessions.filter(s => 
-                    new Date(s.dateTime).toDateString() === today
-                ).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-                
+                const todaysSessions = stats.todaysSessions;
                 const todayContainer = document.getElementById('todaysSessions');
                 
                 if (todaysSessions.length === 0) {
@@ -2116,42 +2027,42 @@ import * as DataManager from './modules/data-manager.js';
             }
 
             refreshReports() {
-                const totalSessions = this.sessions.length;
-                const totalRevenue = this.sessions.reduce((sum, session) => sum + (session.price || 0), 0);
-                const avgSessionPrice = totalSessions > 0 ? totalRevenue / totalSessions : 0;
+                // Use Analytics module for report statistics
+                const totalRevenue = Analytics.getTotalRevenue(this.sessions);
+                const avgSessionPrice = Analytics.getAverageSessionPrice(this.sessions);
+                const clientRetention = Analytics.getClientRetentionRate(this.clients, this.sessions);
                 
-                const clientsWithMultipleSessions = this.clients.filter(client => 
-                    this.sessions.filter(s => s.clientId === client.id).length > 1
-                ).length;
-                const clientRetention = this.clients.length > 0 ? 
-                    Math.round((clientsWithMultipleSessions / this.clients.length) * 100) : 0;
-
-                document.getElementById('totalSessions').textContent = totalSessions;
+                document.getElementById('totalSessions').textContent = this.sessions.length;
                 document.getElementById('totalRevenue').textContent = this.formatCurrency(totalRevenue);
                 document.getElementById('avgSessionPrice').textContent = this.formatCurrency(avgSessionPrice);
-                document.getElementById('clientRetention').textContent = `${clientRetention}%`;
+                document.getElementById('clientRetention').textContent = `${Math.round(clientRetention)}%`;
             }
 
             exportData(type) {
                 let data, filename;
                 
+                if (type === 'all') {
+                    // Use DataManager module for enhanced export with validation
+                    const exportData = DataManager.exportData({
+                        clients: this.clients,
+                        sessions: this.sessions,
+                        inventory: this.inventory,
+                        settings: {
+                            language: this.currentLanguage,
+                            currency: localStorage.getItem('inkmanager_currency') || 'USD'
+                        }
+                    });
+                    
+                    // Add checksums for data integrity
+                    const exportWithChecksums = DataManager.addChecksums(exportData);
+                    
+                    DataManager.downloadJSON(exportWithChecksums, 'inkmanager-pro-complete-backup');
+                    this.showNotification('💾 Data exported successfully with integrity checks!');
+                    return;
+                }
+                
+                // Legacy export for individual data types
                 switch(type) {
-                    case 'all':
-                        data = {
-                            clients: this.clients,
-                            sessions: this.sessions,
-                            inventory: this.inventory,
-                            exportDate: new Date().toISOString(),
-                            version: 'InkManager Pro Complete Version',
-                            statistics: {
-                                totalClients: this.clients.length,
-                                totalSessions: this.sessions.length,
-                                totalRevenue: this.sessions.reduce((sum, s) => sum + (s.price || 0), 0),
-                                totalInventory: this.inventory.length
-                            }
-                        };
-                        filename = 'inkmanager-pro-complete-backup.json';
-                        break;
                     case 'clients':
                         data = this.clients;
                         filename = 'inkmanager-pro-clients.json';
@@ -2352,25 +2263,62 @@ import * as DataManager from './modules/data-manager.js';
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         try {
-                            const data = JSON.parse(event.target.result);
+                            const jsonString = event.target.result;
                             
-                            // Validate data structure
-                            if (data.clients || data.sessions || data.inventory) {
-                                if (confirm('Import data? This will overwrite existing data.')) {
-                                    if (data.clients) this.clients = data.clients;
-                                    if (data.sessions) this.sessions = data.sessions;
-                                    if (data.inventory) this.inventory = data.inventory;
-                                    
-                                    this.safeSaveData(true);
-                                    this.refreshAll();
-                                    this.showNotification('✅ Data imported successfully!');
+                            // Use DataManager module for validation and import
+                            const result = DataManager.importData(jsonString);
+                            
+                            if (!result.success) {
+                                const errorMsg = result.errors.join('\n');
+                                this.showNotification('❌ Import failed: ' + errorMsg);
+                                console.error('Import errors:', result.errors);
+                                return;
+                            }
+                            
+                            // Show warnings if any
+                            if (result.warnings.length > 0) {
+                                console.warn('Import warnings:', result.warnings);
+                            }
+                            
+                            // Verify checksums if present
+                            const data = JSON.parse(jsonString);
+                            if (data.checksums) {
+                                const checksumResult = DataManager.verifyChecksums(data);
+                                if (!checksumResult.valid) {
+                                    const warning = 'Data integrity check failed: ' + checksumResult.mismatches.join(', ');
+                                    if (!confirm(warning + '\n\nContinue with import anyway?')) {
+                                        return;
+                                    }
                                 }
-                            } else {
-                                this.showNotification('⚠️ Invalid data format');
+                            }
+                            
+                            // Confirm before overwriting
+                            const confirmMsg = `Import data?\n\n` +
+                                `Clients: ${result.data.clients.length}\n` +
+                                `Sessions: ${result.data.sessions.length}\n` +
+                                `Inventory: ${result.data.inventory.length}\n\n` +
+                                `This will overwrite existing data.`;
+                                
+                            if (confirm(confirmMsg)) {
+                                this.clients = result.data.clients;
+                                this.sessions = result.data.sessions;
+                                this.inventory = result.data.inventory;
+                                
+                                // Apply settings if included
+                                if (result.data.settings) {
+                                    if (result.data.settings.language) {
+                                        this.setLanguage(result.data.settings.language);
+                                    }
+                                }
+                                
+                                this.invalidateInventoryCache();
+                                this.safeSaveData(true);
+                                this.refreshAll();
+                                this.showNotification('✅ Data imported successfully!');
                             }
                         } catch (error) {
                             console.error('Import error:', error);
-                            this.showNotification('❌ Failed to import data');
+                            this.showNotification('❌ Failed to import data: ' + error.message);
                         }
                     };
                     reader.readAsText(file);
