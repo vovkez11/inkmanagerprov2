@@ -650,6 +650,25 @@ import * as DataManager from './modules/data-manager.js';
                     sessionDateTime.value = this.formatDateTime(nextHour);
                 }
 
+                // Settings page event listeners
+                const testNotificationsBtn = document.getElementById('testNotificationsBtn');
+                if (testNotificationsBtn) testNotificationsBtn.addEventListener('click', () => this.testNotification());
+                
+                const backupAllDataBtn = document.getElementById('backupAllDataBtn');
+                if (backupAllDataBtn) backupAllDataBtn.addEventListener('click', () => this.exportData('all'));
+                
+                const importDataBtn = document.getElementById('importDataBtn');
+                if (importDataBtn) importDataBtn.addEventListener('click', () => this.importData());
+                
+                const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+                if (clearAllDataBtn) clearAllDataBtn.addEventListener('click', () => this.confirmClearData());
+                
+                const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+                if (resetSettingsBtn) resetSettingsBtn.addEventListener('click', () => this.resetSettings());
+                
+                const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+                if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', () => this.saveSettings());
+
                 // Setup mobile bottom navigation
                 this.setupMobileBottomNav();
             }
