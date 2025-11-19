@@ -186,13 +186,33 @@ function removeData(key) {
 
 /**
  * Clear all app data from localStorage
+ * This function is idempotent - safe to call multiple times without side effects.
+ * It removes all InkManager Pro related data from localStorage.
  * @returns {boolean} Success status
  */
 export function clearAllData() {
     try {
-        Object.values(STORAGE_KEYS).forEach(key => {
-            localStorage.removeItem(key);
-        });
+        // Check if STORAGE_KEYS is defined and valid
+        if (STORAGE_KEYS && typeof STORAGE_KEYS === 'object') {
+            // Remove all keys from STORAGE_KEYS
+            Object.values(STORAGE_KEYS).forEach(key => {
+                localStorage.removeItem(key);
+            });
+        } else {
+            // Fallback: iterate all localStorage keys and remove those with 'inkmanager_' prefix
+            console.warn('⚠️ STORAGE_KEYS not available, using fallback method');
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('inkmanager_')) {
+                    keysToRemove.push(key);
+                }
+            }
+            // Remove keys (done separately to avoid index issues during iteration)
+            keysToRemove.forEach(key => {
+                localStorage.removeItem(key);
+            });
+        }
         return true;
     } catch (error) {
         console.error('Error clearing data:', error);

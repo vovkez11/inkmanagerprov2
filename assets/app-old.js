@@ -366,16 +366,20 @@ if ('serviceWorker' in navigator) {
             .then(registration => {
                 console.log('✅ Service Worker registered:', registration.scope);
                 
-                // Check for updates periodically
+                // Check for updates periodically (once per hour to reduce server load)
                 setInterval(() => {
-                    registration.update();
-                }, 60000); // Check every minute
+                    if (registration) {
+                        registration.update();
+                    }
+                }, 3600000); // Check every hour (3600000ms)
                 
                 // Listen for updates
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
                     
                     newWorker.addEventListener('statechange', () => {
+                        // Only show update notification when newWorker is installed
+                        // and there's an existing controller (not first install)
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             // New service worker is installed, show update notification
                             showUpdateNotification();
@@ -389,6 +393,7 @@ if ('serviceWorker' in navigator) {
         
         // Listen for messages from service worker
         navigator.serviceWorker.addEventListener('message', (event) => {
+            // Defensive check to ensure event.data exists
             if (event.data && event.data.type === 'SW_UPDATED') {
                 console.log('📦 Service Worker updated:', event.data.version);
                 showUpdateNotification();
