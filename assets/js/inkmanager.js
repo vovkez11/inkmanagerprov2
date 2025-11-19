@@ -328,21 +328,20 @@ import * as DataManager from './modules/data-manager.js';
                 
                 document.getElementById('languageSelect').value = lang;
                 
-                // Cache translation elements on first access
-                if (!this.domCache.i18nElements) {
-                    this.domCache.i18nElements = document.querySelectorAll('[data-i18n]');
-                    this.domCache.i18nPlaceholders = document.querySelectorAll('[data-i18n-placeholder]');
-                }
+                // Always query DOM for translation elements to include newly rendered sections
+                const i18nElements = document.querySelectorAll('[data-i18n]');
+                const i18nPlaceholders = document.querySelectorAll('[data-i18n-placeholder]');
                 
-                // Update translations from cache
-                this.domCache.i18nElements.forEach(element => {
+                // Update text content translations
+                i18nElements.forEach(element => {
                     const key = element.getAttribute('data-i18n');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.textContent = this.translations[lang][key];
                     }
                 });
                 
-                this.domCache.i18nPlaceholders.forEach(element => {
+                // Update placeholder translations
+                i18nPlaceholders.forEach(element => {
                     const key = element.getAttribute('data-i18n-placeholder');
                     if (this.translations[lang] && this.translations[lang][key]) {
                         element.placeholder = this.translations[lang][key];
