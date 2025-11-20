@@ -337,28 +337,34 @@ import * as DataManager from './modules/data-manager.js';
                     settingsLanguage.value = lang;
                 }
                 
-                // Always query DOM for translation elements to include newly rendered sections
+                // Apply translations to all elements
+                this.applyTranslations();
+                
+                this.applySidebarState();
+                this.refreshAll();
+            }
+
+            applyTranslations() {
+                // Apply translations to all elements with data-i18n attributes
+                // This method can be called after dynamic content is added to the DOM
                 const i18nElements = document.querySelectorAll('[data-i18n]');
                 const i18nPlaceholders = document.querySelectorAll('[data-i18n-placeholder]');
                 
                 // Update text content translations
                 i18nElements.forEach(element => {
                     const key = element.getAttribute('data-i18n');
-                    if (this.translations[lang] && this.translations[lang][key]) {
-                        element.textContent = this.translations[lang][key];
+                    if (this.translations[this.currentLanguage] && this.translations[this.currentLanguage][key]) {
+                        element.textContent = this.translations[this.currentLanguage][key];
                     }
                 });
                 
                 // Update placeholder translations
                 i18nPlaceholders.forEach(element => {
                     const key = element.getAttribute('data-i18n-placeholder');
-                    if (this.translations[lang] && this.translations[lang][key]) {
-                        element.placeholder = this.translations[lang][key];
+                    if (this.translations[this.currentLanguage] && this.translations[this.currentLanguage][key]) {
+                        element.placeholder = this.translations[this.currentLanguage][key];
                     }
                 });
-                
-                this.applySidebarState();
-                this.refreshAll();
             }
 
             setupPWA() {
@@ -1312,6 +1318,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                     document.getElementById('addFirstClient').addEventListener('click', () => this.openClientModal());
+                    
+                    // Apply translations to dynamically created elements
+                    this.applyTranslations();
                     return;
                 }
 
@@ -1367,6 +1376,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                 }).join('');
+                
+                // Apply translations to dynamically created elements
+                this.applyTranslations();
             }
 
             searchClients(query) {
@@ -1559,6 +1571,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                     document.getElementById('addFirstSession').addEventListener('click', () => this.openSessionModal());
+                    
+                    // Apply translations to dynamically created elements
+                    this.applyTranslations();
                     return;
                 }
 
@@ -1600,6 +1615,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                 }).join('');
+                
+                // Apply translations to dynamically created elements
+                this.applyTranslations();
             }
 
             deleteSession(sessionId) {
@@ -1709,6 +1727,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                     document.getElementById('addFirstItem').addEventListener('click', () => this.openInventoryModal());
+                    
+                    // Apply translations to dynamically created elements
+                    this.applyTranslations();
                     return;
                 }
 
@@ -1809,6 +1830,9 @@ import * as DataManager from './modules/data-manager.js';
                 } else {
                     alertsContainer.innerHTML = '';
                 }
+                
+                // Apply translations to dynamically created elements
+                this.applyTranslations();
             }
 
             searchInventory(query) {
@@ -1974,6 +1998,9 @@ import * as DataManager from './modules/data-manager.js';
                         </div>
                     `;
                 }
+                
+                // Apply translations to dynamically created elements
+                this.applyTranslations();
             }
 
             refreshCalendar() {
