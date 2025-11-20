@@ -18,9 +18,17 @@
 - 📲 **Install Prompt** - Get prompted to install the app on your device
 - 🔔 **Session Reminders** - Browser notifications for upcoming appointments
 - 🔄 **Service Worker** - Offline functionality with smart caching
+- 🔄 **Auto-Update Detection** - Aggressive update checking with user-controlled updates
 - 📱 **Mobile-Optimized** - Responsive design with mobile menu toggle
 - ⚡ **Fast Performance** - Network-first caching strategy
 - 🏠 **App Shortcuts** - Quick access to Dashboard, Clients, and Sessions
+
+## Auto-Update Features (NEW!)
+- 🔄 **Aggressive Update Detection** - Checks for updates on page load, tab focus, and every 5 minutes
+- 🆕 **Update Banner** - Prominent notification when new version is available
+- 👆 **Click to Update** - User-controlled update process with clear "Update Now" button
+- 🎯 **No Surprise Reloads** - Updates only apply when you click the button
+- ⚡ **Fast Deployment** - New versions detected immediately when deployed
 
 ## Notification Features (NEW!)
 - 🔔 **Session Reminders** - Get notified before sessions start (configurable time window)
