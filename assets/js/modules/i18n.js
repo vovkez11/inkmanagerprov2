@@ -225,6 +225,7 @@ export const translations = {
                         "save_settings": "Save Settings",
                         "settings_saved": "Settings saved successfully!",
                         "settings_reset": "Settings reset to defaults",
+                        "confirm_reset_settings": "Reset all settings to defaults?",
                         "confirm_clear_data": "Are you sure you want to clear all data? This cannot be undone!",
                         "data_cleared": "All data has been cleared",
                         
@@ -462,6 +463,7 @@ export const translations = {
                         "save_settings": "Guardar Configuración",
                         "settings_saved": "¡Configuración guardada exitosamente!",
                         "settings_reset": "Configuración restablecida a valores predeterminados",
+                        "confirm_reset_settings": "¿Restablecer todas las configuraciones a valores predeterminados?",
                         "confirm_clear_data": "¿Estás seguro de que quieres borrar todos los datos? ¡Esto no se puede deshacer!",
                         "data_cleared": "Todos los datos han sido borrados",
                         
@@ -699,6 +701,7 @@ export const translations = {
                         "save_settings": "Сохранить настройки",
                         "settings_saved": "Настройки успешно сохранены!",
                         "settings_reset": "Настройки сброшены по умолчанию",
+                        "confirm_reset_settings": "Сбросить все настройки по умолчанию?",
                         "confirm_clear_data": "Вы уверены, что хотите очистить все данные? Это невозможно отменить!",
                         "data_cleared": "Все данные были очищены",
                         
@@ -936,6 +939,7 @@ export const translations = {
                         "save_settings": "שמור הגדרות",
                         "settings_saved": "ההגדרות נשמרו בהצלחה!",
                         "settings_reset": "ההגדרות אופסו לברירת מחדל",
+                        "confirm_reset_settings": "לאפס את כל ההגדרות לברירת מחדל?",
                         "confirm_clear_data": "האם אתה בטוח שברצונך לנקות את כל הנתונים? לא ניתן לבטל פעולה זו!",
                         "data_cleared": "כל הנתונים נוקו",
                         
