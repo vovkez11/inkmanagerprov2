@@ -2121,6 +2121,11 @@ import settingsManager from './modules/settings.js';
                 document.getElementById('clientRetention').textContent = `${Math.round(clientRetention)}%`;
             }
 
+            refreshSettings() {
+                // Update settings UI with current values from settingsManager
+                settingsManager.updateUI();
+            }
+
             exportData(type) {
                 let data, filename;
                 

@@ -5,7 +5,7 @@
 
 import * as Storage from './storage.js';
 import { showToast } from './ui.js';
-import { setLanguage, updateDOMTranslations } from './i18n.js';
+import { updateDOMTranslations } from './i18n.js';
 
 // Settings version for migration support
 const SETTINGS_VERSION = '1.0.0';
@@ -460,8 +460,8 @@ class SettingsManager {
      * Apply language setting
      */
     applyLanguage(language) {
-        if (typeof setLanguage === 'function') {
-            setLanguage(language);
+        if (typeof updateDOMTranslations === 'function') {
+            updateDOMTranslations(language);
             console.log(`🌐 Language applied: ${language}`);
         }
     }
