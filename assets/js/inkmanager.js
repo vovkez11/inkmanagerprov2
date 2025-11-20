@@ -413,15 +413,6 @@ import * as DataManager from './modules/data-manager.js';
                                     });
                                 }
                             }, 300000); // Check every 5 minutes (300000ms) instead of every hour
-                            
-                            // Listen for controller change (when new SW takes over)
-                            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                                console.log('🔄 Service Worker controller changed, reloading page...');
-                                // Only reload if we're not already reloading
-                                if (!window.location.hash.includes('updating')) {
-                                    window.location.reload();
-                                }
-                            });
                         })
                         .catch(error => {
                             console.log('❌ Service Worker registration failed:', error);
