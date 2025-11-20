@@ -389,12 +389,39 @@ import * as DataManager from './modules/data-manager.js';
                                 });
                             });
                             
-                            // Check for updates periodically (once per hour to reduce server load)
+                            // AGGRESSIVE UPDATE DETECTION
+                            // Check for updates immediately on page load
+                            registration.update().catch(err => {
+                                console.log('⚠️ Initial update check failed:', err);
+                            });
+                            
+                            // Check for updates when user returns to the page
+                            document.addEventListener('visibilitychange', () => {
+                                if (!document.hidden && registration) {
+                                    console.log('👁️ Page visible, checking for updates...');
+                                    registration.update().catch(err => {
+                                        console.log('⚠️ Update check on visibility change failed:', err);
+                                    });
+                                }
+                            });
+                            
+                            // Check for updates periodically (every 5 minutes for more aggressive updates)
                             setInterval(() => {
                                 if (registration) {
-                                    registration.update();
+                                    registration.update().catch(err => {
+                                        console.log('⚠️ Periodic update check failed:', err);
+                                    });
                                 }
-                            }, 3600000); // Check every hour (3600000ms)
+                            }, 300000); // Check every 5 minutes (300000ms) instead of every hour
+                            
+                            // Listen for controller change (when new SW takes over)
+                            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                                console.log('🔄 Service Worker controller changed, reloading page...');
+                                // Only reload if we're not already reloading
+                                if (!window.location.hash.includes('updating')) {
+                                    window.location.reload();
+                                }
+                            });
                         })
                         .catch(error => {
                             console.log('❌ Service Worker registration failed:', error);
