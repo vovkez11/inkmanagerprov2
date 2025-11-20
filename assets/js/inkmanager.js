@@ -528,12 +528,8 @@ import * as DataManager from './modules/data-manager.js';
                 }
 
                 // Settings page language dropdown
-                const settingsLanguageSelect = document.getElementById('settingsLanguage');
-                if (settingsLanguageSelect) {
-                    settingsLanguageSelect.addEventListener('change', (e) => {
-                        this.setLanguage(e.target.value);
-                    });
-                }
+                // Note: Language on settings page should only be saved when "Save Settings" is clicked
+                // The header language selector (languageSelect) still has immediate save for better UX
 
                 const addClientBtn = document.getElementById('addClientBtn');
                 if (addClientBtn) addClientBtn.addEventListener('click', () => this.openClientModal());
@@ -2259,6 +2255,7 @@ import * as DataManager from './modules/data-manager.js';
                     // Clear all settings from localStorage
                     const settingsKeys = [
                         'inkmanager_theme',
+                        'inkmanager_language',
                         'inkmanager_studioName',
                         'inkmanager_currency',
                         'inkmanager_defaultDuration',
