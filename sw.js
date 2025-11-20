@@ -3,8 +3,8 @@
  * Provides offline functionality and caching for PWA
  */
 
-const CACHE_NAME = 'inkmanager-pro-v2.8-modular';
-const RUNTIME_CACHE = 'inkmanager-runtime-v2.8';
+const CACHE_NAME = 'inkmanager-pro-v2.9.1-force-update';
+const RUNTIME_CACHE = 'inkmanager-runtime-v2.9.1';
 const OFFLINE_PAGE = '/inkmanagerprov2/offline.html';
 
 // Resources to cache on install
@@ -44,8 +44,9 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
       .then(() => {
-        console.log('✅ [SW] Service worker installed');
-        return self.skipWaiting();
+        console.log('✅ [SW] Service worker installed, waiting for user action to activate');
+        // Don't skip waiting automatically - wait for user to click update
+        // This ensures users see the update notification and choose when to update
       })
       .catch(err => {
         console.error('❌ [SW] Installation failed:', err);
