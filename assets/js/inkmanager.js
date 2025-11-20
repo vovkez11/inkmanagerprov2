@@ -10,6 +10,7 @@ import * as Inventory from './modules/inventory.js';
 import * as Analytics from './modules/analytics.js';
 import * as Notifications from './modules/notifications.js';
 import * as DataManager from './modules/data-manager.js';
+import settingsManager from './modules/settings.js';
 
 // INKMANAGER PRO - COMPLETE REWRITTEN VERSION WITH PERFECT MULTI-LANGUAGE & CURRENCY SUPPORT
         class InkManagerPro {
@@ -61,13 +62,23 @@ import * as DataManager from './modules/data-manager.js';
                 this.setupPWA();
                 this.setupMobileEnhancements();
                 this.setupHistory();
-                this.loadSettings();
-                this.setLanguage(this.currentLanguage);
+                settingsManager.init();
+                this.setLanguage(settingsManager.get('language') || 'en');
                 this.applySidebarState();
                 this.updateInventoryTabsUI();
                 this.syncInventorySortUI();
                 this.updateBulkActionsUI();
                 this.setupNotifications();
+                
+                // Register notification change callback
+                settingsManager.on('onNotificationsChange', (data) => {
+                    if (data.value) {
+                        this.setupNotifications();
+                    } else {
+                        this.stopNotificationScheduler();
+                    }
+                });
+                
                 console.log('🎨 InkManager Pro - Complete Rewritten Version Initialized');
             }
 
@@ -692,34 +703,7 @@ import * as DataManager from './modules/data-manager.js';
                 const clearAllDataBtn = document.getElementById('clearAllDataBtn');
                 if (clearAllDataBtn) clearAllDataBtn.addEventListener('click', () => this.confirmClearData());
                 
-                const resetSettingsBtn = document.getElementById('resetSettingsBtn');
-                if (resetSettingsBtn) resetSettingsBtn.addEventListener('click', () => this.resetSettings());
-                
-                const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-                if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', () => this.saveSettings());
-
-                // Add immediate change listeners for language and theme
-                const settingsLanguageSelect = document.getElementById('settingsLanguage');
-                if (settingsLanguageSelect) {
-                    settingsLanguageSelect.addEventListener('change', (e) => {
-                        const newLanguage = e.target.value;
-                        // Save language to localStorage immediately
-                        localStorage.setItem('inkmanager_language', newLanguage);
-                        // Apply translation immediately
-                        this.setLanguage(newLanguage);
-                    });
-                }
-
-                const settingsThemeSelect = document.getElementById('settingsTheme');
-                if (settingsThemeSelect) {
-                    settingsThemeSelect.addEventListener('change', (e) => {
-                        const newTheme = e.target.value;
-                        // Save theme to localStorage immediately
-                        localStorage.setItem('inkmanager_theme', newTheme);
-                        // Apply theme immediately
-                        this.applyTheme(newTheme);
-                    });
-                }
+                // Note: Settings buttons are now handled by settingsManager module
 
                 // Setup mobile bottom navigation
                 this.setupMobileBottomNav();
@@ -2148,7 +2132,7 @@ import * as DataManager from './modules/data-manager.js';
                         inventory: this.inventory,
                         settings: {
                             language: this.currentLanguage,
-                            currency: localStorage.getItem('inkmanager_currency') || 'USD'
+                            currency: settingsManager.get('currency') || 'USD'
                         }
                     });
                     
@@ -2187,169 +2171,8 @@ import * as DataManager from './modules/data-manager.js';
                 this.showNotification('💾 Data exported successfully!');
             }
 
-            loadSettings() {
-                // Load all settings from localStorage
-                const settings = {
-                    theme: localStorage.getItem('inkmanager_theme') || 'dark',
-                    language: localStorage.getItem('inkmanager_language') || 'en',
-                    studioName: localStorage.getItem('inkmanager_studioName') || '',
-                    currency: localStorage.getItem('inkmanager_currency') || 'USD',
-                    defaultDuration: parseFloat(localStorage.getItem('inkmanager_defaultDuration')) || 2,
-                    lowStockThreshold: parseInt(localStorage.getItem('inkmanager_lowStockThreshold')) || 5,
-                    autoDeduct: localStorage.getItem('inkmanager_autoDeduct') === 'true',
-                    notifications: localStorage.getItem('inkmanager_notifications') !== 'false',
-                    reminderTime: parseInt(localStorage.getItem('inkmanager_reminderTime')) || 2,
-                    autoSave: localStorage.getItem('inkmanager_autoSave') !== 'false'
-                };
-
-                // Apply settings to UI
-                if (document.getElementById('settingsTheme')) {
-                    document.getElementById('settingsTheme').value = settings.theme;
-                }
-                if (document.getElementById('settingsLanguage')) {
-                    document.getElementById('settingsLanguage').value = settings.language;
-                }
-                if (document.getElementById('settingsStudioName')) {
-                    document.getElementById('settingsStudioName').value = settings.studioName;
-                }
-                if (document.getElementById('settingsCurrency')) {
-                    document.getElementById('settingsCurrency').value = settings.currency;
-                }
-                if (document.getElementById('settingsDefaultDuration')) {
-                    document.getElementById('settingsDefaultDuration').value = settings.defaultDuration;
-                }
-                if (document.getElementById('settingsLowStockThreshold')) {
-                    document.getElementById('settingsLowStockThreshold').value = settings.lowStockThreshold;
-                }
-                if (document.getElementById('settingsAutoDeduct')) {
-                    document.getElementById('settingsAutoDeduct').checked = settings.autoDeduct;
-                }
-                if (document.getElementById('settingsNotifications')) {
-                    document.getElementById('settingsNotifications').checked = settings.notifications;
-                }
-                if (document.getElementById('settingsReminderTime')) {
-                    document.getElementById('settingsReminderTime').value = settings.reminderTime;
-                }
-                if (document.getElementById('settingsAutoSave')) {
-                    document.getElementById('settingsAutoSave').checked = settings.autoSave;
-                }
-
-                // Apply theme
-                this.applyTheme(settings.theme);
-
-                return settings;
-            }
-
-            saveSettings() {
-                // Get all settings values
-                const theme = document.getElementById('settingsTheme')?.value || 'dark';
-                const language = document.getElementById('settingsLanguage')?.value || 'en';
-                const studioName = document.getElementById('settingsStudioName')?.value || '';
-                const currency = document.getElementById('settingsCurrency')?.value || 'USD';
-                const defaultDuration = parseFloat(document.getElementById('settingsDefaultDuration')?.value) || 2;
-                const lowStockThreshold = parseInt(document.getElementById('settingsLowStockThreshold')?.value) || 5;
-                const autoDeduct = document.getElementById('settingsAutoDeduct')?.checked || false;
-                const notifications = document.getElementById('settingsNotifications')?.checked || false;
-                const reminderTime = parseInt(document.getElementById('settingsReminderTime')?.value) || 2;
-                const autoSave = document.getElementById('settingsAutoSave')?.checked || false;
-
-                // Check if notification settings changed
-                const previousNotifications = localStorage.getItem('inkmanager_notifications') !== 'false';
-                const notificationsChanged = previousNotifications !== notifications;
-
-                // Save to localStorage
-                localStorage.setItem('inkmanager_theme', theme);
-                localStorage.setItem('inkmanager_language', language);
-                localStorage.setItem('inkmanager_studioName', studioName);
-                localStorage.setItem('inkmanager_currency', currency);
-                localStorage.setItem('inkmanager_defaultDuration', defaultDuration.toString());
-                localStorage.setItem('inkmanager_lowStockThreshold', lowStockThreshold.toString());
-                localStorage.setItem('inkmanager_autoDeduct', autoDeduct.toString());
-                localStorage.setItem('inkmanager_notifications', notifications.toString());
-                localStorage.setItem('inkmanager_reminderTime', reminderTime.toString());
-                localStorage.setItem('inkmanager_autoSave', autoSave.toString());
-
-                // Apply theme immediately
-                this.applyTheme(theme);
-
-                // Apply language if changed
-                if (language !== this.currentLanguage) {
-                    this.setLanguage(language);
-                }
-
-                // Handle notification settings changes
-                if (notificationsChanged) {
-                    if (notifications) {
-                        // Enable notifications
-                        this.setupNotifications();
-                    } else {
-                        // Disable notifications
-                        this.stopNotificationScheduler();
-                    }
-                }
-
-                this.showNotification(this.translate('settings_saved') || '✅ Settings saved successfully!');
-            }
-
-            resetSettings() {
-                if (confirm(this.translate('confirm_reset_settings') || 'Reset all settings to defaults?')) {
-                    // Clear all settings from localStorage
-                    const settingsKeys = [
-                        'inkmanager_theme',
-                        'inkmanager_language',
-                        'inkmanager_studioName',
-                        'inkmanager_currency',
-                        'inkmanager_defaultDuration',
-                        'inkmanager_lowStockThreshold',
-                        'inkmanager_autoDeduct',
-                        'inkmanager_notifications',
-                        'inkmanager_reminderTime',
-                        'inkmanager_autoSave'
-                    ];
-                    
-                    settingsKeys.forEach(key => localStorage.removeItem(key));
-
-                    // Reload settings with defaults
-                    this.loadSettings();
-                    
-                    this.showNotification(this.translate('settings_reset') || '✅ Settings reset to defaults');
-                }
-            }
-
-            applyTheme(theme) {
-                const body = document.body;
-                const root = document.documentElement;
-
-                // Remove existing theme classes
-                body.classList.remove('theme-dark', 'theme-light');
-
-                if (theme === 'auto') {
-                    // Use system preference
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    theme = prefersDark ? 'dark' : 'light';
-                }
-
-                if (theme === 'light') {
-                    body.classList.add('theme-light');
-                    // Light theme colors
-                    root.style.setProperty('--dark', '#f5f5f5');
-                    root.style.setProperty('--darker', '#ffffff');
-                    root.style.setProperty('--dark-gray', '#e0e0e0');
-                    root.style.setProperty('--light', '#0d1117');
-                } else {
-                    body.classList.add('theme-dark');
-                    // Reset to dark theme colors (defaults)
-                    root.style.setProperty('--dark', '#0d1117');
-                    root.style.setProperty('--darker', '#010409');
-                    root.style.setProperty('--dark-gray', '#161b22');
-                    root.style.setProperty('--light', '#f5f5f5');
-                }
-            }
-
-            refreshSettings() {
-                // Reload settings UI
-                this.loadSettings();
-            }
+            // Settings-related methods removed - now handled by settingsManager module
+            // See assets/js/modules/settings.js
 
             importData() {
                 const input = document.createElement('input');
@@ -2542,7 +2365,7 @@ import * as DataManager from './modules/data-manager.js';
              */
             setupNotifications() {
                 // Request notification permission if enabled in settings
-                const notificationsEnabled = localStorage.getItem('inkmanager_notifications') !== 'false';
+                const notificationsEnabled = settingsManager.get('notifications');
                 
                 if (notificationsEnabled && 'Notification' in window) {
                     // Request permission if not already granted
@@ -2618,13 +2441,13 @@ import * as DataManager from './modules/data-manager.js';
              * Check for upcoming sessions and send notifications
              */
             checkUpcomingSessions() {
-                const notificationsEnabled = localStorage.getItem('inkmanager_notifications') !== 'false';
+                const notificationsEnabled = settingsManager.get('notifications');
                 
                 if (!notificationsEnabled || Notification.permission !== 'granted') {
                     return;
                 }
 
-                const reminderTime = parseInt(localStorage.getItem('inkmanager_reminderTime')) || 2; // Default 2 hours
+                const reminderTime = settingsManager.get('reminderTime') || 2; // Default 2 hours
                 const now = new Date();
                 const notifiedSessions = JSON.parse(localStorage.getItem('inkmanager_notifiedSessions')) || [];
                 
