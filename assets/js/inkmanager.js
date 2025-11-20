@@ -326,7 +326,16 @@ import * as DataManager from './modules/data-manager.js';
                 this.currentLanguage = lang;
                 localStorage.setItem('inkmanager_language', lang);
                 
-                document.getElementById('languageSelect').value = lang;
+                // Update both language dropdowns if they exist
+                const languageSelect = document.getElementById('languageSelect');
+                if (languageSelect) {
+                    languageSelect.value = lang;
+                }
+                
+                const settingsLanguage = document.getElementById('settingsLanguage');
+                if (settingsLanguage) {
+                    settingsLanguage.value = lang;
+                }
                 
                 // Always query DOM for translation elements to include newly rendered sections
                 const i18nElements = document.querySelectorAll('[data-i18n]');
