@@ -819,6 +819,13 @@ body.sidebar-collapsed .app-container {
         font-size: 1em;
     }
 
+    .help-text {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255,255,255,0.6);
+        font-size: 0.9em;
+    }
+
     .form-control {
         width: 100%;
         padding: 14px;
@@ -2626,155 +2633,135 @@ body.sidebar-collapsed .app-container {
 
         <!-- Settings Section -->
         <section id="settings" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
-                    </h2>
-                </div>
-
-                <!-- Appearance Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 class="card-title"><i class="fas fa-palette"></i> <span data-i18n="appearance">Appearance</span></h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="theme">Theme</label>
-                        <select class="form-control" id="settingsTheme">
-                            <option value="dark" data-i18n="dark_theme">Dark (Default)</option>
-                            <option value="light" data-i18n="light_theme">Light</option>
-                            <option value="auto" data-i18n="auto_theme">Auto (System)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="language_preference">Language Preference</label>
-                        <select class="form-control" id="settingsLanguage">
-                            <option value="en">🇬🇧 English</option>
-                            <option value="es">🇪🇸 Español</option>
-                            <option value="ru">🇷🇺 Русский</option>
-                            <option value="he">🇮🇱 עברית</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Business Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 class="card-title"><i class="fas fa-briefcase"></i> <span data-i18n="business_settings">Business Settings</span></h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="studio_name">Studio Name</label>
-                        <input type="text" class="form-control" id="settingsStudioName" placeholder="Your Studio Name" data-i18n-placeholder="studio_name_placeholder">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="currency_symbol">Currency Symbol</label>
-                        <select class="form-control" id="settingsCurrency">
-                            <option value="USD" data-i18n="currency_usd">$ USD (US Dollar)</option>
-                            <option value="EUR" data-i18n="currency_eur">€ EUR (Euro)</option>
-                            <option value="GBP" data-i18n="currency_gbp">£ GBP (British Pound)</option>
-                            <option value="RUB" data-i18n="currency_rub">₽ RUB (Russian Ruble)</option>
-                            <option value="ILS" data-i18n="currency_ils">₪ ILS (Israeli Shekel)</option>
-                            <option value="CAD" data-i18n="currency_cad">$ CAD (Canadian Dollar)</option>
-                            <option value="AUD" data-i18n="currency_aud">$ AUD (Australian Dollar)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="default_session_duration">Default Session Duration (hours)</label>
-                        <input type="number" class="form-control" id="settingsDefaultDuration" min="0.5" step="0.5" value="2">
-                    </div>
-                </div>
-
-                <!-- Inventory Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 class="card-title"><i class="fas fa-boxes"></i> <span data-i18n="inventory_settings">Inventory Settings</span></h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
-                        <input type="number" class="form-control" id="settingsLowStockThreshold" min="0" value="5">
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsAutoDeduct" style="width: auto; min-height: auto;">
-                            <span data-i18n="auto_deduct_materials">Auto-deduct materials after sessions</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Notifications Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 class="card-title"><i class="fas fa-bell"></i> <span data-i18n="notifications">Notifications</span></h3>
-                    
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsNotifications" style="width: auto; min-height: auto;" checked>
-                            <span data-i18n="enable_notifications">Enable notifications</span>
-                        </label>
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="notifications_help">Get notified about upcoming sessions</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" data-i18n="session_reminder">Session Reminder (hours before)</label>
-                        <input type="number" class="form-control" id="settingsReminderTime" min="0" max="48" value="2">
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="reminder_help">You'll be notified this many hours before a session starts</small>
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-outline" onclick="app.testNotification()">
-                            <i class="fas fa-bell"></i> <span data-i18n="test_notifications">Test Notifications</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Data Management -->
-                <div style="margin-bottom: 30px;">
-                    <h3 class="card-title"><i class="fas fa-database"></i> <span data-i18n="data_management">Data Management</span></h3>
-                    
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="settingsAutoSave" style="width: auto; min-height: auto;" checked>
-                            <span data-i18n="auto_save">Auto-save changes</span>
-                        </label>
-                        <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.6);" data-i18n="auto_save_help">Changes are saved automatically to your browser</small>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-                        <button class="btn btn-success" onclick="app.exportData('all')">
-                            <i class="fas fa-download"></i> <span data-i18n="backup_all_data">Backup All Data</span>
-                        </button>
-                        <button class="btn btn-outline" onclick="app.importData()">
-                            <i class="fas fa-upload"></i> <span data-i18n="import_data">Import Data</span>
-                        </button>
-                        <button class="btn btn-danger" onclick="app.confirmClearData()">
-                            <i class="fas fa-trash-alt"></i> <span data-i18n="clear_all_data">Clear All Data</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- About -->
-                <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,188,212,0.1); border-radius: 12px; border: 1px solid rgba(0,188,212,0.3);">
-                    <h3 class="card-title"><i class="fas fa-info-circle"></i> <span data-i18n="about">About</span></h3>
-                    <p style="margin: 10px 0; color: rgba(255,255,255,0.8);">
-                        <strong>InkManager Pro</strong> v2.0<br>
-                        <span data-i18n="about_description">Professional Tattoo Studio Management System</span>
-                    </p>
-                    <p style="margin: 10px 0; font-size: 0.9em; color: rgba(255,255,255,0.6);">
-                        <span data-i18n="made_with">Made with</span> ❤️ <span data-i18n="for_artists">for tattoo artists worldwide</span>
-                    </p>
-                </div>
-
-                <!-- Save Settings Button -->
-                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
-                    <button class="btn btn-outline" onclick="app.resetSettings()">
-                        <i class="fas fa-undo"></i> <span data-i18n="reset_defaults">Reset to Defaults</span>
-                    </button>
-                    <button class="btn btn-primary" onclick="app.saveSettings()">
-                        <i class="fas fa-save"></i> <span data-i18n="save_settings">Save Settings</span>
-                    </button>
-                </div>
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
+              </h2>
             </div>
+
+            <!-- Appearance Settings -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-palette"></i> <span data-i18n="appearance">Appearance</span>
+              </h3>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="theme">Theme</label>
+                <select class="form-control" id="settingsTheme">
+                  <option value="dark" data-i18n="dark_theme">Dark (Default)</option>
+                  <option value="light" data-i18n="light_theme">Light</option>
+                  <option value="auto" data-i18n="auto_theme">Auto (System)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="language_preference">Language Preference</label>
+                <select class="form-control" id="settingsLanguage">
+                  <option value="en" data-i18n="lang_english">English</option>
+                  <option value="es" data-i18n="lang_spanish">Español</option>
+                  <option value="ru" data-i18n="lang_russian">Русский</option>
+                  <option value="he" data-i18n="lang_hebrew">עברית</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Business Settings -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-briefcase"></i> <span data-i18n="business_settings">Business Settings</span>
+              </h3>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="studio_name">Studio Name</label>
+                <input type="text" class="form-control" id="settingsStudioName" data-i18n-placeholder="studio_name_placeholder" placeholder="Your Studio Name">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="currency_symbol">Currency Symbol</label>
+                <select class="form-control" id="settingsCurrency">
+                  <option value="USD" data-i18n="currency_usd">$ USD (US Dollar)</option>
+                  <option value="EUR" data-i18n="currency_eur">€ EUR (Euro)</option>
+                  <option value="GBP" data-i18n="currency_gbp">£ GBP (British Pound)</option>
+                  <option value="RUB" data-i18n="currency_rub">₽ RUB (Russian Ruble)</option>
+                  <option value="ILS" data-i18n="currency_ils">₪ ILS (Israeli Shekel)</option>
+                  <option value="CAD" data-i18n="currency_cad">$ CAD (Canadian Dollar)</option>
+                  <option value="AUD" data-i18n="currency_aud">$ AUD (Australian Dollar)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" data-i18n="default_session_duration">Default Session Duration (hours)</label>
+                <input type="number" class="form-control" id="settingsDefaultDuration" min="0.5" step="0.5" value="2">
+              </div>
+            </div>
+
+            <!-- Inventory Settings -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-boxes"></i> <span data-i18n="inventory_settings">Inventory Settings</span>
+              </h3>
+              <div class="form-group">
+                <label class="form-label" data-i18n="default_low_stock_alert">Default Low Stock Alert Threshold</label>
+                <input type="number" class="form-control" id="settingsLowStockThreshold" min="1" step="1" value="5">
+                <small class="help-text" data-i18n="low_stock_help">You'll be notified when items reach this quantity</small>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="auto_deduct_materials">Auto-deduct materials after sessions</label>
+                <input type="checkbox" id="settingsAutoDeduct">
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-bell"></i> <span data-i18n="notifications">Notifications</span>
+              </h3>
+              <div class="form-group">
+                <label class="form-label" data-i18n="enable_notifications">Enable notifications</label>
+                <input type="checkbox" id="settingsNotifications">
+                <small class="help-text" data-i18n="notifications_help">Get notified about upcoming sessions</small>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="session_reminder">Session Reminder (hours before)</label>
+                <input type="number" class="form-control" id="settingsReminderTime" min="1" step="1" value="2">
+                <small class="help-text" data-i18n="reminder_help">You'll be notified this many hours before a session starts</small>
+              </div>
+              <button class="btn btn-outline" id="testNotificationsBtn" data-i18n="test_notifications">Test Notifications</button>
+            </div>
+
+            <!-- Data Management -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-database"></i> <span data-i18n="data_management">Data Management</span>
+              </h3>
+              <div class="form-group">
+                <label class="form-label" data-i18n="auto_save">Auto-save changes</label>
+                <input type="checkbox" id="settingsAutoSave">
+                <small class="help-text" data-i18n="auto_save_help">Changes are saved automatically to your browser</small>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-primary" id="backupAllDataBtn" data-i18n="backup_all_data">Backup All Data</button>
+                <button class="btn btn-outline" id="importDataBtn" data-i18n="import_data">Import Data</button>
+                <button class="btn btn-danger" id="clearAllDataBtn" data-i18n="clear_all_data">Clear All Data</button>
+              </div>
+            </div>
+
+            <!-- About -->
+            <div style="margin-bottom: 30px;">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle"></i> <span data-i18n="about">About</span>
+              </h3>
+              <p data-i18n="about_description">Professional Tattoo Studio Management System</p>
+              <p><span data-i18n="made_with">Made with</span> ❤️ <span data-i18n="for_artists">for tattoo artists worldwide</span></p>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions" style="margin-top: 10px;">
+              <button class="btn btn-warning" id="resetSettingsBtn" data-i18n="reset_defaults">Reset to Defaults</button>
+              <button class="btn btn-success" id="saveSettingsBtn" data-i18n="save_settings">Save Settings</button>
+            </div>
+          </div>
         </section>
     </div>
 
