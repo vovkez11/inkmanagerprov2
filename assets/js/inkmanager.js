@@ -680,6 +680,29 @@ import * as DataManager from './modules/data-manager.js';
                 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
                 if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', () => this.saveSettings());
 
+                // Add immediate change listeners for language and theme
+                const settingsLanguageSelect = document.getElementById('settingsLanguage');
+                if (settingsLanguageSelect) {
+                    settingsLanguageSelect.addEventListener('change', (e) => {
+                        const newLanguage = e.target.value;
+                        // Save language to localStorage immediately
+                        localStorage.setItem('inkmanager_language', newLanguage);
+                        // Apply translation immediately
+                        this.setLanguage(newLanguage);
+                    });
+                }
+
+                const settingsThemeSelect = document.getElementById('settingsTheme');
+                if (settingsThemeSelect) {
+                    settingsThemeSelect.addEventListener('change', (e) => {
+                        const newTheme = e.target.value;
+                        // Save theme to localStorage immediately
+                        localStorage.setItem('inkmanager_theme', newTheme);
+                        // Apply theme immediately
+                        this.applyTheme(newTheme);
+                    });
+                }
+
                 // Setup mobile bottom navigation
                 this.setupMobileBottomNav();
             }
