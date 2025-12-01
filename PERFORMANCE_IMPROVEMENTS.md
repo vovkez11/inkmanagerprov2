@@ -75,18 +75,36 @@ The codebase already follows several good performance practices:
 
 ## Technical Details
 
-### Cache Key Generation
-The session cache key is generated from a JSON string of session IDs, dateTimes, and updatedAt timestamps:
+### Session Cache Implementation
+The session cache uses a dirty flag approach for efficiency. When sessions are modified, the dirty flag is set to true, and the cache is only regenerated when needed:
+
 ```javascript
-const cacheKey = JSON.stringify(this.sessions.map(s => s.id + s.dateTime + (s.updatedAt || '')));
+// Set dirty flag when sessions change
+invalidateSessionsCache() {
+    this.sortedSessionsCache = null;
+    this.sessionsCacheDirty = true;
+}
+
+// Use cached sorted sessions if not dirty
+if (!this.sessionsCacheDirty && this.sortedSessionsCache) {
+    sortedSessions = this.sortedSessionsCache;
+} else {
+    // Pre-parse dates for efficient comparison
+    sortedSessions = [...this.sessions]
+        .map(s => ({ ...s, _sortDate: new Date(s.dateTime).getTime() }))
+        .sort((a, b) => b._sortDate - a._sortDate);
+    this.sortedSessionsCache = sortedSessions;
+    this.sessionsCacheDirty = false;
+}
 ```
 
-This ensures the cache is invalidated when:
-- A session is added (new ID)
-- A session is modified (dateTime or updatedAt changes)
-- A session is deleted (ID removed from the list)
+This approach:
+- Uses a simple boolean flag instead of generating cache keys with JSON.stringify()
+- Pre-parses dates to timestamps for O(1) comparison instead of creating new Date objects in the sort comparator
+- Only regenerates the cache when the dirty flag is set
 
 ### Performance Impact
 - **Section Navigation**: Reduced DOM queries from 4+ per navigation to 1 (on first load only)
 - **Session List Rendering**: Avoided redundant sorting when sessions haven't changed
+- **Sort Performance**: Pre-parsed dates reduce Date object creation during sorting
 - **Code Size**: Reduced by removing duplicate function definition

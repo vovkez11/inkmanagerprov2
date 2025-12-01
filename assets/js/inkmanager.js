@@ -50,9 +50,9 @@ import settingsManager from './modules/settings.js';
                 this.sortedInventoryCache = null;
                 this.sortedInventoryCacheKey = null;
                 
-                // Cache for sorted sessions to avoid re-sorting unchanged data
+                // Cache for sorted sessions - uses dirty flag for efficiency
                 this.sortedSessionsCache = null;
-                this.sortedSessionsCacheKey = null;
+                this.sessionsCacheDirty = true;
                 
                 // Use imported currency and translation configurations
                 this.currencyConfig = currencyConfig;
@@ -853,7 +853,7 @@ import settingsManager from './modules/settings.js';
             // Invalidate sessions sort cache when data changes
             invalidateSessionsCache() {
                 this.sortedSessionsCache = null;
-                this.sortedSessionsCacheKey = null;
+                this.sessionsCacheDirty = true;
             }
 
             adjustInventoryQty(itemId, delta) {
@@ -1580,17 +1580,18 @@ import settingsManager from './modules/settings.js';
             refreshSessions() {
                 const container = document.getElementById('sessionsList');
                 
-                // Use cached sorted sessions if data hasn't changed
-                const cacheKey = JSON.stringify(this.sessions.map(s => s.id + s.dateTime + (s.updatedAt || '')));
+                // Use cached sorted sessions if data hasn't changed (dirty flag approach)
                 let sortedSessions;
                 
-                if (this.sortedSessionsCacheKey === cacheKey && this.sortedSessionsCache) {
+                if (!this.sessionsCacheDirty && this.sortedSessionsCache) {
                     sortedSessions = this.sortedSessionsCache;
                 } else {
-                    // Create a sorted copy without mutating the original array
-                    sortedSessions = [...this.sessions].sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+                    // Create a sorted copy with pre-parsed dates for efficient comparison
+                    sortedSessions = [...this.sessions]
+                        .map(s => ({ ...s, _sortDate: new Date(s.dateTime).getTime() }))
+                        .sort((a, b) => b._sortDate - a._sortDate);
                     this.sortedSessionsCache = sortedSessions;
-                    this.sortedSessionsCacheKey = cacheKey;
+                    this.sessionsCacheDirty = false;
                 }
 
                 if (sortedSessions.length === 0) {
