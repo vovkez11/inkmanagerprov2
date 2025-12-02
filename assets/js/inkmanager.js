@@ -50,6 +50,10 @@ import settingsManager from './modules/settings.js';
                 this.sortedInventoryCache = null;
                 this.sortedInventoryCacheKey = null;
                 
+                // Cache for sorted sessions - uses dirty flag for efficiency
+                this.sortedSessionsCache = null;
+                this.sessionsCacheDirty = true;
+                
                 // Use imported currency and translation configurations
                 this.currencyConfig = currencyConfig;
                 this.translations = translations;
@@ -298,19 +302,6 @@ import settingsManager from './modules/settings.js';
                     localStorage.setItem('inkmanager_sidebarCollapsed', this.sidebarCollapsed);
                 }
                 this.applySidebarState();
-            }
-
-            // Debounce utility for search inputs - prevents excessive re-renders
-            debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
             }
 
             formatCurrency(amount) {
@@ -858,6 +849,12 @@ import settingsManager from './modules/settings.js';
                 this.sortedInventoryCache = null;
                 this.sortedInventoryCacheKey = null;
             }
+            
+            // Invalidate sessions sort cache when data changes
+            invalidateSessionsCache() {
+                this.sortedSessionsCache = null;
+                this.sessionsCacheDirty = true;
+            }
 
             adjustInventoryQty(itemId, delta) {
                 const item = Inventory.adjustQuantity(this.inventory, itemId, delta);
@@ -1056,6 +1053,7 @@ import settingsManager from './modules/settings.js';
                 if (!this.domCache.sections) {
                     this.domCache.sections = document.querySelectorAll('.section');
                     this.domCache.navLinks = document.querySelectorAll('.nav-link');
+                    this.domCache.mobileNavItems = document.querySelectorAll('.mobile-nav-item');
                 }
 
                 this.domCache.sections.forEach(s => s.classList.remove('active'));
@@ -1074,8 +1072,8 @@ import settingsManager from './modules/settings.js';
                     }
                 });
 
-                // Update mobile bottom nav active state
-                document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                // Update mobile bottom nav active state using cached elements
+                this.domCache.mobileNavItems.forEach(item => {
                     if (item.dataset.section === sectionId) {
                         item.classList.add('active');
                     } else {
@@ -1432,6 +1430,7 @@ import settingsManager from './modules/settings.js';
                 if (confirm('Are you sure you want to delete this client and all their sessions?')) {
                     this.clients = this.clients.filter(c => c.id !== clientId);
                     this.sessions = this.sessions.filter(s => s.clientId !== clientId);
+                    this.invalidateSessionsCache();
                     this.safeSaveData();
                     this.refreshAll();
                     this.showNotification('🗑️ Client and associated sessions deleted');
@@ -1548,6 +1547,7 @@ import settingsManager from './modules/settings.js';
                         
                         this.deductMaterialsFromInventory();
                         
+                        this.invalidateSessionsCache();
                         this.safeSaveData();
                         this.closeSessionModal();
                         this.refreshAll();
@@ -1569,6 +1569,7 @@ import settingsManager from './modules/settings.js';
 
                     this.sessions.push(session);
                     this.deductMaterialsFromInventory();
+                    this.invalidateSessionsCache();
                     this.safeSaveData();
                     this.closeSessionModal();
                     this.refreshAll();
@@ -1578,9 +1579,22 @@ import settingsManager from './modules/settings.js';
 
             refreshSessions() {
                 const container = document.getElementById('sessionsList');
-                const allSessions = this.sessions.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+                
+                // Use cached sorted sessions if data hasn't changed (dirty flag approach)
+                let sortedSessions;
+                
+                if (!this.sessionsCacheDirty && this.sortedSessionsCache) {
+                    sortedSessions = this.sortedSessionsCache;
+                } else {
+                    // Create a sorted copy with pre-parsed dates for efficient comparison
+                    sortedSessions = [...this.sessions]
+                        .map(s => ({ ...s, _sortDate: new Date(s.dateTime).getTime() }))
+                        .sort((a, b) => b._sortDate - a._sortDate);
+                    this.sortedSessionsCache = sortedSessions;
+                    this.sessionsCacheDirty = false;
+                }
 
-                if (allSessions.length === 0) {
+                if (sortedSessions.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-calendar-plus"></i>
@@ -1598,7 +1612,7 @@ import settingsManager from './modules/settings.js';
                     return;
                 }
 
-                container.innerHTML = allSessions.map(session => {
+                container.innerHTML = sortedSessions.map(session => {
                     const sessionDate = new Date(session.dateTime);
                     const isPast = sessionDate < new Date();
                     const isToday = sessionDate.toDateString() === new Date().toDateString();
@@ -1654,6 +1668,7 @@ import settingsManager from './modules/settings.js';
                     }
                     
                     this.sessions = this.sessions.filter(s => s.id !== sessionId);
+                    this.invalidateSessionsCache();
                     this.safeSaveData();
                     this.refreshAll();
                     this.showNotification('🗑️ Session deleted (materials restored to inventory)');
@@ -2240,6 +2255,7 @@ import settingsManager from './modules/settings.js';
                                 }
                                 
                                 this.invalidateInventoryCache();
+                                this.invalidateSessionsCache();
                                 this.safeSaveData(true);
                                 this.refreshAll();
                                 this.showNotification('✅ Data imported successfully!');
@@ -2261,6 +2277,8 @@ import settingsManager from './modules/settings.js';
                         this.clients = [];
                         this.sessions = [];
                         this.inventory = [];
+                        this.invalidateInventoryCache();
+                        this.invalidateSessionsCache();
                         this.safeSaveData(true);
                         this.refreshAll();
                         this.showNotification(this.translate('data_cleared') || '🗑️ All data has been cleared');
